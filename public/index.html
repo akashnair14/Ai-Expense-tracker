@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PulseAI | Modern Financial Operating System</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Telegram WebApp JS SDK -->
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            slateBg: '#F8FAFC',
+            slateDarkBg: '#0B0F19',
+            cardDark: '#111827',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 4px; }
+  </style>
+</head>
+<body class="bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white pb-16">
+
+  <!-- TOP HEADER NAV -->
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-[#0B0F19]/90 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Left: Logo & Brand Title -->
+      <div class="flex items-center gap-3 shrink-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-none">PulseAI</h1>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-500/20 uppercase tracking-wide">
+              SaaS v2.4
+            </span>
+          </div>
+          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block mt-0.5">AI-Powered Financial Intelligence</p>
+        </div>
+      </div>
+
+      <!-- Center: Global Search Bar (⌘K Bar) -->
+      <div class="hidden md:flex flex-1 max-w-md mx-6">
+        <div class="relative w-full">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </div>
+          <input type="text" id="globalSearch" placeholder="Search transactions, merchants, categories (Press ⌘K)..." 
+            class="w-full pl-10 pr-12 py-2 text-xs bg-slate-100/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all font-medium">
+          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+            <kbd class="px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-xs">⌘K</kbd>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: User Controls & Primary CTA -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- Month Picker Badge -->
+        <div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-slate-100/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span id="currentMonthText">August 2026</span>
+        </div>
+
+        <!-- Notification Bell -->
+        <button class="relative p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-600"></span>
+        </button>
+
+        <!-- Theme Switcher -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+          <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+          <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+        </button>
+
+        <!-- Account Selector Button -->
+        <button onclick="openAccountModal()" class="flex items-center gap-2 pl-2 pr-3 py-1.5 border border-slate-200/80 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
+          <div class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shadow-xs" id="userAvatar">
+            A
+          </div>
+          <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 max-w-[80px] sm:max-w-[120px] truncate" id="userDisplayName">Account</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+        </button>
+
+        <!-- Primary CTA: Quick Add Expense -->
+        <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-4 py-2 bg-brand-600 hover:bg-brand-700 active:scale-95 text-white text-xs font-semibold rounded-xl shadow-sm shadow-brand-600/30 transition-all">
+          <i data-lucide="plus" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">Add Expense</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN WRAPPER CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+    
+    <!-- PAGE TITLE & PERIOD FILTER TOGGLE -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-6">
+      <div>
+        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Executive Dashboard</h2>
+        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Real-time overview of your monthly burn rate, cash flow, and category breakdown.</p>
+      </div>
+
+      <!-- Time Frame Filters (Pill Navigation) -->
+      <div class="inline-flex p-1 bg-slate-200/60 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-xs font-semibold self-start sm:self-auto shadow-xs">
+        <button onclick="setPeriod('today')" id="btn-today" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Today</button>
+        <button onclick="setPeriod('week')" id="btn-week" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Week</button>
+        <button onclick="setPeriod('month')" id="btn-month" class="period-btn px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs transition-all">Month</button>
+        <button onclick="setPeriod('year')" id="btn-year" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Year</button>
+      </div>
+    </div>
+
+
+    <!-- QUICK ACTIONS ROW -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+      <button onclick="openQuickAddModal('EXPENSE')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-brand-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Add Expense</div>
+        <div class="text-[11px] text-slate-400">Record outlays</div>
+      </button>
+
+      <button onclick="openQuickAddModal('INCOME')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-emerald-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Add Income</div>
+        <div class="text-[11px] text-slate-400">Log earnings</div>
+      </button>
+
+      <button onclick="openRecurringModal()" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-indigo-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="repeat" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Recurring Setup</div>
+        <div class="text-[11px] text-slate-400">SIP, Rent, Salary</div>
+      </button>
+
+      <button onclick="openBudgetModal()" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-brand-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="target" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Set Budget</div>
+        <div class="text-[11px] text-slate-400">Monthly limits</div>
+      </button>
+
+      <button onclick="exportData('csv')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-purple-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Export CSV</div>
+        <div class="text-[11px] text-slate-400">Download data</div>
+      </button>
+
+      <button onclick="exportData('pdf')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-amber-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">Export PDF</div>
+        <div class="text-[11px] text-slate-400">Printable statement</div>
+      </button>
+
+
+      <button onclick="scrollToSection('analytics-section')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-cyan-500/50 hover:shadow-md transition-all text-left">
+        <div class="w-8 h-8 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
+          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
+        </div>
+        <div class="text-xs font-semibold text-slate-900 dark:text-white">View Reports</div>
+        <div class="text-[11px] text-slate-400">Detailed graphs</div>
+      </button>
+    </div>
+
+    <!-- KPI METRICS GRID (4 COLUMNS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      
+      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">This Month Expenses</span>
+          <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
+            <i data-lucide="credit-card" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthExpense">₹0</div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-200/50 dark:border-rose-900/30" id="kpiExpenseBadge">
+            Realtime
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-2" id="kpiExpenseSub">Current period outlays</p>
+      </div>
+
+      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">This Month Income</span>
+          <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+            <i data-lucide="wallet" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthIncome">₹0</div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-200/50 dark:border-emerald-900/30" id="kpiIncomeBadge">
+            Realtime
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-2" id="kpiIncomeSub">Total incoming cash flow</p>
+      </div>
+
+      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Net Monthly Savings</span>
+          <div class="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
+            <i data-lucide="piggy-bank" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthSavings">₹0</div>
+          <span class="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 px-2 py-0.5 rounded-full border border-brand-200/50 dark:border-brand-900/30" id="kpiSavingsBadge">
+            Calculated
+          </span>
+        </div>
+        <p class="text-xs text-slate-400 mt-2" id="kpiSavingsSub">Income minus expenses</p>
+      </div>
+
+      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Budget Used</span>
+          <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
+            <i data-lucide="pie-chart" class="w-4 h-4"></i>
+          </div>
+        </div>
+        <div class="flex items-baseline justify-between gap-2">
+          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiBudgetUsed">0%</div>
+          <span class="text-xs font-medium text-slate-400" id="kpiBudgetRatio">₹0 / ₹0</span>
+        </div>
+        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
+          <div class="bg-brand-600 h-full rounded-full transition-all duration-500" id="kpiBudgetProgressBar" style="width: 0%"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- AI INSIGHTS & BUDGET OVERVIEW ROW -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <div class="lg:col-span-2 p-6 bg-gradient-to-br from-white via-white to-brand-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-brand-950/20 border border-brand-200/60 dark:border-slate-800 rounded-2xl shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
+              <i data-lucide="brain-circuit" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <h3 class="text-base font-bold text-slate-900 dark:text-white">AI Financial Insights</h3>
+              <p class="text-xs text-slate-500 dark:text-slate-400">Automated pattern recognition & saving opportunities</p>
+            </div>
+          </div>
+          <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-brand-100 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
+            Realtime Analysis
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="aiInsightsContainer">
+          <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl text-center col-span-3 text-slate-400 text-xs py-6">
+            Analyzing spending data for AI insights...
+          </div>
+        </div>
+      </div>
+
+      <div id="budget-section" class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3>
+          <span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openAccountModal()">Manage</span>
+        </div>
+
+        <div class="space-y-4 text-xs text-slate-400 text-center py-6">
+          Loading budget parameters...
+        </div>
+      </div>
+
+    </div>
+
+
+    <!-- CHARTS ANALYTICS SECTION -->
+    <div id="analytics-section" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Income vs. Expense Trend</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Cash flow comparison over time</p>
+          </div>
+          <div class="flex items-center gap-4 text-xs">
+            <span class="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Income
+            </span>
+            <span class="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Expense
+            </span>
+          </div>
+        </div>
+        <div class="h-64 sm:h-72">
+          <canvas id="cashflowChart"></canvas>
+        </div>
+      </div>
+
+      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Category Breakdown</h3>
+            <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+          </div>
+          <div class="h-56 relative flex items-center justify-center">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 text-center">
+          Top spending category: <strong class="text-slate-900 dark:text-white" id="topCategoryText">Food & Dining</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECENT TRANSACTIONS DATA TABLE -->
+    <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white">Recent Transactions</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">All parsed natural language expenses from Telegram & manual entries</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-medium">
+            <button onclick="filterTxTable('ALL')" class="tx-filter-btn active-tx-filter px-3 py-1 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">All</button>
+            <button onclick="filterTxTable('EXPENSE')" class="tx-filter-btn px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Expenses</button>
+            <button onclick="filterTxTable('INCOME')" class="tx-filter-btn px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Income</button>
+          </div>
+
+          <input type="text" id="txSearchInput" onkeyup="searchTxTable()" placeholder="Search merchant..." 
+            class="px-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider font-semibold">
+              <th class="py-3 px-3">Date</th>
+              <th class="py-3 px-3">Merchant / Desc</th>
+              <th class="py-3 px-3">Category</th>
+              <th class="py-3 px-3">Type</th>
+              <th class="py-3 px-3">Parsed Engine</th>
+              <th class="py-3 px-3 text-right">Amount</th>
+              <th class="py-3 px-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="txTableBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+            <tr>
+              <td colspan="7" class="py-8 text-center text-slate-400">
+                Loading transaction records...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+        <span id="txCountFooter">Showing transactions</span>
+        <div class="flex items-center gap-2">
+          <button class="px-2.5 py-1 border border-slate-200 dark:border-slate-800 rounded-lg disabled:opacity-50" disabled>Previous</button>
+          <button class="px-2.5 py-1 border border-slate-200 dark:border-slate-800 rounded-lg">Next</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- MODALS -->
+  <div id="accountModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Account Profile</h3>
+        <button onclick="closeAccountModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 rounded-xl space-y-3">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-base shadow-xs" id="accountModalAvatar">
+            A
+          </div>
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 dark:text-white" id="accountModalName">Authenticated User</h4>
+            <p class="text-xs text-slate-500 dark:text-slate-400" id="accountModalSub">Connected via Telegram</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-2">
+        <button onclick="logout()" class="w-full py-2.5 px-4 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="quickAddModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white" id="quickAddTitle">Add Transaction</h3>
+        <button onclick="closeQuickAddModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="quickAddForm" onsubmit="submitTransaction(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Transaction Type</label>
+          <select id="modalType" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            <option value="EXPENSE">Expense</option>
+            <option value="INCOME">Income</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Merchant / Description</label>
+          <input type="text" id="modalMerchant" required placeholder="e.g. Swiggy Lunch, Uber, Amazon" 
+            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Amount (₹)</label>
+            <input type="number" id="modalAmount" required placeholder="0.00" step="0.01" 
+              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Category</label>
+            <select id="modalCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Utilities">Utilities</option>
+              <option value="Entertainment">Entertainment</option>
+              <option value="Transport">Transport</option>
+              <option value="Salary">Salary</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-sm">Save Transaction</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 3: SET BUDGET -->
+  <div id="budgetModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Configure Category Budget</h3>
+        <button onclick="closeBudgetModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="budgetForm" onsubmit="submitBudget(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Target Category</label>
+          <select id="budgetCategory" onchange="toggleCustomCategoryInput()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            <option value="Food & Dining">Food & Dining</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Entertainment">Entertainment</option>
+            <option value="Transport">Transport</option>
+            <option value="Others">Others</option>
+            <option value="__CUSTOM__">+ Create Custom Category Budget...</option>
+          </select>
+        </div>
+
+        <div id="customCategoryGroup" class="hidden">
+          <label class="block font-semibold text-brand-600 dark:text-brand-400 mb-1">Custom Category Name</label>
+          <input type="text" id="customCategoryInput" placeholder="e.g. Subscriptions, Travel, Fitness" 
+            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-brand-300 dark:border-brand-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Monthly Spending Limit (₹)</label>
+          <input type="number" id="budgetLimit" required placeholder="e.g. 10000" step="100" 
+            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+        </div>
+
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeBudgetModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-sm">Save Budget Limit</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: RECURRING PAYMENTS & INCOME -->
+  <div id="recurringModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+        <h3 class="text-base font-bold text-slate-900 dark:text-white">Recurring Setup (SIP, Rent, Salary)</h3>
+        <button onclick="closeRecurringModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="recurringForm" onsubmit="submitRecurring(event)" class="space-y-4 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Type</label>
+            <select id="recurringType" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              <option value="EXPENSE">Fixed Expense (Rent, SIP, EMI)</option>
+              <option value="INCOME">Fixed Income (Salary, Dividend)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Day of Month</label>
+            <input type="number" id="recurringDay" required min="1" max="31" placeholder="e.g. 1 or 5" 
+              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Payment Name / Description</label>
+          <input type="text" id="recurringName" required placeholder="e.g. House Rent, Zerodha SIP, Monthly Salary" 
+            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Amount (₹)</label>
+            <input type="number" id="recurringAmount" required placeholder="0.00" step="100" 
+              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+          </div>
+
+          <div>
+            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Category</label>
+            <select id="recurringCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              <option value="Utilities">Utilities & Rent</option>
+              <option value="Investments">Investments / SIP</option>
+              <option value="Salary">Salary</option>
+              <option value="Food & Dining">Food & Dining</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2">
+          <button type="button" onclick="closeRecurringModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm">Save Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- FULL SCREEN AUTHENTICATION OVERLAY MODAL -->
+  <div id="authRequiredModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-brand-500/30">
+        <i data-lucide="sparkles" class="w-7 h-7"></i>
+      </div>
+      
+      <div>
+        <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome to PulseAI</h3>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Log in with your Telegram account to access your AI financial operating system.</p>
+      </div>
+
+      <!-- OFFICIAL TELEGRAM LOGIN WIDGET -->
+      <div class="space-y-4 pt-2 flex flex-col items-center justify-center">
+        <div id="telegramLoginWidgetContainer" class="min-h-[40px] flex items-center justify-center">
+          <script async src="https://telegram.org/js/telegram-widget.js?22"
+            data-telegram-login="Akash_Expense_tracker_bot"
+            data-size="large"
+            data-radius="12"
+            data-onauth="onTelegramAuth(user)"
+            data-request-access="write">
+          </script>
+        </div>
+
+        <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" 
+          class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+          <i data-lucide="send" class="w-3.5 h-3.5 text-[#229ED9]"></i> Open Bot (@Akash_Expense_tracker_bot)
+        </a>
+      </div>
+
+      <p class="text-[11px] text-slate-400">Transactions and budgets automatically sync across Telegram & Web.</p>
+    </div>
+  </div>
+
+
+  <script>
+    let rawTransactions = [];
+    let activePeriod = 'month';
+    let activeFilterType = 'ALL';
+    let catChartInstance = null;
+    let cashflowChartInstance = null;
+    let currentUser = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      lucide.createIcons();
+
+      // Check server session status first via /api/me
+      const isAuthenticated = await checkAuthStatus();
+      if (!isAuthenticated) {
+        // Telegram Mini App Auto SSO Authentication if inside Telegram WebApp
+        if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.initDataUnsafe && window.Telegram.WebApp.initDataUnsafe.user) {
+          const tgUser = window.Telegram.WebApp.initDataUnsafe.user;
+          if (tgUser.id) {
+            window.Telegram.WebApp.ready();
+            window.Telegram.WebApp.expand();
+            await onTelegramAuth({
+              id: tgUser.id,
+              first_name: tgUser.first_name,
+              last_name: tgUser.last_name,
+              username: tgUser.username,
+              auth_date: Math.floor(Date.now() / 1000),
+              hash: 'miniapp_auto_sso'
+            });
+          }
+        }
+      }
+    });
+
+    async function checkAuthStatus() {
+      try {
+        const res = await fetch('/api/me', {
+          headers: getAuthHeaders()
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            currentUser = data.user;
+            document.getElementById('authRequiredModal').classList.add('hidden');
+            loadDashboard();
+            return true;
+          }
+        }
+      } catch (err) {
+        console.error('Session check failed', err);
+      }
+      document.getElementById('authRequiredModal').classList.remove('hidden');
+      return false;
+    }
+
+    async function onTelegramAuth(user) {
+      if (!user || !user.id) return;
+
+      try {
+        const res = await fetch('/api/auth/telegram', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(user)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.authenticated) {
+          if (data.token) {
+            localStorage.setItem('pulse_session_token', data.token);
+            sessionStorage.setItem('pulse_session_token', data.token);
+          }
+          currentUser = data.user;
+          const authOverlay = document.getElementById('authRequiredModal');
+          if (authOverlay) {
+            authOverlay.style.display = 'none';
+            authOverlay.classList.add('hidden');
+          }
+          await loadDashboard();
+        } else {
+          showErrorToast(data.message || 'Telegram authentication failed');
+        }
+      } catch (err) {
+        console.error('Telegram auth request error', err);
+        showErrorToast('Failed to connect to Telegram auth server');
+      }
+    }
+
+    async function logout() {
+      try {
+        localStorage.removeItem('pulse_session_token');
+        sessionStorage.removeItem('pulse_session_token');
+        await fetch('/api/auth/logout', { method: 'POST', headers: getAuthHeaders() });
+      } catch (err) {
+        console.error('Logout error', err);
+      }
+      window.location.reload();
+    }
+
+    function toggleTheme() {
+      const htmlEl = document.documentElement;
+      if (htmlEl.classList.contains('dark')) {
+        htmlEl.classList.remove('dark');
+        htmlEl.classList.add('light');
+        localStorage.setItem('pulse_theme', 'light');
+      } else {
+        htmlEl.classList.remove('light');
+        htmlEl.classList.add('dark');
+        localStorage.setItem('pulse_theme', 'dark');
+      }
+      reRenderCharts();
+    }
+
+    function openAccountModal() { document.getElementById('accountModal').classList.remove('hidden'); }
+    function closeAccountModal() { document.getElementById('accountModal').classList.add('hidden'); }
+    function openQuickAddModal(type = 'EXPENSE') {
+      document.getElementById('modalType').value = type;
+      document.getElementById('quickAddModal').classList.remove('hidden');
+    }
+    function closeQuickAddModal() { document.getElementById('quickAddModal').classList.add('hidden'); }
+
+    function getAuthHeaders() {
+      const headers = {};
+      const token = localStorage.getItem('pulse_session_token') || sessionStorage.getItem('pulse_session_token');
+      if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+      } else {
+        const initData = window.Telegram?.WebApp?.initData || '';
+        if (initData) {
+          headers['Authorization'] = `Bearer ${initData}`;
+        }
+      }
+      return headers;
+    }
+
+    function showErrorToast(msg) {
+      const toast = document.getElementById('errorToast');
+      if (toast) {
+        toast.innerText = msg;
+        toast.classList.remove('hidden');
+        setTimeout(() => toast.classList.add('hidden'), 5000);
+      }
+    }
+
+    async function loadDashboard() {
+      const authOverlay = document.getElementById('authRequiredModal');
+      
+      try {
+        const res = await fetch('/api/transactions', {
+          headers: getAuthHeaders()
+        });
+
+        if (res.status === 401) {
+          if (authOverlay) authOverlay.classList.remove('hidden');
+          renderEmptyState();
+          return;
+        }
+
+        if (!res.ok) {
+          showErrorToast(`Server Error: HTTP ${res.status}`);
+          renderEmptyState();
+          return;
+        }
+
+        const data = await res.json();
+
+        if (data.error) {
+          showErrorToast(`User error: ${data.error}`);
+          renderEmptyState();
+          return;
+        }
+
+        if (authOverlay) authOverlay.classList.add('hidden');
+        const user = data.user || currentUser || {};
+        const curr = user.currency || '₹';
+        const activeSummary = data[activePeriod] || data.month || { totalExpense: 0, totalIncome: 0, netSavings: 0, categoryBreakdown: {} };
+        rawTransactions = data.recentTransactions || [];
+
+        const nameEl = document.getElementById('userDisplayName');
+        const avatarEl = document.getElementById('userAvatar');
+        const modalNameEl = document.getElementById('accountModalName');
+        const modalAvatarEl = document.getElementById('accountModalAvatar');
+
+        if (nameEl) nameEl.innerText = user.firstName || 'Account';
+        if (avatarEl) avatarEl.innerText = (user.firstName || 'A').charAt(0).toUpperCase();
+        if (modalNameEl) modalNameEl.innerText = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Authenticated User';
+        if (modalAvatarEl) modalAvatarEl.innerText = (user.firstName || 'A').charAt(0).toUpperCase();
+
+        document.getElementById('kpiMonthExpense').innerText = `${curr} ${activeSummary.totalExpense.toLocaleString()}`;
+        document.getElementById('kpiMonthIncome').innerText = `${curr} ${activeSummary.totalIncome.toLocaleString()}`;
+        document.getElementById('kpiMonthSavings').innerText = `${curr} ${activeSummary.netSavings.toLocaleString()}`;
+
+        // Budget Calculations
+        if (data.budgetOverview && data.budgetOverview.length > 0) {
+          renderBudgetOverview(data.budgetOverview, curr);
+        } else {
+          renderDefaultBudgetOverview(activeSummary, curr);
+        }
+
+        // AI Insights Rendering
+        if (data.aiInsights && data.aiInsights.length > 0) {
+          renderAIInsights(data.aiInsights);
+        } else {
+          renderDefaultAIInsights(activeSummary);
+        }
+
+        renderTable(rawTransactions, curr);
+        renderCharts(activeSummary, data.weeklyTrend || []);
+
+      } catch (err) {
+        console.error('Failed to fetch analytics server data', err);
+        showErrorToast('Failed to connect to backend server. Retrying...');
+        renderEmptyState();
+      }
+    }
+
+    function renderEmptyState() {
+      const curr = '₹';
+      document.getElementById('kpiMonthExpense').innerText = `${curr} 0`;
+      document.getElementById('kpiMonthIncome').innerText = `${curr} 0`;
+      document.getElementById('kpiMonthSavings').innerText = `${curr} 0`;
+      renderDefaultBudgetOverview({ categoryBreakdown: {} }, curr);
+      renderDefaultAIInsights({ totalExpense: 0, totalIncome: 0, categoryBreakdown: {} });
+      renderTable([], curr);
+      renderCharts({ categoryBreakdown: {} }, []);
+    }
+
+    function renderBudgetOverview(budgets, curr) {
+      const container = document.getElementById('budget-section');
+      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
+
+      budgets.forEach(b => {
+        html += `
+          <div>
+            <div class="flex justify-between font-semibold mb-1">
+              <span class="text-slate-700 dark:text-slate-300">${b.category}</span>
+              <span class="text-slate-900 dark:text-white">${curr}${b.spent.toLocaleString()} / ${curr}${b.limit.toLocaleString()}</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-brand-600 h-full rounded-full" style="width: ${b.percentage}%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>${b.percentage}% consumed</span>
+              <span class="${b.percentage > 85 ? 'text-rose-500 font-semibold' : 'text-emerald-500 font-semibold'}">${b.percentage > 85 ? 'Near Limit' : 'On Track'}</span>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function renderDefaultBudgetOverview(summary, curr) {
+      const catBreakdown = summary.categoryBreakdown || {};
+      const items = Object.entries(catBreakdown);
+      const container = document.getElementById('budget-section');
+      
+      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
+
+      if (items.length === 0) {
+        html += `
+          <div>
+            <div class="flex justify-between font-semibold mb-1">
+              <span class="text-slate-700 dark:text-slate-300">Food & Dining</span>
+              <span class="text-slate-900 dark:text-white">${curr}0 / ${curr}10,000</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-500 h-full rounded-full" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>0% consumed</span>
+              <span class="text-emerald-500 font-semibold">Healthy</span>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between font-semibold mb-1">
+              <span class="text-slate-700 dark:text-slate-300">Shopping</span>
+              <span class="text-slate-900 dark:text-white">${curr}0 / ${curr}6,000</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>0% consumed</span>
+              <span class="text-emerald-500 font-semibold">Healthy</span>
+            </div>
+          </div>
+        `;
+        html += `</div>`;
+        container.innerHTML = html;
+        return;
+      }
+
+      items.forEach(([cat, spent]) => {
+        const estLimit = spent > 0 ? spent * 1.25 : 5000;
+        const pct = Math.min(Math.round((spent / estLimit) * 100), 100);
+        html += `
+          <div>
+            <div class="flex justify-between font-semibold mb-1">
+              <span class="text-slate-700 dark:text-slate-300">${cat}</span>
+              <span class="text-slate-900 dark:text-white">${curr}${spent.toLocaleString()} / ${curr}${Math.round(estLimit).toLocaleString()}</span>
+            </div>
+            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-brand-600 h-full rounded-full" style="width: ${pct}%"></div>
+            </div>
+            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+              <span>${pct}% consumed</span>
+              <span class="text-emerald-500 font-semibold">Active</span>
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      container.innerHTML = html;
+    }
+
+    function renderAIInsights(insights) {
+      const container = document.getElementById('aiInsightsContainer');
+      container.innerHTML = '';
+
+      insights.forEach(ins => {
+        const icon = ins.type === 'DANGER' ? 'trending-up' : ins.type === 'WARNING' ? 'alert-triangle' : 'sparkles';
+        const color = ins.type === 'DANGER' ? 'text-rose-600 dark:text-rose-400' : ins.type === 'WARNING' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
+        
+        const div = document.createElement('div');
+        div.className = 'p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl';
+        div.innerHTML = `
+          <div class="flex items-center gap-2 ${color} text-xs font-semibold mb-1">
+            <i data-lucide="${icon}" class="w-3.5 h-3.5"></i> ${ins.title}
+          </div>
+          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">${ins.message}</p>
+        `;
+        container.appendChild(div);
+      });
+      lucide.createIcons();
+    }
+
+    function renderDefaultAIInsights(summary) {
+      const container = document.getElementById('aiInsightsContainer');
+      container.innerHTML = `
+        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
+          <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Spend Analysis
+          </div>
+          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">All systems active. AI is monitoring your natural language transactions for spending spikes.</p>
+        </div>
+        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
+          <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 text-xs font-semibold mb-1">
+            <i data-lucide="target" class="w-3.5 h-3.5"></i> Budget Status
+          </div>
+          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">Click <strong>Set Budget</strong> above to configure personalized monthly category limits.</p>
+        </div>
+        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
+          <div class="flex items-center gap-2 text-purple-600 dark:text-purple-400 text-xs font-semibold mb-1">
+            <i data-lucide="zap" class="w-3.5 h-3.5"></i> Realtime Sync
+          </div>
+          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">Send any expense message on Telegram or use <strong>Add Expense</strong> to auto-update.</p>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+
+
+    function renderTable(transactions, curr = '₹') {
+      const tbody = document.getElementById('txTableBody');
+      tbody.innerHTML = '';
+
+      let filtered = transactions;
+      if (activeFilterType !== 'ALL') {
+        filtered = transactions.filter(t => t.type === activeFilterType);
+      }
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">No transactions found.</td></tr>`;
+        document.getElementById('txCountFooter').innerText = `0 transactions`;
+        return;
+      }
+
+      document.getElementById('txCountFooter').innerText = `Showing ${filtered.length} transactions`;
+
+      filtered.forEach(tx => {
+        const catName = tx.category ? tx.category.name : 'Others';
+        const isExpense = tx.type === 'EXPENSE';
+        const dateStr = new Date(tx.transactionDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-slate-50/80 dark:hover:bg-slate-800/40 transition-colors group';
+        tr.innerHTML = `
+          <td class="py-3 px-3 text-slate-500 dark:text-slate-400">${dateStr}</td>
+          <td class="py-3 px-3 font-semibold text-slate-900 dark:text-white flex items-center gap-2">
+            <div class="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 flex items-center justify-center text-xs">
+              <i data-lucide="${getMerchantIcon(tx.merchant)}" class="w-3.5 h-3.5"></i>
+            </div>
+            <span>${tx.merchant || tx.description || 'General Outlay'}</span>
+          </td>
+          <td class="py-3 px-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              ${catName}
+            </span>
+          </td>
+          <td class="py-3 px-3">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${isExpense ? 'bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400 border border-rose-200/60 dark:border-rose-900/30' : 'bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 border border-emerald-200/60 dark:border-emerald-900/30'}">
+              ${tx.type}
+            </span>
+          </td>
+          <td class="py-3 px-3 text-slate-400 font-mono text-[11px]">${tx.parsedBy || 'MANUAL'}</td>
+          <td class="py-3 px-3 text-right font-bold ${isExpense ? 'text-slate-900 dark:text-white' : 'text-emerald-600 dark:text-emerald-400'}">
+            ${isExpense ? '-' : '+'}${curr}${tx.amount.toLocaleString()}
+          </td>
+          <td class="py-3 px-3 text-right">
+            <button onclick="deleteTx('${tx.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer" title="Delete Transaction">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </td>
+
+        `;
+        tbody.appendChild(tr);
+      });
+
+      lucide.createIcons();
+    }
+
+    function getMerchantIcon(merchantName = '') {
+      const m = (merchantName || '').toLowerCase();
+      if (m.includes('uber') || m.includes('cab')) return 'car';
+      if (m.includes('swiggy') || m.includes('zomato') || m.includes('food')) return 'utensils';
+      if (m.includes('amazon') || m.includes('shop')) return 'shopping-bag';
+      if (m.includes('bill') || m.includes('electricity')) return 'zap';
+      if (m.includes('salary') || m.includes('payout')) return 'banknote';
+      return 'receipt';
+    }
+
+    function renderCharts(summaryData, weeklyTrend = []) {
+      const isDark = document.documentElement.classList.contains('dark');
+      const textColor = isDark ? '#94A3B8' : '#64748B';
+      const gridColor = isDark ? 'rgba(30, 41, 59, 0.5)' : 'rgba(226, 232, 240, 0.8)';
+
+      const catBreakdown = summaryData.categoryBreakdown || {};
+      const catLabels = Object.keys(catBreakdown);
+      const catValues = Object.values(catBreakdown);
+
+      if (catLabels.length > 0) {
+        document.getElementById('topCategoryText').innerText = catLabels[0];
+      } else {
+        document.getElementById('topCategoryText').innerText = 'None';
+      }
+
+      if (catChartInstance) catChartInstance.destroy();
+      catChartInstance = new Chart(document.getElementById('categoryChart'), {
+        type: 'doughnut',
+        data: {
+          labels: catLabels.length > 0 ? catLabels : ['No Data'],
+          datasets: [{
+            data: catValues.length > 0 ? catValues : [1],
+            backgroundColor: catValues.length > 0 ? ['#2563EB', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6', '#EC4899'] : ['#E2E8F0'],
+            borderWidth: 0,
+            hoverOffset: 6
+          }]
+        },
+        options: {
+          cutout: '72%',
+          plugins: {
+            legend: { position: 'bottom', labels: { color: textColor, font: { family: 'Inter', size: 11 } } }
+          }
+        }
+      });
+
+      const weekLabels = weeklyTrend.length > 0 ? weeklyTrend.map(w => w.week) : ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
+      const incomeData = weeklyTrend.length > 0 ? weeklyTrend.map(w => w.income) : [0, 0, 0, 0];
+      const expenseData = weeklyTrend.length > 0 ? weeklyTrend.map(w => w.expense) : [0, 0, 0, 0];
+
+      if (cashflowChartInstance) cashflowChartInstance.destroy();
+      cashflowChartInstance = new Chart(document.getElementById('cashflowChart'), {
+        type: 'bar',
+        data: {
+          labels: weekLabels,
+          datasets: [
+            { label: 'Income', data: incomeData, backgroundColor: '#10B981', borderRadius: 6 },
+            { label: 'Expense', data: expenseData, backgroundColor: '#EF4444', borderRadius: 6 }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: textColor } },
+            y: { grid: { color: gridColor }, ticks: { color: textColor } }
+          }
+        }
+      });
+    }
+
+    function reRenderCharts() { loadDashboard(); }
+
+    function setPeriod(p) { 
+      activePeriod = p; 
+      ['today', 'week', 'month', 'year'].forEach(item => {
+        const btn = document.getElementById(`btn-${item}`);
+        if (btn) {
+          if (item === p) {
+            btn.className = 'period-btn px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs font-bold transition-all';
+          } else {
+            btn.className = 'period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all font-semibold';
+          }
+        }
+      });
+      loadDashboard(); 
+    }
+
+    function filterTxTable(type) { activeFilterType = type; renderTable(rawTransactions); }
+    function searchTxTable() {
+      const q = document.getElementById('txSearchInput').value.toLowerCase();
+      const filtered = rawTransactions.filter(t => (t.merchant || '').toLowerCase().includes(q));
+      renderTable(filtered);
+    }
+
+    function openBudgetModal() { document.getElementById('budgetModal').classList.remove('hidden'); }
+    function closeBudgetModal() { document.getElementById('budgetModal').classList.add('hidden'); }
+
+    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+
+    async function deleteTx(id) {
+      try {
+        await fetch(`/api/transactions/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+        loadDashboard();
+      } catch (err) {
+        console.error('Delete error', err);
+      }
+    }
+
+    async function submitTransaction(e) {
+      e.preventDefault();
+      const payload = {
+        type: document.getElementById('modalType').value,
+        merchant: document.getElementById('modalMerchant').value,
+        amount: parseFloat(document.getElementById('modalAmount').value),
+        categoryName: document.getElementById('modalCategory').value
+      };
+
+      try {
+        await fetch('/api/transactions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+          body: JSON.stringify(payload)
+        });
+        closeQuickAddModal();
+        loadDashboard();
+      } catch (err) {
+        console.error('Failed to add transaction', err);
+      }
+    }
+
+    function toggleCustomCategoryInput() {
+      const sel = document.getElementById('budgetCategory').value;
+      const group = document.getElementById('customCategoryGroup');
+      if (sel === '__CUSTOM__') {
+        group.classList.remove('hidden');
+        document.getElementById('customCategoryInput').focus();
+      } else {
+        group.classList.add('hidden');
+      }
+    }
+
+    function openBudgetModal() { 
+      document.getElementById('budgetModal').classList.remove('hidden'); 
+    }
+    function closeBudgetModal() { 
+      document.getElementById('budgetModal').classList.add('hidden'); 
+      document.getElementById('customCategoryGroup').classList.add('hidden');
+      document.getElementById('budgetCategory').value = 'Food & Dining';
+    }
+
+    async function submitBudget(e) {
+      e.preventDefault();
+      const categorySelect = document.getElementById('budgetCategory').value;
+      let categoryName = categorySelect;
+      
+      if (categorySelect === '__CUSTOM__') {
+        categoryName = document.getElementById('customCategoryInput').value.trim();
+        if (!categoryName) {
+          alert('Please enter a custom category name');
+          return;
+        }
+      }
+
+      const payload = {
+        categoryName,
+        monthlyLimit: parseFloat(document.getElementById('budgetLimit').value)
+      };
+
+      try {
+        await fetch('/api/budgets', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+          body: JSON.stringify(payload)
+        });
+        closeBudgetModal();
+        loadDashboard();
+      } catch (err) {
+        console.error('Failed to update budget limit', err);
+      }
+    }
+
+    function openRecurringModal() { document.getElementById('recurringModal').classList.remove('hidden'); }
+    function closeRecurringModal() { document.getElementById('recurringModal').classList.add('hidden'); }
+
+    async function submitRecurring(e) {
+      e.preventDefault();
+      const payload = {
+        type: document.getElementById('recurringType').value,
+        dayOfMonth: document.getElementById('recurringDay').value,
+        name: document.getElementById('recurringName').value,
+        amount: parseFloat(document.getElementById('recurringAmount').value),
+        categoryName: document.getElementById('recurringCategory').value
+      };
+
+      try {
+        await fetch('/api/recurring', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+          body: JSON.stringify(payload)
+        });
+        closeRecurringModal();
+        alert(`Recurring ${payload.type.toLowerCase()} schedule created for day ${payload.dayOfMonth} of every month!`);
+        loadDashboard();
+      } catch (err) {
+        console.error('Failed to create recurring transaction', err);
+      }
+    }
+
+    async function exportData(format) {
+      if (format === 'csv') {
+        const res = await fetch('/api/export/csv', {
+          headers: getAuthHeaders()
+        });
+        const csvText = await res.text();
+        const blob = new Blob([csvText], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.setAttribute('href', url);
+        a.setAttribute('download', `transactions_export_${currentUser?.telegramId || 'user'}.csv`);
+        a.click();
+      } else if (format === 'pdf') {
+        window.print();
+      }
+    }
+  </script>
+</body>
+</html>
+
+
