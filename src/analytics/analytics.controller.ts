@@ -51,6 +51,8 @@ export class AnalyticsController {
 
     const weeklyTrend = await this.analyticsService.getWeeklyTrend(user.id);
     const aiInsights = await this.analyticsService.generateInsights(user.id, monthSummary);
+    const pulseHealth = await this.analyticsService.calculatePulseScore(user.id);
+    const dailyLimit = await this.analyticsService.calculateDailyDiscretionaryLimit(user.id);
 
     return {
       user: {
@@ -62,6 +64,8 @@ export class AnalyticsController {
         profilePhotoUrl: user.profilePhotoUrl,
         currency: user.currency || '₹',
       },
+      pulseHealth,
+      dailyLimit,
       today: todaySummary,
       week: weekSummary,
       month: monthSummary,
@@ -81,7 +85,7 @@ export class AnalyticsController {
   async createTransaction(@Body() body: any, @Req() req: Request & { user: User }) {
     const user = req.user;
 
-    return this.transactionService.createManualTransaction(user.telegramId, {
+    return this.transactionService.createManualTransaction(user.id, {
       type: body.type,
       merchant: body.merchant,
       amount: parseFloat(body.amount),
@@ -124,7 +128,7 @@ export class AnalyticsController {
     const user = req.user;
 
     return this.transactionService.setBudgetLimit(
-      user.telegramId,
+      user.id,
       body.categoryName,
       parseFloat(body.monthlyLimit),
     );

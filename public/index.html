@@ -1,9 +1,18 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PulseAI | Modern Financial Operating System</title>
+  
+  <script>
+    // Instant theme application before DOM rendering to prevent flashing
+    (function() {
+      const savedTheme = localStorage.getItem('pulse_theme') || 'dark';
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(savedTheme);
+    })();
+  </script>
   
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,15 +37,15 @@
           },
           colors: {
             brand: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
+              50: '#f8fafc',
+              100: '#f1f5f9',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
             },
-            slateBg: '#F8FAFC',
-            slateDarkBg: '#0B0F19',
-            cardDark: '#111827',
+            slateBg: '#FAFAFA',
+            slateDarkBg: '#09090b',
+            cardDark: '#121215',
           }
         }
       }
@@ -45,41 +54,43 @@
   <style>
     ::-webkit-scrollbar { width: 6px; height: 6px; }
     ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(148, 163, 184, 0.3); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb { background: rgba(161, 161, 170, 0.2); border-radius: 4px; }
+    .dark body { background-color: #09090b; }
+    .dark header { background-color: rgba(9, 9, 11, 0.85); }
   </style>
 </head>
-<body class="bg-[#F8FAFC] dark:bg-[#0B0F19] text-slate-900 dark:text-slate-100 font-sans min-h-screen antialiased selection:bg-brand-500 selection:text-white pb-16">
+<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-zinc-800 selection:text-white pb-16">
 
   <!-- TOP HEADER NAV -->
-  <header class="sticky top-0 z-30 bg-white/90 dark:bg-[#0B0F19]/90 backdrop-blur-lg border-b border-slate-200/80 dark:border-slate-800/80 shadow-xs">
+  <header class="sticky top-0 z-30 bg-white/90 dark:bg-[#09090b]/85 backdrop-blur-xl border-b border-zinc-200/80 dark:border-zinc-800/80">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
       
       <!-- Left: Logo & Brand Title -->
       <div class="flex items-center gap-3 shrink-0">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-brand-500/20">
-          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        <div class="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-sm shadow-sm">
+          <i data-lucide="wallet" class="w-4 h-4"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-base font-bold tracking-tight text-slate-900 dark:text-white leading-none">PulseAI</h1>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-50 dark:bg-brand-500/10 text-brand-600 dark:text-brand-400 border border-brand-200 dark:border-brand-500/20 uppercase tracking-wide">
-              SaaS v2.4
+            <h1 class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 leading-none">PulseAI</h1>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+              v2.4
             </span>
           </div>
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 font-medium hidden sm:block mt-0.5">AI-Powered Financial Intelligence</p>
+          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 hidden sm:block mt-0.5">Expense & Financial Tracker</p>
         </div>
       </div>
 
-      <!-- Center: Global Search Bar (⌘K Bar) -->
+      <!-- Center: Global Search Bar -->
       <div class="hidden md:flex flex-1 max-w-md mx-6">
         <div class="relative w-full">
-          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-            <i data-lucide="search" class="w-4 h-4"></i>
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-zinc-400">
+            <i data-lucide="search" class="w-3.5 h-3.5"></i>
           </div>
-          <input type="text" id="globalSearch" placeholder="Search transactions, merchants, categories (Press ⌘K)..." 
-            class="w-full pl-10 pr-12 py-2 text-xs bg-slate-100/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-500/40 focus:border-brand-500 transition-all font-medium">
-          <div class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-            <kbd class="px-1.5 py-0.5 text-[10px] font-semibold text-slate-400 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded shadow-xs">⌘K</kbd>
+          <input type="text" id="globalSearch" placeholder="Search transactions or categories..." 
+            class="w-full pl-9 pr-10 py-1.5 text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-all">
+          <div class="absolute inset-y-0 right-0 pr-2.5 flex items-center pointer-events-none">
+            <kbd class="px-1.5 py-0.5 text-[10px] font-medium text-zinc-400 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 rounded">⌘K</kbd>
           </div>
         </div>
       </div>
@@ -87,35 +98,29 @@
       <!-- Right: User Controls & Primary CTA -->
       <div class="flex items-center gap-2 sm:gap-3 shrink-0">
         <!-- Month Picker Badge -->
-        <div class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-slate-100/80 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300">
-          <i data-lucide="calendar" class="w-3.5 h-3.5 text-slate-400"></i>
+        <div class="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs font-medium text-zinc-700 dark:text-zinc-300">
+          <i data-lucide="calendar" class="w-3.5 h-3.5 text-zinc-400"></i>
           <span id="currentMonthText">August 2026</span>
         </div>
 
-        <!-- Notification Bell -->
-        <button class="relative p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-          <i data-lucide="bell" class="w-4 h-4"></i>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-brand-600"></span>
-        </button>
-
         <!-- Theme Switcher -->
-        <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
           <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
           <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
         </button>
 
         <!-- Account Selector Button -->
-        <button onclick="openAccountModal()" class="flex items-center gap-2 pl-2 pr-3 py-1.5 border border-slate-200/80 dark:border-slate-800 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors">
-          <div class="w-6 h-6 rounded-full bg-brand-600 text-white flex items-center justify-center text-xs font-bold shadow-xs" id="userAvatar">
-            A
+        <button onclick="openAccountModal()" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
+          <div class="w-6 h-6 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center text-xs font-semibold" id="userAvatar">
+            U
           </div>
-          <span class="text-xs font-semibold text-slate-700 dark:text-slate-200 max-w-[80px] sm:max-w-[120px] truncate" id="userDisplayName">Account</span>
-          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400"></i>
+          <span class="text-xs font-medium text-zinc-700 dark:text-zinc-200 max-w-[100px] truncate" id="userDisplayName">Account</span>
+          <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400"></i>
         </button>
 
         <!-- Primary CTA: Quick Add Expense -->
-        <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-4 py-2 bg-brand-600 hover:bg-brand-700 active:scale-95 text-white text-xs font-semibold rounded-xl shadow-sm shadow-brand-600/30 transition-all">
-          <i data-lucide="plus" class="w-4 h-4"></i>
+        <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-medium rounded-lg shadow-sm transition-all active:scale-95">
+          <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Add Expense</span>
         </button>
       </div>
@@ -126,146 +131,114 @@
   <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
     
     <!-- PAGE TITLE & PERIOD FILTER TOGGLE -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 dark:border-slate-800/80 pb-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
       <div>
-        <h2 class="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white">Executive Dashboard</h2>
-        <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 font-medium">Real-time overview of your monthly burn rate, cash flow, and category breakdown.</p>
+        <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">Overview</h2>
+        <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-0.5">Real-time breakdown of cash flow, budgets, and transactions.</p>
       </div>
 
       <!-- Time Frame Filters (Pill Navigation) -->
-      <div class="inline-flex p-1 bg-slate-200/60 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-800 rounded-xl text-xs font-semibold self-start sm:self-auto shadow-xs">
-        <button onclick="setPeriod('today')" id="btn-today" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Today</button>
-        <button onclick="setPeriod('week')" id="btn-week" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Week</button>
-        <button onclick="setPeriod('month')" id="btn-month" class="period-btn px-3.5 py-1.5 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white shadow-xs transition-all">Month</button>
-        <button onclick="setPeriod('year')" id="btn-year" class="period-btn px-3.5 py-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Year</button>
+      <div class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-xs font-medium self-start sm:self-auto">
+        <button onclick="setPeriod('today')" id="btn-today" class="period-btn px-3 py-1 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all">Today</button>
+        <button onclick="setPeriod('week')" id="btn-week" class="period-btn px-3 py-1 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all">Week</button>
+        <button onclick="setPeriod('month')" id="btn-month" class="period-btn px-3 py-1 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs transition-all">Month</button>
+        <button onclick="setPeriod('year')" id="btn-year" class="period-btn px-3 py-1 rounded-md text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all">Year</button>
       </div>
     </div>
 
 
     <!-- QUICK ACTIONS ROW -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-      <button onclick="openQuickAddModal('EXPENSE')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-brand-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
+      <button onclick="openQuickAddModal('EXPENSE')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-rose-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Add Expense</div>
-        <div class="text-[11px] text-slate-400">Record outlays</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Add Expense</div>
+        <div class="text-[10px] text-zinc-400">Record outlays</div>
       </button>
 
-      <button onclick="openQuickAddModal('INCOME')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-emerald-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="arrow-down-left" class="w-4 h-4"></i>
+      <button onclick="openQuickAddModal('INCOME')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Add Income</div>
-        <div class="text-[11px] text-slate-400">Log earnings</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Add Income</div>
+        <div class="text-[10px] text-zinc-400">Log earnings</div>
       </button>
 
-      <button onclick="openRecurringModal()" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-indigo-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="repeat" class="w-4 h-4"></i>
+      <button onclick="openRecurringModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="repeat" class="w-3.5 h-3.5 text-sky-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Recurring Setup</div>
-        <div class="text-[11px] text-slate-400">SIP, Rent, Salary</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Recurring</div>
+        <div class="text-[10px] text-zinc-400">SIP, Rent, Salary</div>
       </button>
 
-      <button onclick="openBudgetModal()" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-brand-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="target" class="w-4 h-4"></i>
+      <button onclick="openBudgetModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="target" class="w-3.5 h-3.5 text-amber-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Set Budget</div>
-        <div class="text-[11px] text-slate-400">Monthly limits</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Set Budget</div>
+        <div class="text-[10px] text-zinc-400">Monthly limits</div>
       </button>
 
-      <button onclick="exportData('csv')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-purple-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+      <button onclick="exportData('csv')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-zinc-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Export CSV</div>
-        <div class="text-[11px] text-slate-400">Download data</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Export CSV</div>
+        <div class="text-[10px] text-zinc-400">Spreadsheet</div>
       </button>
 
-      <button onclick="exportData('pdf')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-amber-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="file-text" class="w-4 h-4"></i>
+      <button onclick="exportData('pdf')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+          <i data-lucide="file-text" class="w-3.5 h-3.5 text-zinc-500"></i>
         </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">Export PDF</div>
-        <div class="text-[11px] text-slate-400">Printable statement</div>
-      </button>
-
-
-      <button onclick="scrollToSection('analytics-section')" class="group p-3.5 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl hover:border-cyan-500/50 hover:shadow-md transition-all text-left">
-        <div class="w-8 h-8 rounded-xl bg-cyan-50 dark:bg-cyan-950/40 text-cyan-600 dark:text-cyan-400 flex items-center justify-center mb-2.5 group-hover:scale-105 transition-transform">
-          <i data-lucide="bar-chart-3" class="w-4 h-4"></i>
-        </div>
-        <div class="text-xs font-semibold text-slate-900 dark:text-white">View Reports</div>
-        <div class="text-[11px] text-slate-400">Detailed graphs</div>
+        <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Export PDF</div>
+        <div class="text-[10px] text-zinc-400">Statement</div>
       </button>
     </div>
 
     <!-- KPI METRICS GRID (4 COLUMNS) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       
-      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">This Month Expenses</span>
-          <div class="w-8 h-8 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center">
-            <i data-lucide="credit-card" class="w-4 h-4"></i>
-          </div>
+      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Expenses</span>
+          <i data-lucide="credit-card" class="w-4 h-4 text-zinc-400"></i>
         </div>
-        <div class="flex items-baseline justify-between gap-2">
-          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthExpense">₹0</div>
-          <span class="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/50 px-2 py-0.5 rounded-full border border-rose-200/50 dark:border-rose-900/30" id="kpiExpenseBadge">
-            Realtime
-          </span>
-        </div>
-        <p class="text-xs text-slate-400 mt-2" id="kpiExpenseSub">Current period outlays</p>
+        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthExpense">₹0</div>
+        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiExpenseSub">Current period outlays</p>
       </div>
 
-      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">This Month Income</span>
-          <div class="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
-            <i data-lucide="wallet" class="w-4 h-4"></i>
-          </div>
+      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Income</span>
+          <i data-lucide="wallet" class="w-4 h-4 text-zinc-400"></i>
         </div>
-        <div class="flex items-baseline justify-between gap-2">
-          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthIncome">₹0</div>
-          <span class="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-full border border-emerald-200/50 dark:border-emerald-900/30" id="kpiIncomeBadge">
-            Realtime
-          </span>
-        </div>
-        <p class="text-xs text-slate-400 mt-2" id="kpiIncomeSub">Total incoming cash flow</p>
+        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthIncome">₹0</div>
+        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiIncomeSub">Total incoming cash flow</p>
       </div>
 
-      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Net Monthly Savings</span>
-          <div class="w-8 h-8 rounded-xl bg-brand-50 dark:bg-brand-950/40 text-brand-600 dark:text-brand-400 flex items-center justify-center">
-            <i data-lucide="piggy-bank" class="w-4 h-4"></i>
-          </div>
+      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Net Savings</span>
+          <i data-lucide="piggy-bank" class="w-4 h-4 text-zinc-400"></i>
         </div>
-        <div class="flex items-baseline justify-between gap-2">
-          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiMonthSavings">₹0</div>
-          <span class="inline-flex items-center gap-1 text-xs font-semibold text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-950/50 px-2 py-0.5 rounded-full border border-brand-200/50 dark:border-brand-900/30" id="kpiSavingsBadge">
-            Calculated
-          </span>
-        </div>
-        <p class="text-xs text-slate-400 mt-2" id="kpiSavingsSub">Income minus expenses</p>
+        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthSavings">₹0</div>
+        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiSavingsSub">Income minus expenses</p>
       </div>
 
-      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm hover:shadow-md transition-all">
-        <div class="flex items-center justify-between mb-3">
-          <span class="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Budget Used</span>
-          <div class="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/40 text-amber-600 dark:text-amber-400 flex items-center justify-center">
-            <i data-lucide="pie-chart" class="w-4 h-4"></i>
-          </div>
+      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Consumed</span>
+          <i data-lucide="pie-chart" class="w-4 h-4 text-zinc-400"></i>
         </div>
         <div class="flex items-baseline justify-between gap-2">
-          <div class="text-3xl font-bold text-slate-900 dark:text-white tracking-tight" id="kpiBudgetUsed">0%</div>
-          <span class="text-xs font-medium text-slate-400" id="kpiBudgetRatio">₹0 / ₹0</span>
+          <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiBudgetUsed">0%</div>
+          <span class="text-[11px] text-zinc-400" id="kpiBudgetRatio">₹0 / ₹0</span>
         </div>
-        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full mt-3 overflow-hidden">
-          <div class="bg-brand-600 h-full rounded-full transition-all duration-500" id="kpiBudgetProgressBar" style="width: 0%"></div>
+        <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
+          <div class="bg-zinc-900 dark:bg-white h-full rounded-full transition-all duration-500" id="kpiBudgetProgressBar" style="width: 0%"></div>
         </div>
       </div>
 
@@ -274,36 +247,30 @@
     <!-- AI INSIGHTS & BUDGET OVERVIEW ROW -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
-      <div class="lg:col-span-2 p-6 bg-gradient-to-br from-white via-white to-brand-50/30 dark:from-slate-900 dark:via-slate-900 dark:to-brand-950/20 border border-brand-200/60 dark:border-slate-800 rounded-2xl shadow-sm relative overflow-hidden">
-        <div class="flex items-center justify-between mb-5">
-          <div class="flex items-center gap-2.5">
-            <div class="w-8 h-8 rounded-xl bg-brand-600 text-white flex items-center justify-center shadow-sm">
-              <i data-lucide="brain-circuit" class="w-4 h-4"></i>
-            </div>
+      <div class="lg:col-span-2 p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <i data-lucide="sparkles" class="w-4 h-4 text-zinc-400"></i>
             <div>
-              <h3 class="text-base font-bold text-slate-900 dark:text-white">AI Financial Insights</h3>
-              <p class="text-xs text-slate-500 dark:text-slate-400">Automated pattern recognition & saving opportunities</p>
+              <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Financial Insights</h3>
             </div>
           </div>
-          <span class="px-2.5 py-1 rounded-full text-[11px] font-medium bg-brand-100 dark:bg-brand-950/60 text-brand-700 dark:text-brand-300 border border-brand-200 dark:border-brand-800">
-            Realtime Analysis
-          </span>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="aiInsightsContainer">
-          <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl text-center col-span-3 text-slate-400 text-xs py-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3" id="aiInsightsContainer">
+          <div class="p-4 bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800 rounded-lg text-center col-span-3 text-zinc-400 text-xs py-6">
             Analyzing spending data for AI insights...
           </div>
         </div>
       </div>
 
-      <div id="budget-section" class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm">
+      <div id="budget-section" class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
         <div class="flex items-center justify-between mb-4">
-          <h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3>
-          <span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openAccountModal()">Manage</span>
+          <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Budget Overview</h3>
+          <span class="text-xs font-medium text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white cursor-pointer" onclick="openBudgetModal()">Manage</span>
         </div>
 
-        <div class="space-y-4 text-xs text-slate-400 text-center py-6">
+        <div class="space-y-3 text-xs text-zinc-400 text-center py-6">
           Loading budget parameters...
         </div>
       </div>
@@ -313,18 +280,18 @@
 
     <!-- CHARTS ANALYTICS SECTION -->
     <div id="analytics-section" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div class="lg:col-span-2 p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
           <div>
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Income vs. Expense Trend</h3>
-            <p class="text-xs text-slate-500 dark:text-slate-400">Cash flow comparison over time</p>
+            <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Cash Flow Trend</h3>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400">Income vs. Expense over time</p>
           </div>
-          <div class="flex items-center gap-4 text-xs">
-            <span class="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Income
+          <div class="flex items-center gap-3 text-xs">
+            <span class="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-300 text-[11px]">
+              <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Income
             </span>
-            <span class="flex items-center gap-1.5 font-medium text-slate-700 dark:text-slate-300">
-              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span> Expense
+            <span class="flex items-center gap-1.5 text-zinc-600 dark:text-zinc-300 text-[11px]">
+              <span class="w-2 h-2 rounded-full bg-rose-500"></span> Expense
             </span>
           </div>
         </div>
@@ -333,58 +300,58 @@
         </div>
       </div>
 
-      <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm flex flex-col justify-between">
+      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs flex flex-col justify-between">
         <div>
-          <div class="flex items-center justify-between mb-4">
-            <h3 class="text-base font-bold text-slate-900 dark:text-white">Category Breakdown</h3>
-            <i data-lucide="info" class="w-4 h-4 text-slate-400 cursor-pointer"></i>
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Category Breakdown</h3>
+            <i data-lucide="info" class="w-3.5 h-3.5 text-zinc-400"></i>
           </div>
           <div class="h-56 relative flex items-center justify-center">
             <canvas id="categoryChart"></canvas>
           </div>
         </div>
-        <div class="pt-4 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-500 dark:text-slate-400 text-center">
-          Top spending category: <strong class="text-slate-900 dark:text-white" id="topCategoryText">Food & Dining</strong>
+        <div class="pt-3 border-t border-zinc-100 dark:border-zinc-800 text-[11px] text-zinc-500 dark:text-zinc-400 text-center">
+          Top category: <strong class="text-zinc-900 dark:text-zinc-100" id="topCategoryText">Food & Dining</strong>
         </div>
       </div>
     </div>
 
     <!-- RECENT TRANSACTIONS DATA TABLE -->
-    <div class="p-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800 rounded-2xl shadow-sm space-y-4">
+    <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs space-y-4">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h3 class="text-base font-bold text-slate-900 dark:text-white">Recent Transactions</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400">All parsed natural language expenses from Telegram & manual entries</p>
+          <h3 class="text-sm font-semibold text-zinc-900 dark:text-zinc-100">Recent Transactions</h3>
+          <p class="text-[11px] text-zinc-500 dark:text-zinc-400">Entries recorded via Telegram & Manual addition</p>
         </div>
 
         <div class="flex flex-wrap items-center gap-2">
-          <div class="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl text-xs font-medium">
-            <button onclick="filterTxTable('ALL')" class="tx-filter-btn active-tx-filter px-3 py-1 rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm">All</button>
-            <button onclick="filterTxTable('EXPENSE')" class="tx-filter-btn px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Expenses</button>
-            <button onclick="filterTxTable('INCOME')" class="tx-filter-btn px-3 py-1 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white">Income</button>
+          <div class="inline-flex p-1 bg-zinc-100 dark:bg-zinc-900 rounded-lg text-xs font-medium border border-zinc-200 dark:border-zinc-800">
+            <button onclick="filterTxTable('ALL')" class="tx-filter-btn active-tx-filter px-2.5 py-1 rounded-md bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs">All</button>
+            <button onclick="filterTxTable('EXPENSE')" class="tx-filter-btn px-2.5 py-1 rounded-md text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Expenses</button>
+            <button onclick="filterTxTable('INCOME')" class="tx-filter-btn px-2.5 py-1 rounded-md text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white">Income</button>
           </div>
 
-          <input type="text" id="txSearchInput" onkeyup="searchTxTable()" placeholder="Search merchant..." 
-            class="px-3 py-1.5 text-xs bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-500/40">
+          <input type="text" id="txSearchInput" onkeyup="searchTxTable()" placeholder="Filter merchant..." 
+            class="px-3 py-1.5 text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg focus:outline-none focus:border-zinc-400 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400">
         </div>
       </div>
 
       <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse text-xs">
           <thead>
-            <tr class="border-b border-slate-200 dark:border-slate-800 text-slate-400 uppercase tracking-wider font-semibold">
-              <th class="py-3 px-3">Date</th>
-              <th class="py-3 px-3">Merchant / Desc</th>
-              <th class="py-3 px-3">Category</th>
-              <th class="py-3 px-3">Type</th>
-              <th class="py-3 px-3">Parsed Engine</th>
-              <th class="py-3 px-3 text-right">Amount</th>
-              <th class="py-3 px-3 text-right">Actions</th>
+            <tr class="border-b border-zinc-200 dark:border-zinc-800 text-zinc-400 uppercase tracking-wider font-medium text-[10px]">
+              <th class="py-2.5 px-3">Date</th>
+              <th class="py-2.5 px-3">Merchant / Description</th>
+              <th class="py-2.5 px-3">Category</th>
+              <th class="py-2.5 px-3">Type</th>
+              <th class="py-2.5 px-3">Source</th>
+              <th class="py-2.5 px-3 text-right">Amount</th>
+              <th class="py-2.5 px-3 text-right">Actions</th>
             </tr>
           </thead>
-          <tbody id="txTableBody" class="divide-y divide-slate-100 dark:divide-slate-800/60 font-medium text-slate-700 dark:text-slate-300">
+          <tbody id="txTableBody" class="divide-y divide-zinc-100 dark:divide-zinc-800/60 font-medium text-zinc-700 dark:text-zinc-300">
             <tr>
-              <td colspan="7" class="py-8 text-center text-slate-400">
+              <td colspan="7" class="py-8 text-center text-zinc-400">
                 Loading transaction records...
               </td>
             </tr>
@@ -392,11 +359,11 @@
         </table>
       </div>
 
-      <div class="flex items-center justify-between text-xs text-slate-400 pt-2">
+      <div class="flex items-center justify-between text-xs text-zinc-400 pt-2 border-t border-zinc-100 dark:border-zinc-800">
         <span id="txCountFooter">Showing transactions</span>
         <div class="flex items-center gap-2">
-          <button class="px-2.5 py-1 border border-slate-200 dark:border-slate-800 rounded-lg disabled:opacity-50" disabled>Previous</button>
-          <button class="px-2.5 py-1 border border-slate-200 dark:border-slate-800 rounded-lg">Next</button>
+          <button class="px-2.5 py-1 border border-zinc-200 dark:border-zinc-800 rounded-md disabled:opacity-50 text-xs" disabled>Previous</button>
+          <button class="px-2.5 py-1 border border-zinc-200 dark:border-zinc-800 rounded-md text-xs">Next</button>
         </div>
       </div>
     </div>
@@ -592,37 +559,93 @@
     </div>
   </div>
 
-  <!-- FULL SCREEN AUTHENTICATION OVERLAY MODAL -->
-  <div id="authRequiredModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-center">
-      <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white mx-auto shadow-lg shadow-brand-500/30">
-        <i data-lucide="sparkles" class="w-7 h-7"></i>
-      </div>
-      
-      <div>
-        <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome to PulseAI</h3>
-        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 font-medium">Log in with your Telegram account to access your AI financial operating system.</p>
-      </div>
-
-      <!-- OFFICIAL TELEGRAM LOGIN WIDGET -->
-      <div class="space-y-4 pt-2 flex flex-col items-center justify-center">
-        <div id="telegramLoginWidgetContainer" class="min-h-[40px] flex items-center justify-center">
-          <script async src="https://telegram.org/js/telegram-widget.js?22"
-            data-telegram-login="Akash_Expense_tracker_bot"
-            data-size="large"
-            data-radius="12"
-            data-onauth="onTelegramAuth(user)"
-            data-request-access="write">
-          </script>
+  <!-- FULL SCREEN AUTHENTICATION OVERLAY MODAL (Hidden by default, shown only if unauthenticated) -->
+  <div id="authRequiredModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-left">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 shrink-0">
+          <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
+        <div>
+          <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome to PulseAI</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Access your AI financial operating system</p>
+        </div>
+      </div>
 
-        <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" 
-          class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
-          <i data-lucide="send" class="w-3.5 h-3.5 text-[#229ED9]"></i> Open Bot (@Akash_Expense_tracker_bot)
+      <!-- AUTH TABS -->
+      <div class="flex bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-semibold">
+        <button id="tabQrBtn" onclick="switchAuthTab('qr')" class="flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="qr-code" class="w-3.5 h-3.5 text-brand-500"></i> Scan QR
+        </button>
+        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Sign In</button>
+        <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Create Account</button>
+      </div>
+
+      <!-- QR CODE TAB -->
+      <div id="qrTabContent" class="space-y-4 text-center">
+        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-3">
+          <div id="qrCodeContainer" class="w-48 h-48 bg-white p-2.5 rounded-xl shadow-inner flex items-center justify-center border border-slate-100">
+            <img id="qrCodeImg" src="" alt="Scan QR code" class="w-full h-full object-contain">
+          </div>
+          <div class="space-y-1">
+            <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Scan with Telegram</p>
+            <p class="text-[11px] text-slate-400">Point your phone camera or tap link to authenticate instantly</p>
+          </div>
+        </div>
+        
+        <a id="qrDirectLink" href="#" target="_blank" class="w-full py-2.5 px-3 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Or Open in Telegram Directly
         </a>
       </div>
 
-      <p class="text-[11px] text-slate-400">Transactions and budgets automatically sync across Telegram & Web.</p>
+      <!-- LOGIN FORM (Hidden by default) -->
+      <form id="loginForm" onsubmit="handleEmailLogin(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
+          <input type="email" id="loginEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Password</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+        </div>
+        <button type="submit" id="submitLoginBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+          <span>Sign In</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- REGISTER FORM (Hidden by default) -->
+      <form id="registerForm" onsubmit="handleEmailRegister(event)" class="space-y-4 hidden">
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Full Name</label>
+          <input type="text" id="regName" placeholder="Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
+          <input type="email" id="regEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Password</label>
+          <input type="password" id="regPassword" required minlength="6" placeholder="At least 6 characters" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+        </div>
+        <button type="submit" id="submitRegBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+          <span>Create Account</span>
+          <i data-lucide="user-plus" class="w-4 h-4"></i>
+        </button>
+      </form>
+
+      <!-- DEMO ACCESS DIVIDER -->
+      <div class="relative flex items-center justify-center">
+        <div class="border-t border-slate-200 dark:border-slate-800 w-full"></div>
+        <span class="bg-white dark:bg-slate-900 px-3 text-[10px] uppercase tracking-wider font-semibold text-slate-400 absolute">or try without account</span>
+      </div>
+
+      <!-- QUICK DEMO ACCESS BUTTON -->
+      <button onclick="handleDemoLogin()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+        <i data-lucide="play-circle" class="w-4 h-4 text-emerald-500"></i> Continue with Instant Demo Pass
+      </button>
+
+      <p class="text-[11px] text-slate-400 text-center">Transactions and budgets automatically sync seamlessly.</p>
     </div>
   </div>
 
@@ -678,7 +701,153 @@
         console.error('Session check failed', err);
       }
       document.getElementById('authRequiredModal').classList.remove('hidden');
+      switchAuthTab('qr');
       return false;
+    }
+
+    let qrPollInterval = null;
+
+    async function loadQrCode() {
+      try {
+        const res = await fetch('/api/auth/qr/generate');
+        const data = await res.json();
+        if (data.sessionId) {
+          const qrImg = document.getElementById('qrCodeImg');
+          const qrLink = document.getElementById('qrDirectLink');
+          // Use high-reliability QR code API
+          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(data.deepLink)}`;
+          qrLink.href = data.deepLink;
+
+          if (qrPollInterval) clearInterval(qrPollInterval);
+          qrPollInterval = setInterval(async () => {
+            try {
+              const statusRes = await fetch(`/api/auth/qr/status?sessionId=${data.sessionId}`);
+              const statusData = await statusRes.json();
+              if (statusData.status === 'APPROVED' && statusData.token) {
+                clearInterval(qrPollInterval);
+                localStorage.setItem('pulse_token', statusData.token);
+                currentUser = statusData.user;
+                document.getElementById('authRequiredModal').classList.add('hidden');
+                showSuccessToast('Logged in via Telegram QR!');
+                loadDashboard();
+              } else if (statusData.status === 'EXPIRED') {
+                clearInterval(qrPollInterval);
+                loadQrCode(); // Refresh QR on expiry
+              }
+            } catch (pollErr) {
+              console.error('QR status check error', pollErr);
+            }
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Failed to generate QR code', err);
+      }
+    }
+
+    function switchAuthTab(tab) {
+      const qrContent = document.getElementById('qrTabContent');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      const tabQrBtn = document.getElementById('tabQrBtn');
+      const tabLoginBtn = document.getElementById('tabLoginBtn');
+      const tabRegisterBtn = document.getElementById('tabRegisterBtn');
+
+      // Reset all buttons
+      tabQrBtn.className = 'flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all flex items-center justify-center gap-1.5';
+      tabLoginBtn.className = 'flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+      tabRegisterBtn.className = 'flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all';
+
+      qrContent.classList.add('hidden');
+      loginForm.classList.add('hidden');
+      registerForm.classList.add('hidden');
+
+      if (tab === 'qr') {
+        qrContent.classList.remove('hidden');
+        tabQrBtn.className = 'flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5';
+        loadQrCode();
+      } else if (tab === 'login') {
+        loginForm.classList.remove('hidden');
+        tabLoginBtn.className = 'flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all';
+        if (qrPollInterval) clearInterval(qrPollInterval);
+      } else if (tab === 'register') {
+        registerForm.classList.remove('hidden');
+        tabRegisterBtn.className = 'flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all';
+        if (qrPollInterval) clearInterval(qrPollInterval);
+      }
+    }
+
+    async function handleEmailLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('pulse_token', data.token);
+          currentUser = data.user;
+          document.getElementById('authRequiredModal').classList.add('hidden');
+          showSuccessToast('Logged in successfully!');
+          loadDashboard();
+        } else {
+          showErrorToast(data.message || 'Login failed');
+        }
+      } catch (err) {
+        showErrorToast('Failed to connect to authentication server');
+      }
+    }
+
+    async function handleEmailRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password })
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('pulse_token', data.token);
+          currentUser = data.user;
+          document.getElementById('authRequiredModal').classList.add('hidden');
+          showSuccessToast('Account created successfully!');
+          loadDashboard();
+        } else {
+          showErrorToast(data.message || 'Registration failed');
+        }
+      } catch (err) {
+        showErrorToast('Failed to connect to authentication server');
+      }
+    }
+
+    async function handleDemoLogin() {
+      try {
+        const res = await fetch('/api/auth/demo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        if (res.ok && data.token) {
+          localStorage.setItem('pulse_token', data.token);
+          currentUser = data.user;
+          document.getElementById('authRequiredModal').classList.add('hidden');
+          showSuccessToast('Welcome to Demo Access!');
+          loadDashboard();
+        } else {
+          showErrorToast(data.message || 'Demo login failed');
+        }
+      } catch (err) {
+        showErrorToast('Failed to start demo session');
+      }
     }
 
     async function onTelegramAuth(user) {
@@ -738,7 +907,26 @@
       reRenderCharts();
     }
 
-    function openAccountModal() { document.getElementById('accountModal').classList.remove('hidden'); }
+    function openAccountModal() {
+      if (currentUser) {
+        const modalNameEl = document.getElementById('accountModalName');
+        const modalAvatarEl = document.getElementById('accountModalAvatar');
+        const modalSubEl = document.getElementById('accountModalSub');
+
+        if (modalNameEl) modalNameEl.innerText = currentUser.firstName ? `${currentUser.firstName} ${currentUser.lastName || ''}`.trim() : (currentUser.email || 'Authenticated User');
+        if (modalAvatarEl) modalAvatarEl.innerText = (currentUser.firstName || currentUser.email || 'U').charAt(0).toUpperCase();
+        if (modalSubEl) {
+          if (currentUser.username) {
+            modalSubEl.innerText = `@${currentUser.username} (Telegram)`;
+          } else if (currentUser.telegramId) {
+            modalSubEl.innerText = `Telegram ID: ${currentUser.telegramId}`;
+          } else if (currentUser.email) {
+            modalSubEl.innerText = currentUser.email;
+          }
+        }
+      }
+      document.getElementById('accountModal').classList.remove('hidden');
+    }
     function closeAccountModal() { document.getElementById('accountModal').classList.add('hidden'); }
     function openQuickAddModal(type = 'EXPENSE') {
       document.getElementById('modalType').value = type;
@@ -748,7 +936,7 @@
 
     function getAuthHeaders() {
       const headers = {};
-      const token = localStorage.getItem('pulse_session_token') || sessionStorage.getItem('pulse_session_token');
+      const token = localStorage.getItem('pulse_token') || localStorage.getItem('pulse_session_token') || sessionStorage.getItem('pulse_session_token');
       if (token) {
         headers['Authorization'] = `Bearer ${token}`;
       } else {
@@ -762,10 +950,13 @@
 
     function showErrorToast(msg) {
       const toast = document.getElementById('errorToast');
-      if (toast) {
-        toast.innerText = msg;
+      const msgEl = document.getElementById('errorToastMessage');
+      if (toast && msgEl) {
+        msgEl.innerText = msg;
         toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 5000);
+        setTimeout(() => toast.classList.add('hidden'), 6000);
+      } else {
+        alert(msg);
       }
     }
 
@@ -808,10 +999,23 @@
         const modalNameEl = document.getElementById('accountModalName');
         const modalAvatarEl = document.getElementById('accountModalAvatar');
 
-        if (nameEl) nameEl.innerText = user.firstName || 'Account';
-        if (avatarEl) avatarEl.innerText = (user.firstName || 'A').charAt(0).toUpperCase();
-        if (modalNameEl) modalNameEl.innerText = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : 'Authenticated User';
-        if (modalAvatarEl) modalAvatarEl.innerText = (user.firstName || 'A').charAt(0).toUpperCase();
+        if (nameEl) nameEl.innerText = user.firstName || (user.email ? user.email.split('@')[0] : 'User');
+        if (avatarEl) avatarEl.innerText = (user.firstName || user.email || 'U').charAt(0).toUpperCase();
+        if (modalNameEl) modalNameEl.innerText = user.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : (user.email || 'Authenticated User');
+        if (modalAvatarEl) modalAvatarEl.innerText = (user.firstName || user.email || 'U').charAt(0).toUpperCase();
+        
+        const modalSubEl = document.getElementById('accountModalSub');
+        if (modalSubEl) {
+          if (user.username) {
+            modalSubEl.innerText = `@${user.username} (Telegram)`;
+          } else if (user.telegramId) {
+            modalSubEl.innerText = `Telegram ID: ${user.telegramId}`;
+          } else if (user.email) {
+            modalSubEl.innerText = user.email;
+          } else {
+            modalSubEl.innerText = 'Connected Account';
+          }
+        }
 
         document.getElementById('kpiMonthExpense').innerText = `${curr} ${activeSummary.totalExpense.toLocaleString()}`;
         document.getElementById('kpiMonthIncome').innerText = `${curr} ${activeSummary.totalIncome.toLocaleString()}`;
@@ -1276,6 +1480,12 @@
       }
     }
   </script>
+
+  <!-- ERROR TOAST NOTIFICATION -->
+  <div id="errorToast" class="fixed bottom-6 right-6 z-50 hidden bg-rose-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md transition-all">
+    <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-white"></i>
+    <span id="errorToastMessage"></span>
+  </div>
 </body>
 </html>
 

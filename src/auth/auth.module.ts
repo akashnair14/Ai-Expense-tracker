@@ -15,7 +15,7 @@ import { TransactionModule } from '../transactions/transaction.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('SESSION_SECRET') || 'pulseai_jwt_secret_key_2026_super_secure',
+        secret: config.get<string>('SESSION_SECRET') || config.get<string>('JWT_SECRET') || 'pulseai_jwt_secret_key_2026_super_secure',
         signOptions: { expiresIn: '30d' },
       }),
     }),

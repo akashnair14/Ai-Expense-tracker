@@ -11,6 +11,8 @@ import { TelegramModule } from './telegram/telegram.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
 import { HealthController } from './health/health.controller';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -28,8 +30,9 @@ import { HealthController } from './health/health.controller';
     AnalyticsModule,
     AuthModule,
   ],
-  controllers: [HealthController],
+  controllers: [AppController, HealthController],
   providers: [
+    AppService,
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,

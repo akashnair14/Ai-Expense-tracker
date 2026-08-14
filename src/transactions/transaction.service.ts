@@ -11,7 +11,30 @@ export class TransactionService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  public async getOrCreateUser(telegramId: string | number, username?: string, firstName?: string) {
+  public async seedDefaultCategories(userId: string) {
+    const defaults = [
+      'Food', 'Groceries', 'Shopping', 'Transport', 'Fuel',
+      'Bills', 'Rent', 'EMI', 'Entertainment', 'Travel',
+      'Healthcare', 'Education', 'Investment', 'Insurance',
+      'Salary', 'Freelance', 'Business', 'Gift', 'Others'
+    ];
+
+    try {
+      await this.prisma.category.createMany({
+        data: defaults.map(name => ({
+          userId,
+          name,
+          type: ['Salary', 'Freelance', 'Business'].includes(name) ? ('INCOME' as const) : ('EXPENSE' as const),
+          isSystem: true,
+        })),
+        skipDuplicates: true,
+      });
+    } catch (err) {
+      // Ignored if categories created concurrently
+    }
+  }
+
+  public async getOrCreateUser(telegramId: string | number, username?: string, firstName?: string, lastName?: string) {
     const stringId = String(telegramId);
     let user = await this.prisma.user.findUnique({
       where: { telegramId: stringId },
@@ -21,34 +44,23 @@ export class TransactionService {
       user = await this.prisma.user.create({
         data: {
           telegramId: stringId,
-          username,
-          firstName,
+          username: username || undefined,
+          firstName: firstName || undefined,
+          lastName: lastName || undefined,
           currency: 'INR',
         },
       });
 
-      // Seed system default categories in batch (fixes N+1 sequential loop)
-      const defaults = [
-        'Food', 'Groceries', 'Shopping', 'Transport', 'Fuel',
-        'Bills', 'Rent', 'EMI', 'Entertainment', 'Travel',
-        'Healthcare', 'Education', 'Investment', 'Insurance',
-        'Salary', 'Freelance', 'Business', 'Gift', 'Others'
-      ];
-
-      const createdUserId = user.id;
-      try {
-        await this.prisma.category.createMany({
-          data: defaults.map(name => ({
-            userId: createdUserId,
-            name,
-            type: ['Salary', 'Freelance', 'Business'].includes(name) ? ('INCOME' as const) : ('EXPENSE' as const),
-            isSystem: true,
-          })),
-          skipDuplicates: true,
-        });
-      } catch (err) {
-        // Ignored if categories created concurrently or user cleaned up
-      }
+      await this.seedDefaultCategories(user.id);
+    } else if ((firstName && user.firstName !== firstName) || (username && user.username !== username) || (lastName && user.lastName !== lastName)) {
+      user = await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          firstName: firstName || user.firstName,
+          lastName: lastName || user.lastName,
+          username: username || user.username,
+        },
+      });
     }
 
     return user;
@@ -100,8 +112,15 @@ export class TransactionService {
     return { transaction, budgetAlert };
   }
 
-  public async createManualTransaction(telegramId: string, payload: { type?: 'EXPENSE' | 'INCOME'; merchant?: string; amount: number; categoryName?: string }) {
-    const user = await this.getOrCreateUser(telegramId);
+  public async createManualTransaction(userIdentifier: string, payload: { type?: 'EXPENSE' | 'INCOME'; merchant?: string; amount: number; categoryName?: string }) {
+    let user = await this.prisma.user.findFirst({
+      where: { OR: [{ id: userIdentifier }, { telegramId: userIdentifier }] }
+    });
+
+    if (!user) {
+      user = await this.getOrCreateUser(userIdentifier);
+    }
+
     const categoryName = payload.categoryName || 'General';
 
     let category = await this.prisma.category.findFirst({
@@ -140,8 +159,14 @@ export class TransactionService {
     return tx;
   }
 
-  public async setBudgetLimit(telegramId: string, categoryName: string, monthlyLimit: number) {
-    const user = await this.getOrCreateUser(telegramId);
+  public async setBudgetLimit(userIdentifier: string, categoryName: string, monthlyLimit: number) {
+    let user = await this.prisma.user.findFirst({
+      where: { OR: [{ id: userIdentifier }, { telegramId: userIdentifier }] }
+    });
+
+    if (!user) {
+      user = await this.getOrCreateUser(userIdentifier);
+    }
     let category = await this.prisma.category.findFirst({
       where: { userId: user.id, name: { equals: categoryName, mode: 'insensitive' } },
     });

@@ -34,6 +34,12 @@ export class RegexParser {
       lowerText.includes('received') ||
       lowerText.includes('freelance') ||
       lowerText.includes('cashback') ||
+      lowerText.includes('credited') ||
+      lowerText.includes('payout') ||
+      lowerText.includes('dividend') ||
+      lowerText.includes('profit') ||
+      lowerText.includes('refund') ||
+      lowerText.includes('sold') ||
       text.includes('+')
     ) {
       type = 'INCOME';
@@ -47,8 +53,8 @@ export class RegexParser {
       }
     }
 
-    // 3. Detect Split Payment (e.g. "split with 4", "split by 2")
-    const splitMatch = lowerText.match(/split\s+(?:with|by)?\s*(\d+)/i);
+    // 3. Detect Split Payment (e.g. "split with 4", "split by 2", "split between 5")
+    const splitMatch = lowerText.match(/split\s+(?:with|by|between)?\s*(\d+)/i);
     if (splitMatch) {
       splitCount = parseInt(splitMatch[1], 10);
     }

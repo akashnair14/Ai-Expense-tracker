@@ -12,6 +12,7 @@ describe('TransactionService', () => {
     prismaMock = {
       user: {
         findUnique: jest.fn(),
+        findFirst: jest.fn(),
         create: jest.fn(),
       },
       category: {
