@@ -113,20 +113,13 @@ export class TelegramBotService implements OnModuleInit {
 
     // /dashboard command
     this.bot.command('dashboard', async (ctx) => {
-      const appUrl = process.env.APP_URL || 'http://localhost:3000';
-      const keyboard = new InlineKeyboard();
+      const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+      const keyboard = new InlineKeyboard().url('🚀 Open Web Dashboard', appUrl);
 
-      if (appUrl.startsWith('https://')) {
-        keyboard.url('🚀 Launch Dashboard', appUrl);
-        await ctx.reply(`💻 **Web Dashboard Access**\n\nOpen your financial dashboard on your browser:`, {
-          parse_mode: 'Markdown',
-          reply_markup: keyboard,
-        });
-      } else {
-        await ctx.reply(`💻 **Web Dashboard Access**\n\nTo access your dashboard on your laptop, open:\n\`${appUrl}\`\n\nAnd scan the on-screen QR code with your phone camera to log in instantly!`, {
-          parse_mode: 'Markdown',
-        });
-      }
+      await ctx.reply(`💻 **Web Dashboard Access**\n\nOpen your financial dashboard on your browser or laptop:\n${appUrl}\n\nScan the on-screen QR code with your phone camera to log in instantly without passwords!`, {
+        parse_mode: 'Markdown',
+        reply_markup: keyboard,
+      });
     });
 
     // /budget command with Interactive Visual Menu
@@ -217,8 +210,12 @@ export class TelegramBotService implements OnModuleInit {
         await ctx.reply(`🔁 **Manage Recurring Payments**\n\nTo schedule automatic income or expense, use:\n\`/recurring Rent 15000 on 1st\`\n\`/recurring Salary 65000 income on 30th\`\n\`/recurring SIP 5000 on 5th\``, { parse_mode: 'Markdown' });
       } else if (data === 'cmd_dashboard') {
         await ctx.answerCallbackQuery();
-        const appUrl = process.env.APP_URL || 'http://localhost:3000';
-        await ctx.reply(`💻 **Web Dashboard Access**\n\nTo view your full dashboard on desktop or laptop:\n1. Open \`${appUrl}\` on your computer.\n2. Scan the on-screen QR code with your phone camera to log in instantly without passwords!`, { parse_mode: 'Markdown' });
+        const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+        const keyboard = new InlineKeyboard().url('🚀 Open Web Dashboard', appUrl);
+        await ctx.reply(`💻 **Web Dashboard Access**\n\nOpen your financial dashboard on your browser or laptop:\n${appUrl}\n\nScan the on-screen QR code to log in instantly without passwords!`, {
+          parse_mode: 'Markdown',
+          reply_markup: keyboard,
+        });
       } else if (data.startsWith('change_cat_')) {
         // change_cat_<txId>
         const txId = data.replace('change_cat_', '');
