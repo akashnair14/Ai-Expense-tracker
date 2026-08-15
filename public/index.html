@@ -57,6 +57,83 @@
     ::-webkit-scrollbar-thumb { background: rgba(161, 161, 170, 0.2); border-radius: 4px; }
     .dark body { background-color: #09090b; }
     .dark header { background-color: rgba(9, 9, 11, 0.85); }
+
+    /* Modern Motion Design & Spring Physics */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    @keyframes slideDownFade {
+      from { opacity: 0; transform: translateY(-16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.02); }
+    }
+
+    @keyframes toastFlyIn {
+      0% { opacity: 0; transform: translateY(24px) scale(0.92); }
+      70% { opacity: 1; transform: translateY(-4px) scale(1.02); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Interactive Element Micro-animations */
+    .animate-fade-in {
+      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-scale-in {
+      animation: scaleIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-slide-down {
+      animation: slideDownFade 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .animate-toast {
+      animation: toastFlyIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    /* Card Hover Lift & Border Shimmer */
+    .card-interactive {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card-interactive:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.12), 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+    }
+    .dark .card-interactive:hover {
+      box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.08);
+    }
+
+    /* Button Tap Ripple & Tactile Feedback */
+    button, .btn-interactive {
+      transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    button:active, .btn-interactive:active {
+      transform: scale(0.96) !important;
+    }
+
+    /* Table Row Slide and Highlight */
+    tbody tr {
+      transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+    /* Modal Backdrop Transitions */
+    .modal-backdrop {
+      transition: opacity 0.25s ease-out;
+    }
+    .modal-content {
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out;
+    }
   </style>
 </head>
 <body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-zinc-800 selection:text-white pb-16">
@@ -154,48 +231,48 @@
 
     <!-- QUICK ACTIONS ROW -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5">
-      <button onclick="openQuickAddModal('EXPENSE')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="openQuickAddModal('EXPENSE')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-rose-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Add Expense</div>
         <div class="text-[10px] text-zinc-400">Record outlays</div>
       </button>
 
-      <button onclick="openQuickAddModal('INCOME')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="openQuickAddModal('INCOME')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="arrow-down-left" class="w-3.5 h-3.5 text-emerald-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Add Income</div>
         <div class="text-[10px] text-zinc-400">Log earnings</div>
       </button>
 
-      <button onclick="openRecurringModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="openRecurringModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="repeat" class="w-3.5 h-3.5 text-sky-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Recurring</div>
         <div class="text-[10px] text-zinc-400">SIP, Rent, Salary</div>
       </button>
 
-      <button onclick="openBudgetModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="openBudgetModal()" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="target" class="w-3.5 h-3.5 text-amber-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Set Budget</div>
         <div class="text-[10px] text-zinc-400">Monthly limits</div>
       </button>
 
-      <button onclick="exportData('csv')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="exportData('csv')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5 text-zinc-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Export CSV</div>
         <div class="text-[10px] text-zinc-400">Spreadsheet</div>
       </button>
 
-      <button onclick="exportData('pdf')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 transition-all text-left group">
-        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-105 transition-transform">
+      <button onclick="exportData('pdf')" class="p-3 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl hover:border-zinc-400 dark:hover:border-zinc-700 card-interactive text-left group">
+        <div class="w-7 h-7 rounded-lg bg-zinc-100 dark:bg-zinc-800/80 text-zinc-800 dark:text-zinc-200 flex items-center justify-center mb-2 group-hover:scale-110 transition-transform">
           <i data-lucide="file-text" class="w-3.5 h-3.5 text-zinc-500"></i>
         </div>
         <div class="text-xs font-semibold text-zinc-900 dark:text-zinc-100">Export PDF</div>
@@ -207,7 +284,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5">
       
       <!-- 1. Expenses -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Expenses</span>
           <i data-lucide="credit-card" class="w-3.5 h-3.5 text-zinc-400"></i>
@@ -217,7 +294,7 @@
       </div>
 
       <!-- 2. Income -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Income</span>
           <i data-lucide="wallet" class="w-3.5 h-3.5 text-zinc-400"></i>
@@ -227,7 +304,7 @@
       </div>
 
       <!-- 3. Net Savings -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Net Savings</span>
           <i data-lucide="piggy-bank" class="w-3.5 h-3.5 text-zinc-400"></i>
@@ -237,7 +314,7 @@
       </div>
 
       <!-- 4. Budget Consumed -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Used</span>
           <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-zinc-400"></i>
@@ -252,28 +329,27 @@
       </div>
 
       <!-- 5. Pulse Health Score (0-100) -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs relative overflow-hidden">
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs relative overflow-hidden card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Pulse Health</span>
           <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-500"></i>
         </div>
         <div class="flex items-baseline gap-2">
-          <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiPulseScore">85<span class="text-xs font-normal text-zinc-400">/100</span></div>
-          <span class="px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" id="kpiPulseGrade">Good</span>
+          <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiPulseScore">80<span class="text-xs font-normal text-zinc-400">/100</span></div>
+          <span id="kpiPulseBadge" class="text-[10px] px-1.5 py-0.5 rounded font-semibold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Good</span>
         </div>
-        <p class="text-[10px] text-zinc-400 mt-1 truncate" id="kpiPulseSub">Savings & budget health</p>
+        <p class="text-[10px] text-zinc-400 mt-1">Savings & budget health</p>
       </div>
 
-      <!-- 6. Safe Daily Spend (Daily Discretionary Limit) -->
-      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+      <!-- 6. Safe Daily Spend Limit -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs card-interactive">
         <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Safe Daily Limit</span>
-          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+          <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
         </div>
         <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiDailyLimit">₹0</div>
-        <p class="text-[10px] text-zinc-400 mt-1 truncate" id="kpiDailySub">Suggested daily spend</p>
+        <p class="text-[10px] text-zinc-400 mt-1" id="kpiDailyLimitSub">17 days left in month</p>
       </div>
-
     </div>
 
     <!-- AI INSIGHTS & BUDGET OVERVIEW ROW -->
@@ -403,27 +479,27 @@
   </main>
 
   <!-- MODALS -->
-  <div id="accountModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Account Profile</h3>
-        <button onclick="closeAccountModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+  <div id="accountModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-scale-in">
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
+        <h3 class="text-base font-bold text-zinc-900 dark:text-white">Account Profile</h3>
+        <button onclick="closeAccountModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
-      <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 rounded-xl space-y-3">
+      <div class="p-4 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200/80 dark:border-zinc-800 rounded-xl space-y-3">
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-base shadow-xs" id="accountModalAvatar">
+            <div class="w-10 h-10 rounded-full bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-base shadow-xs" id="accountModalAvatar">
               A
             </div>
             <div>
-              <h4 class="text-sm font-bold text-slate-900 dark:text-white" id="accountModalName">Authenticated User</h4>
-              <p class="text-xs text-slate-500 dark:text-slate-400" id="accountModalSub">Connected via Telegram</p>
+              <h4 class="text-sm font-bold text-zinc-900 dark:text-white" id="accountModalName">Authenticated User</h4>
+              <p class="text-xs text-zinc-500 dark:text-zinc-400" id="accountModalSub">Connected via Telegram</p>
             </div>
           </div>
-          <button onclick="closeAccountModal(); openPersonalizationModal();" title="Edit Budget & Preferences" class="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors">
+          <button onclick="closeAccountModal(); openPersonalizationModal();" title="Edit Budget & Preferences" class="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
             <i data-lucide="settings" class="w-4 h-4"></i>
           </button>
         </div>
@@ -443,43 +519,44 @@
     </div>
   </div>
 
-  <div id="quickAddModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white" id="quickAddTitle">Add Transaction</h3>
-        <button onclick="closeQuickAddModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+  <div id="quickAddModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-scale-in">
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
+        <h3 class="text-base font-bold text-zinc-900 dark:text-white" id="quickAddTitle">Add Transaction</h3>
+        <button onclick="closeQuickAddModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
       <form id="quickAddForm" onsubmit="submitTransaction(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Transaction Type</label>
-          <select id="modalType" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+          <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Transaction Type</label>
+          <select id="modalType" class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
             <option value="EXPENSE">Expense</option>
             <option value="INCOME">Income</option>
           </select>
         </div>
 
         <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Merchant / Description</label>
+          <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Merchant / Description</label>
           <input type="text" id="modalMerchant" required placeholder="e.g. Swiggy Lunch, Uber, Amazon" 
-            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Amount (₹)</label>
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Amount (₹)</label>
             <input type="number" id="modalAmount" required placeholder="0.00" step="0.01" 
-              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Category</label>
-            <select id="modalCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Category</label>
+            <select id="modalCategory" class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
               <option value="Food & Dining">Food & Dining</option>
+              <option value="Groceries">Groceries</option>
               <option value="Shopping">Shopping</option>
-              <option value="Utilities">Utilities</option>
+              <option value="Bills & Utilities">Bills & Utilities</option>
               <option value="Entertainment">Entertainment</option>
               <option value="Transport">Transport</option>
               <option value="Salary">Salary</option>
@@ -488,31 +565,32 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
-          <button type="submit" class="px-4 py-2 font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-sm">Save Transaction</button>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+          <button type="button" onclick="closeQuickAddModal()" class="px-4 py-2 font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-xl shadow-sm">Save Transaction</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL 3: SET BUDGET -->
-  <div id="budgetModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Configure Category Budget</h3>
-        <button onclick="closeBudgetModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+  <div id="budgetModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-scale-in">
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
+        <h3 class="text-base font-bold text-zinc-900 dark:text-white">Configure Category Budget</h3>
+        <button onclick="closeBudgetModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
 
       <form id="budgetForm" onsubmit="submitBudget(event)" class="space-y-4 text-xs">
         <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Target Category</label>
-          <select id="budgetCategory" onchange="toggleCustomCategoryInput()" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+          <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Target Category</label>
+          <select id="budgetCategory" onchange="toggleCustomCategoryInput()" class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
             <option value="Food & Dining">Food & Dining</option>
+            <option value="Groceries">Groceries</option>
             <option value="Shopping">Shopping</option>
-            <option value="Utilities">Utilities</option>
+            <option value="Bills & Utilities">Bills & Utilities</option>
             <option value="Entertainment">Entertainment</option>
             <option value="Transport">Transport</option>
             <option value="Others">Others</option>
@@ -521,32 +599,32 @@
         </div>
 
         <div id="customCategoryGroup" class="hidden">
-          <label class="block font-semibold text-brand-600 dark:text-brand-400 mb-1">Custom Category Name</label>
+          <label class="block font-semibold text-zinc-900 dark:text-zinc-100 mb-1">Custom Category Name</label>
           <input type="text" id="customCategoryInput" placeholder="e.g. Subscriptions, Travel, Fitness" 
-            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-brand-300 dark:border-brand-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
         </div>
 
         <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Monthly Spending Limit (₹)</label>
+          <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Monthly Spending Limit (₹)</label>
           <input type="number" id="budgetLimit" required placeholder="e.g. 10000" step="100" 
-            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
         </div>
 
 
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" onclick="closeBudgetModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
-          <button type="submit" class="px-4 py-2 font-semibold bg-brand-600 hover:bg-brand-700 text-white rounded-xl shadow-sm">Save Budget Limit</button>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+          <button type="button" onclick="closeBudgetModal()" class="px-4 py-2 font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-xl shadow-sm">Save Budget Limit</button>
         </div>
       </form>
     </div>
   </div>
 
   <!-- MODAL 4: RECURRING PAYMENTS & INCOME -->
-  <div id="recurringModal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <h3 class="text-base font-bold text-slate-900 dark:text-white">Recurring Setup (SIP, Rent, Salary)</h3>
-        <button onclick="closeRecurringModal()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+  <div id="recurringModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 animate-scale-in">
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
+        <h3 class="text-base font-bold text-zinc-900 dark:text-white">Recurring Setup (SIP, Rent, Salary)</h3>
+        <button onclick="closeRecurringModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -554,38 +632,38 @@
       <form id="recurringForm" onsubmit="submitRecurring(event)" class="space-y-4 text-xs">
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Type</label>
-            <select id="recurringType" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Type</label>
+            <select id="recurringType" class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
               <option value="EXPENSE">Fixed Expense (Rent, SIP, EMI)</option>
               <option value="INCOME">Fixed Income (Salary, Dividend)</option>
             </select>
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Day of Month</label>
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Day of Month</label>
             <input type="number" id="recurringDay" required min="1" max="31" placeholder="e.g. 1 or 5" 
-              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
           </div>
         </div>
 
         <div>
-          <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Payment Name / Description</label>
+          <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Payment Name / Description</label>
           <input type="text" id="recurringName" required placeholder="e.g. House Rent, Zerodha SIP, Monthly Salary" 
-            class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+            class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
         </div>
 
         <div class="grid grid-cols-2 gap-3">
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Amount (₹)</label>
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Amount (₹)</label>
             <input type="number" id="recurringAmount" required placeholder="0.00" step="100" 
-              class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
+              class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
           </div>
 
           <div>
-            <label class="block font-semibold text-slate-700 dark:text-slate-300 mb-1">Category</label>
-            <select id="recurringCategory" class="w-full px-3 py-2 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:outline-none">
-              <option value="Utilities">Utilities & Rent</option>
-              <option value="Investments">Investments / SIP</option>
+            <label class="block font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Category</label>
+            <select id="recurringCategory" class="w-full px-3 py-2 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-white focus:outline-none">
+              <option value="Bills & Utilities">Utilities & Rent</option>
+              <option value="Investment">Investments / SIP</option>
               <option value="Salary">Salary</option>
               <option value="Food & Dining">Food & Dining</option>
               <option value="Others">Others</option>
@@ -593,49 +671,74 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-end gap-2 pt-2">
-          <button type="button" onclick="closeRecurringModal()" class="px-4 py-2 font-semibold text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl">Cancel</button>
-          <button type="submit" class="px-4 py-2 font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl shadow-sm">Save Schedule</button>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+          <button type="button" onclick="closeRecurringModal()" class="px-4 py-2 font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl">Cancel</button>
+          <button type="submit" class="px-4 py-2 font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-xl shadow-sm">Save Schedule</button>
         </div>
       </form>
     </div>
   </div>
 
+  <!-- UNIVERSAL CONFIRMATION & WARNING MODAL -->
+  <div id="confirmModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-left">
+      <div class="flex items-start gap-3.5">
+        <div class="w-10 h-10 rounded-xl bg-rose-500/10 text-rose-500 border border-rose-500/20 flex items-center justify-center shrink-0">
+          <i data-lucide="alert-triangle" class="w-5 h-5"></i>
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-sm font-bold text-zinc-900 dark:text-white" id="confirmModalTitle">Are you sure?</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed" id="confirmModalMessage">This action cannot be undone.</p>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-2 pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+        <button type="button" id="confirmCancelBtn" onclick="closeConfirmModal()" class="px-3.5 py-2 text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-xl transition-all">
+          Cancel
+        </button>
+        <button type="button" id="confirmActionBtn" class="px-4 py-2 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+          <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          <span id="confirmActionBtnText">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- FULL SCREEN AUTHENTICATION OVERLAY MODAL (Hidden by default, shown only if unauthenticated) -->
-  <div id="authRequiredModal" class="fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-left">
+  <div id="authRequiredModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-left">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-600 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-brand-500/30 shrink-0">
+        <div class="w-12 h-12 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xl shadow-lg shrink-0">
           <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
         <div>
-          <h3 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Welcome to PulseAI</h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 font-medium">Access your AI financial operating system</p>
+          <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Welcome to PulseAI</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Access your AI financial operating system</p>
         </div>
       </div>
 
       <!-- AUTH TABS -->
-      <div class="flex bg-slate-100 dark:bg-slate-800/80 p-1 rounded-xl text-xs font-semibold">
-        <button id="tabQrBtn" onclick="switchAuthTab('qr')" class="flex-1 py-2 text-center rounded-lg bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
-          <i data-lucide="qr-code" class="w-3.5 h-3.5 text-brand-500"></i> Scan QR
+      <div class="flex bg-zinc-100 dark:bg-zinc-900 p-1 rounded-xl text-xs font-semibold">
+        <button id="tabQrBtn" onclick="switchAuthTab('qr')" class="flex-1 py-2 text-center rounded-lg bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-sm transition-all flex items-center justify-center gap-1.5">
+          <i data-lucide="qr-code" class="w-3.5 h-3.5"></i> Scan QR
         </button>
-        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Sign In</button>
-        <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 text-center rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-all">Create Account</button>
+        <button id="tabLoginBtn" onclick="switchAuthTab('login')" class="flex-1 py-2 text-center rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all">Sign In</button>
+        <button id="tabRegisterBtn" onclick="switchAuthTab('register')" class="flex-1 py-2 text-center rounded-lg text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-all">Create Account</button>
       </div>
 
       <!-- QR CODE TAB -->
       <div id="qrTabContent" class="space-y-4 text-center">
-        <div class="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col items-center justify-center space-y-3">
-          <div id="qrCodeContainer" class="w-48 h-48 bg-white p-2.5 rounded-xl shadow-inner flex items-center justify-center border border-slate-100">
+        <div class="p-4 bg-zinc-50 dark:bg-zinc-900/60 rounded-2xl border border-zinc-200 dark:border-zinc-800 flex flex-col items-center justify-center space-y-3">
+          <div id="qrCodeContainer" class="w-48 h-48 bg-white p-2.5 rounded-xl shadow-inner flex items-center justify-center border border-zinc-100">
             <img id="qrCodeImg" src="" alt="Scan QR code" class="w-full h-full object-contain">
           </div>
           <div class="space-y-1">
-            <p class="text-xs font-semibold text-slate-800 dark:text-slate-200">Scan with Telegram</p>
-            <p class="text-[11px] text-slate-400">Point your phone camera or tap link to authenticate instantly</p>
+            <p class="text-xs font-semibold text-zinc-800 dark:text-zinc-200">Scan with Telegram</p>
+            <p class="text-[11px] text-zinc-400">Point your phone camera or tap link to authenticate instantly</p>
           </div>
         </div>
         
-        <a id="qrDirectLink" href="#" target="_blank" class="w-full py-2.5 px-3 bg-brand-50 hover:bg-brand-100 dark:bg-brand-950/50 dark:hover:bg-brand-900/50 text-brand-600 dark:text-brand-400 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+        <a id="qrDirectLink" href="#" target="_blank" class="w-full py-2.5 px-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-900 dark:text-white text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800">
           <i data-lucide="external-link" class="w-3.5 h-3.5"></i> Or Open in Telegram Directly
         </a>
       </div>
@@ -643,14 +746,14 @@
       <!-- LOGIN FORM (Hidden by default) -->
       <form id="loginForm" onsubmit="handleEmailLogin(event)" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
-          <input type="email" id="loginEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Email Address</label>
+          <input type="email" id="loginEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Password</label>
-          <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Password</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
         </div>
-        <button type="submit" id="submitLoginBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="submitLoginBtn" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
           <span>Sign In</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
@@ -659,18 +762,18 @@
       <!-- REGISTER FORM (Hidden by default) -->
       <form id="registerForm" onsubmit="handleEmailRegister(event)" class="space-y-4 hidden">
         <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Full Name</label>
-          <input type="text" id="regName" placeholder="Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Full Name</label>
+          <input type="text" id="regName" placeholder="Alex Morgan" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Email Address</label>
-          <input type="email" id="regEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Email Address</label>
+          <input type="email" id="regEmail" required placeholder="you@example.com" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-300 mb-1">Password</label>
-          <input type="password" id="regPassword" required minlength="6" placeholder="At least 6 characters" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-brand-500/50">
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Password</label>
+          <input type="password" id="regPassword" required minlength="6" placeholder="At least 6 characters" class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
         </div>
-        <button type="submit" id="submitRegBtn" class="w-full py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow-lg shadow-brand-500/25 transition-all flex items-center justify-center gap-2">
+        <button type="submit" id="submitRegBtn" class="w-full py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 font-semibold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
           <span>Create Account</span>
           <i data-lucide="user-plus" class="w-4 h-4"></i>
         </button>
@@ -678,16 +781,16 @@
 
       <!-- DEMO ACCESS DIVIDER -->
       <div class="relative flex items-center justify-center">
-        <div class="border-t border-slate-200 dark:border-slate-800 w-full"></div>
-        <span class="bg-white dark:bg-slate-900 px-3 text-[10px] uppercase tracking-wider font-semibold text-slate-400 absolute">or try without account</span>
+        <div class="border-t border-zinc-200 dark:border-zinc-800 w-full"></div>
+        <span class="bg-white dark:bg-[#121215] px-3 text-[10px] uppercase tracking-wider font-semibold text-zinc-400 absolute">or try without account</span>
       </div>
 
       <!-- QUICK DEMO ACCESS BUTTON -->
-      <button onclick="handleDemoLogin()" class="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+      <button onclick="handleDemoLogin()" class="w-full py-2.5 px-3 bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2 border border-zinc-200 dark:border-zinc-800">
         <i data-lucide="play-circle" class="w-4 h-4 text-emerald-500"></i> Continue with Instant Demo Pass
       </button>
 
-      <p class="text-[11px] text-slate-400 text-center">Transactions and budgets automatically sync seamlessly.</p>
+      <p class="text-[11px] text-zinc-400 text-center">Transactions and budgets automatically sync seamlessly.</p>
     </div>
   </div>
 
@@ -1340,19 +1443,19 @@
 
     function renderBudgetOverview(budgets, curr) {
       const container = document.getElementById('budget-section');
-      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
+      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-zinc-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
 
       budgets.forEach(b => {
         html += `
           <div>
             <div class="flex justify-between font-semibold mb-1">
-              <span class="text-slate-700 dark:text-slate-300">${b.category}</span>
-              <span class="text-slate-900 dark:text-white">${curr}${b.spent.toLocaleString()} / ${curr}${b.limit.toLocaleString()}</span>
+              <span class="text-zinc-700 dark:text-zinc-300">${b.category}</span>
+              <span class="text-zinc-900 dark:text-white">${curr}${b.spent.toLocaleString()} / ${curr}${b.limit.toLocaleString()}</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-brand-600 h-full rounded-full" style="width: ${b.percentage}%"></div>
+            <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-zinc-900 dark:bg-white h-full rounded-full" style="width: ${b.percentage}%"></div>
             </div>
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+            <div class="flex justify-between text-[11px] text-zinc-400 mt-1">
               <span>${b.percentage}% consumed</span>
               <span class="${b.percentage > 85 ? 'text-rose-500 font-semibold' : 'text-emerald-500 font-semibold'}">${b.percentage > 85 ? 'Near Limit' : 'On Track'}</span>
             </div>
@@ -1368,32 +1471,32 @@
       const items = Object.entries(catBreakdown);
       const container = document.getElementById('budget-section');
       
-      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-slate-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-brand-600 dark:text-brand-400 cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
+      let html = `<div class="flex items-center justify-between mb-4"><h3 class="text-base font-bold text-zinc-900 dark:text-white">Budget Overview</h3><span class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white cursor-pointer hover:underline" onclick="openBudgetModal()">Manage</span></div><div class="space-y-4 text-xs">`;
 
       if (items.length === 0) {
         html += `
           <div>
             <div class="flex justify-between font-semibold mb-1">
-              <span class="text-slate-700 dark:text-slate-300">Food & Dining</span>
-              <span class="text-slate-900 dark:text-white">${curr}0 / ${curr}10,000</span>
+              <span class="text-zinc-700 dark:text-zinc-300">Food & Dining</span>
+              <span class="text-zinc-900 dark:text-white">${curr}0 / ${curr}10,000</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-amber-500 h-full rounded-full" style="width: 0%"></div>
+            <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-zinc-900 dark:bg-white h-full rounded-full" style="width: 0%"></div>
             </div>
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+            <div class="flex justify-between text-[11px] text-zinc-400 mt-1">
               <span>0% consumed</span>
               <span class="text-emerald-500 font-semibold">Healthy</span>
             </div>
           </div>
           <div>
             <div class="flex justify-between font-semibold mb-1">
-              <span class="text-slate-700 dark:text-slate-300">Shopping</span>
-              <span class="text-slate-900 dark:text-white">${curr}0 / ${curr}6,000</span>
+              <span class="text-zinc-700 dark:text-zinc-300">Shopping</span>
+              <span class="text-zinc-900 dark:text-white">${curr}0 / ${curr}6,000</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-brand-600 h-full rounded-full" style="width: 0%"></div>
+            <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-zinc-900 dark:bg-white h-full rounded-full" style="width: 0%"></div>
             </div>
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+            <div class="flex justify-between text-[11px] text-zinc-400 mt-1">
               <span>0% consumed</span>
               <span class="text-emerald-500 font-semibold">Healthy</span>
             </div>
@@ -1410,13 +1513,13 @@
         html += `
           <div>
             <div class="flex justify-between font-semibold mb-1">
-              <span class="text-slate-700 dark:text-slate-300">${cat}</span>
-              <span class="text-slate-900 dark:text-white">${curr}${spent.toLocaleString()} / ${curr}${Math.round(estLimit).toLocaleString()}</span>
+              <span class="text-zinc-700 dark:text-zinc-300">${cat}</span>
+              <span class="text-zinc-900 dark:text-white">${curr}${spent.toLocaleString()} / ${curr}${Math.round(estLimit).toLocaleString()}</span>
             </div>
-            <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
-              <div class="bg-brand-600 h-full rounded-full" style="width: ${pct}%"></div>
+            <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-2 rounded-full overflow-hidden">
+              <div class="bg-zinc-900 dark:bg-white h-full rounded-full" style="width: ${pct}%"></div>
             </div>
-            <div class="flex justify-between text-[11px] text-slate-400 mt-1">
+            <div class="flex justify-between text-[11px] text-zinc-400 mt-1">
               <span>${pct}% consumed</span>
               <span class="text-emerald-500 font-semibold">Active</span>
             </div>
@@ -1436,12 +1539,12 @@
         const color = ins.type === 'DANGER' ? 'text-rose-600 dark:text-rose-400' : ins.type === 'WARNING' ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400';
         
         const div = document.createElement('div');
-        div.className = 'p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl';
+        div.className = 'p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800 rounded-xl';
         div.innerHTML = `
           <div class="flex items-center gap-2 ${color} text-xs font-semibold mb-1">
             <i data-lucide="${icon}" class="w-3.5 h-3.5"></i> ${ins.title}
           </div>
-          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">${ins.message}</p>
+          <p class="text-xs text-zinc-700 dark:text-zinc-300 font-medium">${ins.message}</p>
         `;
         container.appendChild(div);
       });
@@ -1451,23 +1554,23 @@
     function renderDefaultAIInsights(summary) {
       const container = document.getElementById('aiInsightsContainer');
       container.innerHTML = `
-        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
+        <div class="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800 rounded-xl">
           <div class="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 text-xs font-semibold mb-1">
             <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Spend Analysis
           </div>
-          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">All systems active. AI is monitoring your natural language transactions for spending spikes.</p>
+          <p class="text-xs text-zinc-700 dark:text-zinc-300 font-medium">All systems active. AI is monitoring your natural language transactions for spending spikes.</p>
         </div>
-        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
-          <div class="flex items-center gap-2 text-brand-600 dark:text-brand-400 text-xs font-semibold mb-1">
+        <div class="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800 rounded-xl">
+          <div class="flex items-center gap-2 text-zinc-900 dark:text-zinc-100 text-xs font-semibold mb-1">
             <i data-lucide="target" class="w-3.5 h-3.5"></i> Budget Status
           </div>
-          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">Click <strong>Set Budget</strong> above to configure personalized monthly category limits.</p>
+          <p class="text-xs text-zinc-700 dark:text-zinc-300 font-medium">Click <strong>Set Budget</strong> above to configure personalized monthly category limits.</p>
         </div>
-        <div class="p-4 bg-white/80 dark:bg-slate-800/80 border border-slate-200/70 dark:border-slate-700/50 rounded-xl">
-          <div class="flex items-center gap-2 text-purple-600 dark:text-purple-400 text-xs font-semibold mb-1">
+        <div class="p-4 bg-zinc-50/80 dark:bg-zinc-900/60 border border-zinc-200/70 dark:border-zinc-800 rounded-xl">
+          <div class="flex items-center gap-2 text-indigo-600 dark:text-indigo-400 text-xs font-semibold mb-1">
             <i data-lucide="zap" class="w-3.5 h-3.5"></i> Realtime Sync
           </div>
-          <p class="text-xs text-slate-700 dark:text-slate-300 font-medium">Send any expense message on Telegram or use <strong>Add Expense</strong> to auto-update.</p>
+          <p class="text-xs text-zinc-700 dark:text-zinc-300 font-medium">Send any expense message on Telegram or use <strong>Add Expense</strong> to auto-update.</p>
         </div>
       `;
       lucide.createIcons();
@@ -1521,7 +1624,7 @@
             ${isExpense ? '-' : '+'}${curr}${tx.amount.toLocaleString()}
           </td>
           <td class="py-3 px-3 text-right">
-            <button onclick="deleteTx('${tx.id}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer" title="Delete Transaction">
+            <button onclick="confirmDeleteTx('${tx.id}', '${(tx.merchant || tx.description || 'Expense').replace(/'/g, "\\'")}', '${curr}${tx.amount.toLocaleString()}')" class="text-rose-500 hover:text-rose-700 p-1.5 rounded-lg hover:bg-rose-50 dark:hover:bg-rose-950/40 transition-colors cursor-pointer" title="Delete Transaction">
               <i data-lucide="trash-2" class="w-4 h-4"></i>
             </button>
           </td>
@@ -1628,42 +1731,133 @@
       renderTable(filtered);
     }
 
-    function openBudgetModal() { document.getElementById('budgetModal').classList.remove('hidden'); }
-    function closeBudgetModal() { document.getElementById('budgetModal').classList.add('hidden'); }
+    let pendingConfirmAction = null;
 
-    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior: 'smooth' }); }
+    function promptConfirm({ title, message, actionText = 'Delete', isDanger = true, onConfirm }) {
+      const modal = document.getElementById('confirmModal');
+      const titleEl = document.getElementById('confirmModalTitle');
+      const msgEl = document.getElementById('confirmModalMessage');
+      const btn = document.getElementById('confirmActionBtn');
+      const btnText = document.getElementById('confirmActionBtnText');
 
-    async function deleteTx(id) {
+      if (titleEl) titleEl.innerText = title || 'Are you sure?';
+      if (msgEl) msgEl.innerText = message || 'This action cannot be undone.';
+      if (btnText) btnText.innerText = actionText;
+
+      if (btn) {
+        btn.className = isDanger 
+          ? 'px-4 py-2 text-xs font-semibold bg-rose-600 hover:bg-rose-700 text-white rounded-xl shadow-sm transition-all flex items-center gap-1.5'
+          : 'px-4 py-2 text-xs font-semibold bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 rounded-xl shadow-sm transition-all flex items-center gap-1.5';
+      }
+
+      pendingConfirmAction = onConfirm;
+      if (modal) {
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function closeConfirmModal() {
+      const modal = document.getElementById('confirmModal');
+      if (modal) modal.classList.add('hidden');
+      pendingConfirmAction = null;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const actionBtn = document.getElementById('confirmActionBtn');
+      if (actionBtn) {
+        actionBtn.addEventListener('click', async () => {
+          if (typeof pendingConfirmAction === 'function') {
+            const action = pendingConfirmAction;
+            closeConfirmModal();
+            await action();
+          }
+        });
+      }
+    });
+
+    function confirmDeleteTx(id, description, amountStr) {
+      promptConfirm({
+        title: 'Delete Transaction?',
+        message: `Are you sure you want to delete "${description || 'Transaction'}" for ${amountStr}? This will recalculate your monthly analytics.`,
+        actionText: 'Delete Record',
+        isDanger: true,
+        onConfirm: () => executeDeleteTx(id),
+      });
+    }
+
+    async function executeDeleteTx(id) {
       try {
-        await fetch(`/api/transactions/${id}`, {
+        const res = await fetch(`/api/transactions/${id}`, {
           method: 'DELETE',
           headers: getAuthHeaders()
         });
-        loadDashboard();
+        if (res.ok) {
+          showSuccessToast('🗑️ Transaction deleted successfully');
+          loadDashboard();
+        } else {
+          showErrorToast('Failed to delete transaction');
+        }
       } catch (err) {
         console.error('Delete error', err);
+        showErrorToast('Network error while deleting transaction');
       }
+    }
+
+    function showErrorToast(msg) {
+      const el = document.getElementById('errorToast');
+      document.getElementById('errorToastMessage').innerText = msg;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    function showSuccessToast(msg) {
+      const el = document.getElementById('successToast');
+      document.getElementById('successToastMessage').innerText = msg;
+      el.classList.remove('hidden');
+      setTimeout(() => el.classList.add('hidden'), 3000);
+    }
+
+    function openBudgetModal() { document.getElementById('budgetModal').classList.remove('hidden'); }
+    function closeBudgetModal() { 
+      document.getElementById('budgetModal').classList.add('hidden'); 
+      document.getElementById('customCategoryGroup').classList.add('hidden');
+      document.getElementById('budgetCategory').value = 'Food & Dining';
     }
 
     async function submitTransaction(e) {
       e.preventDefault();
-      const payload = {
-        type: document.getElementById('modalType').value,
-        merchant: document.getElementById('modalMerchant').value,
-        amount: parseFloat(document.getElementById('modalAmount').value),
-        categoryName: document.getElementById('modalCategory').value
-      };
+      const amount = parseFloat(document.getElementById('modalAmount').value);
+      const merchant = document.getElementById('modalMerchant').value.trim();
+      const type = document.getElementById('modalType').value;
+      const categoryName = document.getElementById('modalCategory').value;
+
+      if (!merchant || isNaN(amount) || amount <= 0) {
+        showErrorToast('Please provide a valid description and positive amount');
+        return;
+      }
+
+      const payload = { type, merchant, amount, categoryName };
 
       try {
-        await fetch('/api/transactions', {
+        const res = await fetch('/api/transactions', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
           body: JSON.stringify(payload)
         });
-        closeQuickAddModal();
-        loadDashboard();
+
+        if (res.ok) {
+          closeQuickAddModal();
+          showSuccessToast(`✅ ${type === 'INCOME' ? 'Income' : 'Expense'} of ₹${amount.toLocaleString()} added!`);
+          document.getElementById('quickAddForm').reset();
+          loadDashboard();
+        } else {
+          const errData = await res.json().catch(() => ({}));
+          showErrorToast(errData.message || 'Failed to add transaction');
+        }
       } catch (err) {
         console.error('Failed to add transaction', err);
+        showErrorToast('Network error while recording transaction');
       }
     }
 
@@ -1678,15 +1872,6 @@
       }
     }
 
-    function openBudgetModal() { 
-      document.getElementById('budgetModal').classList.remove('hidden'); 
-    }
-    function closeBudgetModal() { 
-      document.getElementById('budgetModal').classList.add('hidden'); 
-      document.getElementById('customCategoryGroup').classList.add('hidden');
-      document.getElementById('budgetCategory').value = 'Food & Dining';
-    }
-
     async function submitBudget(e) {
       e.preventDefault();
       const categorySelect = document.getElementById('budgetCategory').value;
@@ -1695,26 +1880,37 @@
       if (categorySelect === '__CUSTOM__') {
         categoryName = document.getElementById('customCategoryInput').value.trim();
         if (!categoryName) {
-          alert('Please enter a custom category name');
+          showErrorToast('Please enter a custom category name');
           return;
         }
       }
 
-      const payload = {
-        categoryName,
-        monthlyLimit: parseFloat(document.getElementById('budgetLimit').value)
-      };
+      const limit = parseFloat(document.getElementById('budgetLimit').value);
+      if (isNaN(limit) || limit < 0) {
+        showErrorToast('Please enter a valid monthly limit');
+        return;
+      }
+
+      const payload = { categoryName, monthlyLimit: limit };
 
       try {
-        await fetch('/api/budgets', {
+        const res = await fetch('/api/budgets', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
           body: JSON.stringify(payload)
         });
-        closeBudgetModal();
-        loadDashboard();
+
+        if (res.ok) {
+          closeBudgetModal();
+          showSuccessToast(`🎯 ${categoryName} budget set to ₹${limit.toLocaleString()}/month`);
+          document.getElementById('budgetForm').reset();
+          loadDashboard();
+        } else {
+          showErrorToast('Failed to update budget limit');
+        }
       } catch (err) {
         console.error('Failed to update budget limit', err);
+        showErrorToast('Network error while saving budget');
       }
     }
 
@@ -1723,53 +1919,83 @@
 
     async function submitRecurring(e) {
       e.preventDefault();
+      const name = document.getElementById('recurringName').value.trim();
+      const amount = parseFloat(document.getElementById('recurringAmount').value);
+      const day = parseInt(document.getElementById('recurringDay').value, 10);
+      const type = document.getElementById('recurringType').value;
+      const categoryName = document.getElementById('recurringCategory').value;
+
+      if (!name || isNaN(amount) || amount <= 0 || isNaN(day) || day < 1 || day > 31) {
+        showErrorToast('Please fill all recurring fields with valid values');
+        return;
+      }
+
       const payload = {
-        type: document.getElementById('recurringType').value,
-        dayOfMonth: document.getElementById('recurringDay').value,
-        name: document.getElementById('recurringName').value,
-        amount: parseFloat(document.getElementById('recurringAmount').value),
-        categoryName: document.getElementById('recurringCategory').value
+        type,
+        dayOfMonth: day,
+        name,
+        amount,
+        categoryName
       };
 
       try {
-        await fetch('/api/recurring', {
+        const res = await fetch('/api/recurring', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
           body: JSON.stringify(payload)
         });
-        closeRecurringModal();
-        alert(`Recurring ${payload.type.toLowerCase()} schedule created for day ${payload.dayOfMonth} of every month!`);
-        loadDashboard();
+
+        if (res.ok) {
+          closeRecurringModal();
+          showSuccessToast(`🔁 Recurring schedule "${name}" created for day ${day}!`);
+          document.getElementById('recurringForm').reset();
+          loadDashboard();
+        } else {
+          showErrorToast('Failed to create recurring schedule');
+        }
       } catch (err) {
-        console.error('Failed to create recurring transaction', err);
+        console.error('Failed to save recurring schedule', err);
+        showErrorToast('Network error while saving recurring schedule');
       }
     }
 
     async function exportData(format) {
-      if (format === 'csv') {
-        const res = await fetch('/api/export/csv', {
-          headers: getAuthHeaders()
-        });
-        const csvText = await res.text();
-        const blob = new Blob([csvText], { type: 'text/csv' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.setAttribute('href', url);
-        a.setAttribute('download', `transactions_export_${currentUser?.telegramId || 'user'}.csv`);
-        a.click();
-      } else if (format === 'pdf') {
-        window.print();
+      try {
+        if (format === 'csv') {
+          showSuccessToast('📥 Generating CSV export...');
+          const res = await fetch('/api/export/csv', {
+            headers: getAuthHeaders()
+          });
+          if (!res.ok) {
+            showErrorToast('Failed to generate CSV export');
+            return;
+          }
+          const csvText = await res.text();
+          const blob = new Blob([csvText], { type: 'text/csv' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.setAttribute('href', url);
+          a.setAttribute('download', `pulseai_export_${currentUser?.firstName || 'user'}_${new Date().toISOString().slice(0, 10)}.csv`);
+          a.click();
+          showSuccessToast('✅ CSV exported successfully!');
+        } else if (format === 'pdf') {
+          showSuccessToast('🖨️ Opening print/PDF view...');
+          window.print();
+        }
+      } catch (err) {
+        console.error('Export error', err);
+        showErrorToast('Failed to export data');
       }
     }
   </script>
 
   <!-- TOAST NOTIFICATIONS -->
-  <div id="errorToast" class="fixed bottom-6 right-6 z-50 hidden bg-rose-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md transition-all">
+  <div id="errorToast" class="fixed bottom-6 right-6 z-50 hidden bg-rose-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md animate-toast">
     <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-white"></i>
     <span id="errorToastMessage"></span>
   </div>
 
-  <div id="successToast" class="fixed bottom-6 right-6 z-50 hidden bg-emerald-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md transition-all">
+  <div id="successToast" class="fixed bottom-6 right-6 z-50 hidden bg-emerald-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md animate-toast">
     <i data-lucide="check-circle" class="w-4 h-4 shrink-0 text-white"></i>
     <span id="successToastMessage"></span>
   </div>
