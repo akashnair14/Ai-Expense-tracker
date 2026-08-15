@@ -115,8 +115,28 @@ export class AuthController {
         username: u.username || '',
         profilePhotoUrl: u.profilePhotoUrl || '',
         currency: u.currency || '₹',
+        isOnboarded: u.isOnboarded ?? false,
+        monthlyIncome: u.monthlyIncome ? Number(u.monthlyIncome) : null,
+        targetSavingsRate: u.targetSavingsRate ?? 20,
       },
     };
+  }
+
+  @Post('user/onboarding')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  async saveOnboarding(
+    @Req() req: any,
+    @Body() body: {
+      firstName?: string;
+      currency?: string;
+      monthlyIncome?: number;
+      targetSavingsRate?: number;
+      budgets?: Array<{ category: string; limit: number }>;
+    },
+  ) {
+    const user = (req as Request & { user: any }).user;
+    return this.authService.completeOnboarding(user.id, body);
   }
 
   @Post('auth/logout')

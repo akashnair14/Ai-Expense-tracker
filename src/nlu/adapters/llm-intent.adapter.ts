@@ -31,13 +31,14 @@ Intents:
 5. FINANCIAL_ANALYSIS: User asks for an overview or comparison (e.g. "Where did my money go this month?", "Why did my savings drop?").
 6. BUDGET_QUERY: User asks about budget status (e.g. "How is my budget looking?", "What's left in food budget?").
 7. SET_BUDGET: User wants to set a budget limit (e.g. "Set food budget to 8000", "Limit shopping to 5000").
-8. CONVERSATIONAL_CORRECTION: User corrects a previous transaction (e.g. "Actually make that groceries", "Change it to 450", "It was yesterday").
-9. FINANCIAL_ADVICE: General question about affordability or saving (e.g. "Can I afford a 20k phone?", "How can I save more?").
-10. GENERAL_QUESTION: Any other general query.
+8. CREATE_RECURRING: User wants to set a recurring salary, rent, subscription, or EMI (e.g. "Salary 39279 on 4th of every month", "Rent 15000 every 1st", "Netflix 649 monthly").
+9. CONVERSATIONAL_CORRECTION: User corrects a previous transaction (e.g. "Actually make that groceries", "Change it to 450", "It was yesterday").
+10. FINANCIAL_ADVICE: General question about affordability or saving (e.g. "Can I afford a 20k phone?", "How can I save more?").
+11. GENERAL_QUESTION: Any other general query.
 
 CRITICAL: Return ONLY valid JSON matching this schema:
 {
-  "intent": "CREATE_TRANSACTION" | "QUERY_EXPENSE_SUMMARY" | "QUERY_CATEGORY_SPENDING" | "QUERY_TOP_EXPENSES" | "FINANCIAL_ANALYSIS" | "BUDGET_QUERY" | "SET_BUDGET" | "CONVERSATIONAL_CORRECTION" | "FINANCIAL_ADVICE" | "GENERAL_QUESTION",
+  "intent": "CREATE_TRANSACTION" | "QUERY_EXPENSE_SUMMARY" | "QUERY_CATEGORY_SPENDING" | "QUERY_TOP_EXPENSES" | "FINANCIAL_ANALYSIS" | "BUDGET_QUERY" | "SET_BUDGET" | "CREATE_RECURRING" | "CONVERSATIONAL_CORRECTION" | "FINANCIAL_ADVICE" | "GENERAL_QUESTION",
   "confidence": number (0.0 to 1.0),
   "transactions": [
     {
@@ -54,8 +55,13 @@ CRITICAL: Return ONLY valid JSON matching this schema:
   ],
   "toolCalls": [
     {
-      "tool": "create_transaction" | "get_expense_summary" | "get_category_spending" | "get_top_expenses" | "get_budget_status" | "set_budget" | "ask_financial_intelligence" | "delete_last_transaction",
-      "parameters": {}
+      "tool": "create_transaction" | "get_expense_summary" | "get_category_spending" | "get_top_expenses" | "get_budget_status" | "set_budget" | "create_recurring" | "ask_financial_intelligence" | "delete_last_transaction",
+      "parameters": {
+        "name": "string (for create_recurring)",
+        "amount": "number",
+        "type": "INCOME or EXPENSE",
+        "day": "number (day of month, 1-31)"
+      }
     }
   ],
   "targetCategory": string | null,

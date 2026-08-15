@@ -239,6 +239,16 @@ export class TransactionService {
     const limitNum = Number(budget.monthlyLimit);
     const usedPercentage = limitNum > 0 ? (currentSpent / limitNum) * 100 : 0;
 
+    // Predictive Run-Rate & Month-End Pace Warning Calculation
+    const totalDaysInMonth = new Date(year, month, 0).getDate();
+    const currentDay = now.getDate();
+    const expectedPacePercentage = (currentDay / totalDaysInMonth) * 100;
+    
+    // Flag if burn pace is more than 20% ahead of calendar schedule
+    const isOverPaced = usedPercentage > (expectedPacePercentage + 20) && currentSpent < limitNum;
+    const projectedMonthEndSpend = Math.round((currentSpent / currentDay) * totalDaysInMonth);
+    const projectedOverage = projectedMonthEndSpend - limitNum;
+
     return {
       categoryName: budget.category.name,
       monthlyLimit: limitNum,
@@ -246,6 +256,11 @@ export class TransactionService {
       remaining: limitNum - currentSpent,
       usedPercentage: Math.round(usedPercentage),
       isExceeded: currentSpent > limitNum,
+      isOverPaced,
+      currentDay,
+      totalDaysInMonth,
+      projectedMonthEndSpend,
+      projectedOverage,
     };
   }
 

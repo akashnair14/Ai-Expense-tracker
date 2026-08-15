@@ -12,6 +12,8 @@ describe('NLU AI Engine 100-Case Evaluation Benchmark', () => {
   beforeAll(() => {
     EVALUATION_DATASET.forEach((testCase) => {
       const parsed = RegexParser.parse(testCase.input);
+      if (!parsed) return;
+
       let category = parsed.category;
       if (category === 'Others') {
         category = CategoryDictionaryMapper.categorize(testCase.input).category;

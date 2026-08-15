@@ -118,6 +118,11 @@
           <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400"></i>
         </button>
 
+        <!-- Settings & Personalization Button -->
+        <button onclick="openPersonalizationModal()" title="Personalization & Budget Settings" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
+          <i data-lucide="settings" class="w-4 h-4"></i>
+        </button>
+
         <!-- Primary CTA: Quick Add Expense -->
         <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-medium rounded-lg shadow-sm transition-all active:scale-95">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
@@ -198,48 +203,75 @@
       </button>
     </div>
 
-    <!-- KPI METRICS GRID (4 COLUMNS) -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <!-- KPI METRICS GRID (6 TILES / 2 ROWS) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3.5">
       
-      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
-        <div class="flex items-center justify-between mb-2">
+      <!-- 1. Expenses -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Expenses</span>
-          <i data-lucide="credit-card" class="w-4 h-4 text-zinc-400"></i>
+          <i data-lucide="credit-card" class="w-3.5 h-3.5 text-zinc-400"></i>
         </div>
-        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthExpense">₹0</div>
-        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiExpenseSub">Current period outlays</p>
+        <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthExpense">₹0</div>
+        <p class="text-[10px] text-zinc-400 mt-1" id="kpiExpenseSub">Current period outlays</p>
       </div>
 
-      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
-        <div class="flex items-center justify-between mb-2">
+      <!-- 2. Income -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Income</span>
-          <i data-lucide="wallet" class="w-4 h-4 text-zinc-400"></i>
+          <i data-lucide="wallet" class="w-3.5 h-3.5 text-zinc-400"></i>
         </div>
-        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthIncome">₹0</div>
-        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiIncomeSub">Total incoming cash flow</p>
+        <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthIncome">₹0</div>
+        <p class="text-[10px] text-zinc-400 mt-1" id="kpiIncomeSub">Total incoming flow</p>
       </div>
 
-      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
-        <div class="flex items-center justify-between mb-2">
+      <!-- 3. Net Savings -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-1.5">
           <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Net Savings</span>
-          <i data-lucide="piggy-bank" class="w-4 h-4 text-zinc-400"></i>
+          <i data-lucide="piggy-bank" class="w-3.5 h-3.5 text-zinc-400"></i>
         </div>
-        <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthSavings">₹0</div>
-        <p class="text-[11px] text-zinc-400 mt-1.5" id="kpiSavingsSub">Income minus expenses</p>
+        <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiMonthSavings">₹0</div>
+        <p class="text-[10px] text-zinc-400 mt-1" id="kpiSavingsSub">Retained capital</p>
       </div>
 
-      <div class="p-5 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
-        <div class="flex items-center justify-between mb-2">
-          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Consumed</span>
-          <i data-lucide="pie-chart" class="w-4 h-4 text-zinc-400"></i>
+      <!-- 4. Budget Consumed -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Budget Used</span>
+          <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-zinc-400"></i>
         </div>
-        <div class="flex items-baseline justify-between gap-2">
-          <div class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiBudgetUsed">0%</div>
-          <span class="text-[11px] text-zinc-400" id="kpiBudgetRatio">₹0 / ₹0</span>
+        <div class="flex items-baseline justify-between gap-1">
+          <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiBudgetUsed">0%</div>
+          <span class="text-[10px] text-zinc-400 truncate max-w-[80px]" id="kpiBudgetRatio">₹0 / ₹0</span>
         </div>
-        <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full mt-2.5 overflow-hidden">
+        <div class="w-full bg-zinc-100 dark:bg-zinc-800 h-1.5 rounded-full mt-2 overflow-hidden">
           <div class="bg-zinc-900 dark:bg-white h-full rounded-full transition-all duration-500" id="kpiBudgetProgressBar" style="width: 0%"></div>
         </div>
+      </div>
+
+      <!-- 5. Pulse Health Score (0-100) -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs relative overflow-hidden">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Pulse Health</span>
+          <i data-lucide="activity" class="w-3.5 h-3.5 text-emerald-500"></i>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiPulseScore">85<span class="text-xs font-normal text-zinc-400">/100</span></div>
+          <span class="px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20" id="kpiPulseGrade">Good</span>
+        </div>
+        <p class="text-[10px] text-zinc-400 mt-1 truncate" id="kpiPulseSub">Savings & budget health</p>
+      </div>
+
+      <!-- 6. Safe Daily Spend (Daily Discretionary Limit) -->
+      <div class="p-4 bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800/90 rounded-xl shadow-xs">
+        <div class="flex items-center justify-between mb-1.5">
+          <span class="text-xs font-medium text-zinc-500 dark:text-zinc-400">Safe Daily Limit</span>
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-amber-500"></i>
+        </div>
+        <div class="text-xl font-bold text-zinc-900 dark:text-zinc-100 tracking-tight" id="kpiDailyLimit">₹0</div>
+        <p class="text-[10px] text-zinc-400 mt-1 truncate" id="kpiDailySub">Suggested daily spend</p>
       </div>
 
     </div>
@@ -381,18 +413,28 @@
       </div>
 
       <div class="p-4 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 rounded-xl space-y-3">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-base shadow-xs" id="accountModalAvatar">
-            A
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-brand-600 text-white flex items-center justify-center font-bold text-base shadow-xs" id="accountModalAvatar">
+              A
+            </div>
+            <div>
+              <h4 class="text-sm font-bold text-slate-900 dark:text-white" id="accountModalName">Authenticated User</h4>
+              <p class="text-xs text-slate-500 dark:text-slate-400" id="accountModalSub">Connected via Telegram</p>
+            </div>
           </div>
-          <div>
-            <h4 class="text-sm font-bold text-slate-900 dark:text-white" id="accountModalName">Authenticated User</h4>
-            <p class="text-xs text-slate-500 dark:text-slate-400" id="accountModalSub">Connected via Telegram</p>
-          </div>
+          <button onclick="closeAccountModal(); openPersonalizationModal();" title="Edit Budget & Preferences" class="p-2 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors">
+            <i data-lucide="settings" class="w-4 h-4"></i>
+          </button>
         </div>
       </div>
 
-      <div class="pt-2">
+      <div class="space-y-2 pt-1">
+        <button onclick="closeAccountModal(); openPersonalizationModal();" class="w-full py-2.5 px-4 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 text-zinc-800 dark:text-zinc-200 text-xs font-semibold rounded-xl transition-all flex items-center justify-center gap-2">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          Edit Personalization & Budgets
+        </button>
+
         <button onclick="logout()" class="w-full py-2.5 px-4 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/40 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-800 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2">
           <i data-lucide="log-out" class="w-4 h-4"></i>
           Logout
@@ -649,6 +691,99 @@
     </div>
   </div>
 
+  <!-- FIRST-TIME ONBOARDING & PERSONALIZATION SETUP MODAL -->
+  <div id="onboardingModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-6 text-left max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center gap-3 border-b border-zinc-200 dark:border-zinc-800/80 pb-4">
+        <div class="w-10 h-10 rounded-xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-lg shrink-0">
+          ✨
+        </div>
+        <div>
+          <h3 class="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Let's Personalize PulseAI</h3>
+          <p class="text-xs text-zinc-500 dark:text-zinc-400">Set your monthly targets and budgets for precise insights</p>
+        </div>
+      </div>
+
+      <form id="onboardingForm" onsubmit="submitOnboarding(event)" class="space-y-4">
+        <!-- 1. Preferred Currency & Name -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Your Name</label>
+            <input type="text" id="obName" placeholder="e.g. Akash" class="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Primary Currency</label>
+            <select id="obCurrency" class="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
+              <option value="INR" selected>₹ INR (Indian Rupee)</option>
+              <option value="USD">$ USD (US Dollar)</option>
+              <option value="EUR">€ EUR (Euro)</option>
+              <option value="GBP">£ GBP (British Pound)</option>
+              <option value="AED">د.إ AED (UAE Dirham)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 2. Monthly Income & Target Savings -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Expected Monthly Income</label>
+            <input type="number" id="obIncome" min="0" step="1000" placeholder="e.g. 50000" class="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Monthly Savings Goal</label>
+            <select id="obSavingsRate" class="w-full px-3 py-2 text-xs rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900 text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-400">
+              <option value="10">10% (Beginner Saver)</option>
+              <option value="20" selected>20% (Balanced 50/30/20 Rule)</option>
+              <option value="30">30% (Aggressive Growth)</option>
+              <option value="50">50% (FIRE / Minimalist)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3. Key Category Budgets -->
+        <div>
+          <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300 mb-1">Monthly Category Budgets (Optional)</label>
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs">
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">🍔 Food & Dining</span>
+              <input type="number" id="obBgtFood" placeholder="e.g. 6000" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">🛒 Groceries</span>
+              <input type="number" id="obBgtGroceries" placeholder="e.g. 5000" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">🛍️ Shopping</span>
+              <input type="number" id="obBgtShopping" placeholder="e.g. 4000" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">🚗 Transport</span>
+              <input type="number" id="obBgtTransport" placeholder="e.g. 3000" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">💡 Bills & Utilities</span>
+              <input type="number" id="obBgtBills" placeholder="e.g. 2500" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+            <div class="p-2.5 bg-zinc-50 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+              <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">🍿 Entertainment</span>
+              <input type="number" id="obBgtEntertainment" placeholder="e.g. 2000" class="w-full mt-1 px-2 py-1 text-xs rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-white">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-zinc-200 dark:border-zinc-800/80">
+          <button type="button" onclick="skipOnboarding()" class="text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:hover:text-white">
+            Skip for now
+          </button>
+          <button type="submit" class="px-5 py-2.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-semibold rounded-xl shadow-sm transition-all flex items-center gap-1.5">
+            <span>Complete Setup</span>
+            <i data-lucide="check" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
 
   <script>
     let rawTransactions = [];
@@ -693,6 +828,7 @@
           if (data.authenticated && data.user) {
             currentUser = data.user;
             document.getElementById('authRequiredModal').classList.add('hidden');
+            checkAndShowOnboarding(currentUser);
             loadDashboard();
             return true;
           }
@@ -703,6 +839,109 @@
       document.getElementById('authRequiredModal').classList.remove('hidden');
       switchAuthTab('qr');
       return false;
+    }
+
+    function checkAndShowOnboarding(user) {
+      if (user && !user.isOnboarded) {
+        openPersonalizationModal();
+      }
+    }
+
+    function openPersonalizationModal() {
+      const obModal = document.getElementById('onboardingModal');
+      if (!obModal) return;
+
+      if (currentUser) {
+        const obName = document.getElementById('obName');
+        const obCurrency = document.getElementById('obCurrency');
+        const obIncome = document.getElementById('obIncome');
+        const obSavings = document.getElementById('obSavingsRate');
+
+        if (obName && currentUser.firstName && currentUser.firstName !== 'User') {
+          obName.value = currentUser.firstName;
+        }
+        if (obCurrency && currentUser.currency) {
+          obCurrency.value = currentUser.currency;
+        }
+        if (obIncome && currentUser.monthlyIncome) {
+          obIncome.value = currentUser.monthlyIncome;
+        }
+        if (obSavings && currentUser.targetSavingsRate) {
+          obSavings.value = String(currentUser.targetSavingsRate);
+        }
+      }
+
+      obModal.classList.remove('hidden');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function submitOnboarding(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('obName').value.trim();
+      const currency = document.getElementById('obCurrency').value;
+      const monthlyIncome = parseFloat(document.getElementById('obIncome').value) || 0;
+      const targetSavingsRate = parseInt(document.getElementById('obSavingsRate').value, 10) || 20;
+
+      const budgets = [];
+      const foodLimit = parseFloat(document.getElementById('obBgtFood').value) || 0;
+      const grocLimit = parseFloat(document.getElementById('obBgtGroceries').value) || 0;
+      const shopLimit = parseFloat(document.getElementById('obBgtShopping').value) || 0;
+      const transLimit = parseFloat(document.getElementById('obBgtTransport').value) || 0;
+      const billLimit = parseFloat(document.getElementById('obBgtBills').value) || 0;
+      const entLimit = parseFloat(document.getElementById('obBgtEntertainment').value) || 0;
+
+      if (foodLimit > 0) budgets.push({ category: 'Food & Dining', limit: foodLimit });
+      if (grocLimit > 0) budgets.push({ category: 'Groceries', limit: grocLimit });
+      if (shopLimit > 0) budgets.push({ category: 'Shopping', limit: shopLimit });
+      if (transLimit > 0) budgets.push({ category: 'Transport', limit: transLimit });
+      if (billLimit > 0) budgets.push({ category: 'Bills & Utilities', limit: billLimit });
+      if (entLimit > 0) budgets.push({ category: 'Entertainment', limit: entLimit });
+
+      try {
+        const res = await fetch('/api/user/onboarding', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...getAuthHeaders(),
+          },
+          body: JSON.stringify({
+            firstName,
+            currency,
+            monthlyIncome,
+            targetSavingsRate,
+            budgets,
+          }),
+        });
+
+        let data = {};
+        try {
+          data = await res.json();
+        } catch (_) {}
+
+        if (res.ok && (data.success || data.user)) {
+          if (data.user) {
+            currentUser = data.user;
+          }
+          document.getElementById('onboardingModal').classList.add('hidden');
+          showSuccessToast('🎉 Preferences & budgets saved successfully!');
+          loadDashboard();
+        } else {
+          showErrorToast(data.message || `Server error (${res.status}): Could not save settings`);
+        }
+      } catch (err) {
+        console.error('Onboarding save failed', err);
+        showErrorToast(`Network error: ${err.message || 'Failed to connect to server'}`);
+      }
+    }
+
+    function skipOnboarding() {
+      document.getElementById('onboardingModal').classList.add('hidden');
+      // Mark as onboarded in session to prevent nagging
+      fetch('/api/user/onboarding', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+        body: JSON.stringify({}),
+      }).catch(console.error);
     }
 
     let qrPollInterval = null;
@@ -729,6 +968,7 @@
                 currentUser = statusData.user;
                 document.getElementById('authRequiredModal').classList.add('hidden');
                 showSuccessToast('Logged in via Telegram QR!');
+                checkAndShowOnboarding(currentUser);
                 loadDashboard();
               } else if (statusData.status === 'EXPIRED') {
                 clearInterval(qrPollInterval);
@@ -793,6 +1033,7 @@
           currentUser = data.user;
           document.getElementById('authRequiredModal').classList.add('hidden');
           showSuccessToast('Logged in successfully!');
+          checkAndShowOnboarding(currentUser);
           loadDashboard();
         } else {
           showErrorToast(data.message || 'Login failed');
@@ -820,6 +1061,7 @@
           currentUser = data.user;
           document.getElementById('authRequiredModal').classList.add('hidden');
           showSuccessToast('Account created successfully!');
+          checkAndShowOnboarding(currentUser);
           loadDashboard();
         } else {
           showErrorToast(data.message || 'Registration failed');
@@ -841,6 +1083,7 @@
           currentUser = data.user;
           document.getElementById('authRequiredModal').classList.add('hidden');
           showSuccessToast('Welcome to Demo Access!');
+          checkAndShowOnboarding(currentUser);
           loadDashboard();
         } else {
           showErrorToast(data.message || 'Demo login failed');
@@ -872,6 +1115,7 @@
             authOverlay.style.display = 'none';
             authOverlay.classList.add('hidden');
           }
+          checkAndShowOnboarding(currentUser);
           await loadDashboard();
         } else {
           showErrorToast(data.message || 'Telegram authentication failed');
@@ -954,9 +1198,21 @@
       if (toast && msgEl) {
         msgEl.innerText = msg;
         toast.classList.remove('hidden');
-        setTimeout(() => toast.classList.add('hidden'), 6000);
+        if (window.lucide) lucide.createIcons();
+        setTimeout(() => toast.classList.add('hidden'), 5000);
       } else {
         alert(msg);
+      }
+    }
+
+    function showSuccessToast(msg) {
+      const toast = document.getElementById('successToast');
+      const msgEl = document.getElementById('successToastMessage');
+      if (toast && msgEl) {
+        msgEl.innerText = msg;
+        toast.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+        setTimeout(() => toast.classList.add('hidden'), 4000);
       }
     }
 
@@ -1021,6 +1277,28 @@
         document.getElementById('kpiMonthIncome').innerText = `${curr} ${activeSummary.totalIncome.toLocaleString()}`;
         document.getElementById('kpiMonthSavings').innerText = `${curr} ${activeSummary.netSavings.toLocaleString()}`;
 
+        // Populate Pulse Score & Safe Daily Limit
+        if (data.pulseHealth) {
+          const scoreEl = document.getElementById('kpiPulseScore');
+          const gradeEl = document.getElementById('kpiPulseGrade');
+          if (scoreEl) scoreEl.innerHTML = `${data.pulseHealth.pulseScore}<span class="text-xs font-normal text-zinc-400">/100</span>`;
+          if (gradeEl) {
+            gradeEl.innerText = data.pulseHealth.grade;
+            gradeEl.className = data.pulseHealth.pulseScore >= 80 
+              ? 'px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20'
+              : data.pulseHealth.pulseScore >= 65
+              ? 'px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-blue-500/10 text-blue-500 border border-blue-500/20'
+              : 'px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-amber-500/10 text-amber-500 border border-amber-500/20';
+          }
+        }
+
+        if (data.dailyLimit) {
+          const dailyEl = document.getElementById('kpiDailyLimit');
+          const dailySubEl = document.getElementById('kpiDailySub');
+          if (dailyEl) dailyEl.innerText = `${curr} ${data.dailyLimit.recommendedDailyLimit.toLocaleString()}`;
+          if (dailySubEl) dailySubEl.innerText = `${data.dailyLimit.daysRemaining} days left in month`;
+        }
+
         // Budget Calculations
         if (data.budgetOverview && data.budgetOverview.length > 0) {
           renderBudgetOverview(data.budgetOverview, curr);
@@ -1050,6 +1328,10 @@
       document.getElementById('kpiMonthExpense').innerText = `${curr} 0`;
       document.getElementById('kpiMonthIncome').innerText = `${curr} 0`;
       document.getElementById('kpiMonthSavings').innerText = `${curr} 0`;
+      const scoreEl = document.getElementById('kpiPulseScore');
+      if (scoreEl) scoreEl.innerHTML = `70<span class="text-xs font-normal text-zinc-400">/100</span>`;
+      const dailyEl = document.getElementById('kpiDailyLimit');
+      if (dailyEl) dailyEl.innerText = `${curr} 0`;
       renderDefaultBudgetOverview({ categoryBreakdown: {} }, curr);
       renderDefaultAIInsights({ totalExpense: 0, totalIncome: 0, categoryBreakdown: {} });
       renderTable([], curr);
@@ -1481,10 +1763,15 @@
     }
   </script>
 
-  <!-- ERROR TOAST NOTIFICATION -->
+  <!-- TOAST NOTIFICATIONS -->
   <div id="errorToast" class="fixed bottom-6 right-6 z-50 hidden bg-rose-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md transition-all">
     <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-white"></i>
     <span id="errorToastMessage"></span>
+  </div>
+
+  <div id="successToast" class="fixed bottom-6 right-6 z-50 hidden bg-emerald-600 text-white text-xs font-semibold px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3 max-w-md transition-all">
+    <i data-lucide="check-circle" class="w-4 h-4 shrink-0 text-white"></i>
+    <span id="successToastMessage"></span>
   </div>
 </body>
 </html>

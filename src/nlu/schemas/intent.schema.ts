@@ -39,6 +39,7 @@ export const LLMToolCallSchema = z.object({
     'get_top_expenses',
     'get_budget_status',
     'set_budget',
+    'create_recurring',
     'ask_financial_intelligence',
     'delete_last_transaction',
   ]),

@@ -194,8 +194,49 @@ export class AuthService {
         username: user.username || '',
         profilePhotoUrl: user.profilePhotoUrl || '',
         currency: user.currency || '₹',
+        isOnboarded: user.isOnboarded ?? false,
+        monthlyIncome: user.monthlyIncome ? Number(user.monthlyIncome) : null,
+        targetSavingsRate: user.targetSavingsRate ?? 20,
       },
     };
+  }
+
+  async completeOnboarding(userId: string, data: {
+    firstName?: string;
+    currency?: string;
+    monthlyIncome?: number;
+    targetSavingsRate?: number;
+    budgets?: Array<{ category: string; limit: number }>;
+  }) {
+    try {
+      const updated = await this.prisma.user.update({
+        where: { id: userId },
+        data: {
+          firstName: data.firstName || undefined,
+          currency: data.currency || 'INR',
+          monthlyIncome: (data.monthlyIncome !== undefined && data.monthlyIncome !== null) ? Number(data.monthlyIncome) : undefined,
+          targetSavingsRate: data.targetSavingsRate || 20,
+          isOnboarded: true,
+        },
+      });
+
+      // Save initial budgets if provided
+      if (data.budgets && Array.isArray(data.budgets)) {
+        for (const b of data.budgets) {
+          if (b.category && b.limit > 0) {
+            await this.transactionService.setBudgetLimit(userId, b.category, Number(b.limit));
+          }
+        }
+      }
+
+      return {
+        success: true,
+        user: this.buildAuthResult(updated).user,
+      };
+    } catch (err: any) {
+      this.logger.error(`Error in completeOnboarding: ${err.message}`, err.stack);
+      throw new BadRequestException(`Could not save onboarding data: ${err.message}`);
+    }
   }
 
   async validateUserById(userId: string) {

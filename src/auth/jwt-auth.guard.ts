@@ -19,10 +19,10 @@ export class JwtAuthGuard implements CanActivate {
     const sessionToken = cookies['pulse_session'];
     const authHeader = (request.headers['authorization'] || request.headers['x-telegram-init-data']) as string;
 
-    // 1. Try JWT from HttpOnly Cookie or Bearer header
+    // 1. Try JWT from HttpOnly Cookie or Bearer / raw Authorization header
     let token = sessionToken;
-    if (!token && authHeader && authHeader.startsWith('Bearer ') && !authHeader.includes('hash=')) {
-      token = authHeader.substring(7);
+    if (!token && authHeader && !authHeader.includes('hash=')) {
+      token = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
     }
 
     if (token) {

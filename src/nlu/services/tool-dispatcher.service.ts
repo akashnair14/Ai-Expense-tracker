@@ -78,6 +78,50 @@ export class ToolDispatcherService {
         return this.transactionService.setBudgetLimit(userId, category, amount);
       }
 
+      case 'create_recurring': {
+        const name = String(toolCall.parameters?.name || toolCall.parameters?.description || 'Recurring');
+        const amount = Number(toolCall.parameters?.amount) || 0;
+        const type = (toolCall.parameters?.type || 'EXPENSE') as 'EXPENSE' | 'INCOME';
+        const day = Number(toolCall.parameters?.day) || 1;
+
+        const now = new Date();
+        let nextRun = new Date(now.getFullYear(), now.getMonth(), day);
+        if (nextRun <= now) {
+          nextRun = new Date(now.getFullYear(), now.getMonth() + 1, day);
+        }
+
+        let category = await this.prisma.category.findFirst({
+          where: { userId, name: { equals: name, mode: 'insensitive' } },
+        });
+
+        if (!category) {
+          category = await this.prisma.category.create({
+            data: { userId, name, type },
+          });
+        }
+
+        const recurring = await this.prisma.recurringTransaction.create({
+          data: {
+            userId,
+            categoryId: category.id,
+            type,
+            amount,
+            description: name,
+            cronExpression: `0 0 ${day} * *`,
+            nextRun,
+            isActive: true,
+          },
+        });
+
+        return {
+          recurring,
+          name,
+          amount,
+          day,
+          nextRun: nextRun.toISOString().split('T')[0],
+        };
+      }
+
       case 'delete_last_transaction': {
         return this.transactionService.deleteLastTransaction(userId);
       }

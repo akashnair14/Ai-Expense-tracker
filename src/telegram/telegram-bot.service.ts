@@ -39,6 +39,7 @@ export class TelegramBotService implements OnModuleInit {
         await this.bot.api.setMyCommands([
           { command: 'today', description: "📅 View today's financial summary" },
           { command: 'month', description: "🗓️ Current month breakdown" },
+          { command: 'report', description: "📊 Visual month-end financial summary card" },
           { command: 'budget', description: "🎯 Interactive budget control center" },
           { command: 'recurring', description: "🔁 Scheduled & recurring expenses" },
           { command: 'dashboard', description: "💻 Open web dashboard & QR login" },
@@ -120,6 +121,53 @@ export class TelegramBotService implements OnModuleInit {
         parse_mode: 'Markdown',
         reply_markup: keyboard,
       });
+    });
+
+    // /report command - Aesthetic Month-End Financial Summary Card
+    this.bot.command('report', async (ctx) => {
+      if (!ctx.from) return;
+      const user = await this.transactionService.getOrCreateUser(ctx.from.id, ctx.from.username, ctx.from.first_name, ctx.from.last_name);
+      const monthSummary = await this.analyticsService.getSummaryReport(user.id, 'month');
+      const pulseHealth = await this.analyticsService.calculatePulseScore(user.id);
+      const dailyLimit = await this.analyticsService.calculateDailyDiscretionaryLimit(user.id);
+
+      const now = new Date();
+      const monthName = now.toLocaleString('en-US', { month: 'long', year: 'numeric' });
+
+      let card = `╔═══════════════════════════╗\n`;
+      card += `   💳 **PULSEAI MONTHLY STATEMENT**\n`;
+      card += `   🗓️ **${monthName.toUpperCase()}**\n`;
+      card += `╚═══════════════════════════╝\n\n`;
+
+      card += `💰 **Total Income:** ${user.currency} ${monthSummary.totalIncome.toLocaleString()}\n`;
+      card += `💸 **Total Expenses:** ${user.currency} ${monthSummary.totalExpense.toLocaleString()}\n`;
+      card += `📈 **Net Savings:** ${user.currency} ${monthSummary.netSavings.toLocaleString()}\n`;
+      card += `🔢 **Transactions Logged:** ${monthSummary.transactionCount}\n\n`;
+
+      card += `💓 **Pulse Health Score:** ${pulseHealth.pulseScore}/100 (${pulseHealth.grade})\n`;
+      card += `💡 **Safe Daily Spend:** ${user.currency} ${dailyLimit.recommendedDailyLimit.toLocaleString()} / day (${dailyLimit.daysRemaining} days left)\n\n`;
+
+      const topCats = Object.entries(monthSummary.categoryBreakdown)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4);
+
+      if (topCats.length > 0) {
+        card += `📊 **Top Spending Categories:**\n`;
+        for (const [cat, amt] of topCats) {
+          const pct = monthSummary.totalExpense > 0 ? Math.round((amt / monthSummary.totalExpense) * 100) : 0;
+          const barLength = Math.round(pct / 10);
+          const bar = '■'.repeat(barLength) + '□'.repeat(Math.max(0, 10 - barLength));
+          card += `• **${cat}**: ${user.currency} ${amt.toLocaleString()} (${pct}%)\n  \`[${bar}]\`\n`;
+        }
+      }
+
+      const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+      const keyboard = new InlineKeyboard()
+        .url('📊 Full Interactive Charts', appUrl)
+        .row()
+        .text('🎯 Adjust Budget', 'cmd_budget');
+
+      await ctx.reply(card, { parse_mode: 'Markdown', reply_markup: keyboard });
     });
 
     // /budget command with Interactive Visual Menu
@@ -471,9 +519,11 @@ export class TelegramBotService implements OnModuleInit {
 
             if (budgetAlert) {
               responseText += `\n\n📊 **Budget Update (${budgetAlert.categoryName}):**`;
-              responseText += `\nSpent: ${transaction.currency} ${budgetAlert.currentSpent} / ${budgetAlert.monthlyLimit} (${budgetAlert.usedPercentage}%)`;
+              responseText += `\nSpent: ${transaction.currency} ${budgetAlert.currentSpent.toLocaleString()} / ${transaction.currency} ${budgetAlert.monthlyLimit.toLocaleString()} (${budgetAlert.usedPercentage}%)`;
               if (budgetAlert.isExceeded) {
-                responseText += `\n⚠️ **WARNING: Budget limit exceeded by ${transaction.currency} ${Math.abs(budgetAlert.remaining)}!**`;
+                responseText += `\n🚨 **WARNING: Limit exceeded by ${transaction.currency} ${Math.abs(budgetAlert.remaining).toLocaleString()}!**`;
+              } else if (budgetAlert.isOverPaced) {
+                responseText += `\n⚠️ **Pace Warning:** Day ${budgetAlert.currentDay} of ${budgetAlert.totalDaysInMonth} (${budgetAlert.usedPercentage}% spent). At this rate, you may exceed by ${transaction.currency} ${budgetAlert.projectedOverage?.toLocaleString()} by month-end!`;
               }
             }
 
@@ -513,6 +563,11 @@ export class TelegramBotService implements OnModuleInit {
               msg += `${i + 1}. **${t.merchant}** (${t.category}): ${user.currency} ${t.amount.toLocaleString()} on ${t.date}\n`;
             });
             await ctx.reply(msg, { parse_mode: 'Markdown' });
+            return;
+          }
+
+          if (intentResult.intent === 'CREATE_RECURRING' || tool.recurring) {
+            await ctx.reply(`🔁 **Recurring Schedule Created!**\n\n📌 **${tool.name}**: ${user.currency} ${tool.amount.toLocaleString()}\n🗓️ **Scheduled Day:** Every ${tool.day}th of the month\n🗓️ **Next Auto-Run:** ${tool.nextRun}`, { parse_mode: 'Markdown' });
             return;
           }
         }

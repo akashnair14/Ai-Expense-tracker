@@ -18,6 +18,19 @@ export class RegexParser {
     const text = input.trim();
     if (!text) return null;
 
+    // If text contains recurring schedule signals (e.g. "every month", "each month", "on 4th of every month", "every 1st")
+    const lowerText = text.toLowerCase();
+    if (
+      lowerText.includes('every month') ||
+      lowerText.includes('each month') ||
+      lowerText.includes('per month') ||
+      /on\s+\d{1,2}(?:st|nd|rd|th)?\s+of\s+every\s+month/i.test(lowerText) ||
+      /every\s+\d{1,2}(?:st|nd|rd|th)/i.test(lowerText) ||
+      /\d{1,2}(?:st|nd|rd|th)\s+of\s+every\s+month/i.test(lowerText)
+    ) {
+      return null;
+    }
+
     let type: 'EXPENSE' | 'INCOME' = 'EXPENSE';
     let amount = 0;
     let originalAmount = 0;
@@ -28,7 +41,6 @@ export class RegexParser {
     let description = text;
 
     // 1. Detect Income keywords
-    const lowerText = text.toLowerCase();
     if (
       lowerText.includes('salary') ||
       lowerText.includes('received') ||
