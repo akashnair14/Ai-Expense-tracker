@@ -6,10 +6,10 @@
   <title>Kinetiq — Intelligent Financial Operating System</title>
   <meta name="description" content="Kinetiq is an intelligent financial operating system for personal cash flow, automated natural-language ledger management, and safe daily spending control.">
   
-  <!-- High-Precision Modern Typography: Plus Jakarta Sans + JetBrains Mono -->
+  <!-- Modern Typography: Plus Jakarta Sans + JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -106,9 +106,6 @@
       outline: none;
       box-shadow: 0 0 0 1px #10b981;
     }
-    html.light .form-input {
-      background-color: #ffffff;
-    }
 
     .ledger-row {
       transition: background-color 0.1s ease;
@@ -133,7 +130,6 @@
       border-left: 2px solid #10b981;
     }
 
-    /* Landing Page Specific Subtle Hero Backdrop */
     .hero-glow {
       background: radial-gradient(circle at 50% -10%, rgba(16, 185, 129, 0.15) 0%, rgba(8, 9, 12, 0) 70%);
     }
@@ -141,11 +137,11 @@
 </head>
 <body class="selection:bg-emerald-500 selection:text-black">
 
-  <!-- Toast Container -->
+  <!-- Toast Notification Container -->
   <div id="toastContainer" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none max-w-sm w-full"></div>
 
   <!-- ========================================================================= -->
-  <!-- 1. PUBLIC MARKETING LANDING PAGE VIEW (#/ or default) -->
+  <!-- 1. PUBLIC MARKETING LANDING PAGE VIEW (#/) -->
   <!-- ========================================================================= -->
   <div id="view-landing" class="min-h-screen hero-glow flex flex-col justify-between">
 
@@ -169,11 +165,11 @@
       </nav>
 
       <div class="flex items-center gap-3">
-        <button onclick="openAuthModal()" class="text-xs text-slate-300 hover:text-white font-medium px-3 py-1.5 transition-colors">
+        <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-3 py-1.5 transition-colors">
           Sign In
         </button>
-        <button onclick="navigateTo('/app')" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded-md transition-all shadow-sm flex items-center gap-1.5">
-          <span>Launch App</span>
+        <button onclick="navigateTo('/signup')" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded-md transition-all shadow-sm flex items-center gap-1.5">
+          <span>Get Started</span>
           <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
         </button>
       </div>
@@ -198,15 +194,15 @@
         </p>
 
         <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-          <button onclick="navigateTo('/app')" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs sm:text-sm rounded-lg transition-all shadow-lg shadow-emerald-500/10 flex items-center justify-center gap-2">
-            <span>Get Started Free</span>
+          <button onclick="navigateTo('/signup')" class="w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs sm:text-sm rounded-lg transition-all shadow-lg shadow-emerald-500/10 flex items-center justify-center gap-2">
+            <span>Start Free Account</span>
             <i data-lucide="arrow-right" class="w-4 h-4"></i>
           </button>
           
-          <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="w-full sm:w-auto px-5 py-3 card-subtle hover:bg-white/10 text-white font-medium text-xs sm:text-sm rounded-lg transition-all flex items-center justify-center gap-2">
-            <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
-            <span>Open Telegram Bot</span>
-          </a>
+          <button onclick="navigateTo('/login')" class="w-full sm:w-auto px-5 py-3 card-subtle hover:bg-white/10 text-white font-medium text-xs sm:text-sm rounded-lg transition-all flex items-center justify-center gap-2">
+            <i data-lucide="log-in" class="w-4 h-4 text-emerald-400"></i>
+            <span>Sign In / Demo</span>
+          </button>
         </div>
 
         <div class="flex items-center justify-center gap-6 pt-4 text-xs text-slate-500 font-mono">
@@ -216,9 +212,7 @@
         </div>
       </div>
 
-      <!-- ================================================================= -->
-      <!-- Interactive Live Demonstration Sandbox -->
-      <!-- ================================================================= -->
+      <!-- Live Accounting Simulator Section -->
       <section id="interactive-demo" class="card p-5 sm:p-7 shadow-2xl border-white/[0.1] max-w-4xl mx-auto">
         <div class="flex items-center justify-between pb-4 border-b border-white/[0.08] mb-5">
           <div class="flex items-center gap-2">
@@ -228,7 +222,6 @@
           <span class="text-xs text-slate-400 font-mono">Type naturally below to test live parsing</span>
         </div>
 
-        <!-- Simulator Input -->
         <div class="space-y-4">
           <div class="relative">
             <input 
@@ -244,7 +237,6 @@
             </button>
           </div>
 
-          <!-- Quick Interactive Presets -->
           <div class="flex items-center gap-2 overflow-x-auto text-xs text-slate-400">
             <span class="shrink-0 text-[11px] font-mono">Quick test:</span>
             <button onclick="fillSimulator('Swiggy 350 for dinner')" class="px-2 py-0.5 rounded card-subtle hover:bg-white/10 text-slate-300 text-xs shrink-0">🍔 Swiggy 350</button>
@@ -253,7 +245,6 @@
             <button onclick="fillSimulator('Blinkit 650 groceries')" class="px-2 py-0.5 rounded card-subtle hover:bg-white/10 text-slate-300 text-xs shrink-0">🛒 Blinkit 650</button>
           </div>
 
-          <!-- Live Output Screen -->
           <div id="simulatorOutput" class="p-4 rounded-lg bg-black/40 border border-white/[0.06] font-mono text-xs space-y-2">
             <div class="text-slate-500">// Kinetiq NLU Parser & Accounting Engine Output:</div>
             <div class="flex items-start gap-2 text-slate-300">
@@ -264,9 +255,7 @@
         </div>
       </section>
 
-      <!-- ================================================================= -->
       <!-- 4 Core Pillars of Kinetiq Intelligence -->
-      <!-- ================================================================= -->
       <section id="features" class="space-y-8">
         <div class="text-center max-w-xl mx-auto">
           <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Built for effortless financial control</h2>
@@ -274,7 +263,6 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
           <div class="card p-5 space-y-3">
             <div class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center border border-emerald-500/20">
               <i data-lucide="message-square" class="w-4 h-4"></i>
@@ -304,13 +292,10 @@
               Identifies which categories are accelerating before month-end surprises occur. Set proactive limits for Food, Shopping, and Travel.
             </p>
           </div>
-
         </div>
       </section>
 
-      <!-- ================================================================= -->
       <!-- Pricing Section -->
-      <!-- ================================================================= -->
       <section id="pricing" class="card p-6 sm:p-8 max-w-3xl mx-auto space-y-6">
         <div class="text-center space-y-2">
           <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Simple, transparent access</h2>
@@ -324,8 +309,8 @@
               <div class="text-2xl font-bold text-white">Free</div>
               <p class="text-xs text-slate-400">Unlimited natural language logging, Telegram bot integration, and web ledger.</p>
             </div>
-            <button onclick="navigateTo('/app')" class="mt-4 w-full py-2 card-subtle hover:bg-white/10 text-white font-medium text-xs rounded">
-              Launch Free
+            <button onclick="navigateTo('/signup')" class="mt-4 w-full py-2 card-subtle hover:bg-white/10 text-white font-medium text-xs rounded">
+              Get Started Free
             </button>
           </div>
 
@@ -338,8 +323,8 @@
               <div class="text-2xl font-bold text-white">₹199 <span class="text-xs font-normal text-slate-400">/ month</span></div>
               <p class="text-xs text-slate-400">Automated recurring bill detection, Splitwise group expense splitting, and AI financial queries.</p>
             </div>
-            <button onclick="navigateTo('/app')" class="mt-4 w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded transition-all">
-              Start Free 14-Day Trial
+            <button onclick="navigateTo('/signup')" class="mt-4 w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded transition-all">
+              Start Free Trial
             </button>
           </div>
         </div>
@@ -348,8 +333,8 @@
       <!-- Final Call to Action -->
       <div class="text-center py-8 space-y-4">
         <h2 class="text-2xl font-bold text-white tracking-tight">Ready to take control of your money?</h2>
-        <button onclick="navigateTo('/app')" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs sm:text-sm rounded-lg transition-all shadow-lg shadow-emerald-500/10 inline-flex items-center gap-2">
-          <span>Open Kinetiq Dashboard</span>
+        <button onclick="navigateTo('/signup')" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs sm:text-sm rounded-lg transition-all shadow-lg shadow-emerald-500/10 inline-flex items-center gap-2">
+          <span>Create Free Account</span>
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </div>
@@ -364,7 +349,7 @@
       </div>
       <div class="flex items-center gap-4">
         <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="hover:text-slate-300 transition-colors">Telegram Bot</a>
-        <a href="#" onclick="openAuthModal(); return false;" class="hover:text-slate-300 transition-colors">Sign In</a>
+        <a href="#" onclick="navigateTo('/login'); return false;" class="hover:text-slate-300 transition-colors">Sign In</a>
         <a href="#" onclick="navigateTo('/app'); return false;" class="hover:text-slate-300 transition-colors">Dashboard</a>
       </div>
     </footer>
@@ -373,7 +358,156 @@
 
 
   <!-- ========================================================================= -->
-  <!-- 2. AUTHENTICATED FINANCIAL DASHBOARD APPLICATION (#/app) -->
+  <!-- 2. DEDICATED LOGIN VIEW (#/login) -->
+  <!-- ========================================================================= -->
+  <div id="view-login" class="hidden min-h-screen hero-glow flex flex-col justify-center items-center px-4 py-12">
+    <div class="w-full max-w-md space-y-6">
+      
+      <!-- Brand Header -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500 text-black font-bold text-base shadow-sm mb-1 cursor-pointer" onclick="navigateTo('/')">
+          K
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Sign in to Kinetiq</h2>
+        <p class="text-xs text-slate-400">Access your intelligent financial operating system</p>
+      </div>
+
+      <!-- Login Card -->
+      <div class="card p-6 shadow-2xl space-y-5">
+        
+        <!-- Tab Selector: Email vs Telegram vs Demo -->
+        <div class="grid grid-cols-3 gap-1 bg-black/40 border border-white/[0.08] p-1 rounded-lg text-xs font-medium">
+          <button onclick="switchLoginMode('email')" id="loginModeEmail" class="py-1.5 rounded bg-emerald-500 text-black font-semibold transition-all">Email</button>
+          <button onclick="switchLoginMode('telegram')" id="loginModeTg" class="py-1.5 rounded text-slate-400 hover:text-white transition-all">Telegram</button>
+          <button onclick="switchLoginMode('demo')" id="loginModeDemo" class="py-1.5 rounded text-slate-400 hover:text-white transition-all">Sandbox</button>
+        </div>
+
+        <!-- 1. Email Login Form -->
+        <form id="emailLoginForm" onsubmit="handleEmailSignIn(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">Email Address</label>
+            <input type="email" id="loginEmailInput" placeholder="name@example.com" required class="w-full px-3 py-2 form-input rounded-md text-sm">
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-slate-400 font-mono uppercase text-[10px]">Password</label>
+            </div>
+            <input type="password" id="loginPasswordInput" placeholder="••••••••" required class="w-full px-3 py-2 form-input rounded-md text-sm">
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all shadow-sm flex items-center justify-center gap-2">
+            <span>Sign In</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </form>
+
+        <!-- 2. Telegram Connect Form -->
+        <div id="telegramLoginPanel" class="space-y-4 text-xs hidden text-center">
+          <p class="text-slate-300 leading-relaxed">Sync directly with the Kinetiq Telegram Bot to authenticate with 1 tap:</p>
+          <div class="py-3">
+            <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="inline-flex items-center gap-2 px-5 py-2.5 bg-white/10 hover:bg-white/15 text-white border border-white/10 font-semibold rounded-md transition-all">
+              <i data-lucide="send" class="w-4 h-4 text-emerald-400"></i>
+              <span>Open @Akash_Expense_tracker_bot</span>
+            </a>
+          </div>
+          <p class="text-[11px] text-slate-500 font-mono">Use the "📱 Open Mini App" button inside Telegram to authenticate instantly.</p>
+        </div>
+
+        <!-- 3. Demo Sandbox Panel -->
+        <div id="demoLoginPanel" class="space-y-4 text-xs hidden">
+          <p class="text-slate-300 leading-relaxed">Test Kinetiq immediately with a preloaded sample ledger, budget limits, and live cash flow pacing.</p>
+          <button onclick="loginAsDemo()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all flex items-center justify-center gap-2">
+            <i data-lucide="zap" class="w-4 h-4"></i>
+            <span>Continue as Demo Sandbox User</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Bottom Switcher -->
+      <div class="text-center text-xs text-slate-400">
+        <span>Don't have an account yet?</span>
+        <button onclick="navigateTo('/signup')" class="text-emerald-400 hover:underline font-semibold ml-1">Sign up free</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 3. DEDICATED SIGNUP & ONBOARDING VIEW (#/signup) -->
+  <!-- ========================================================================= -->
+  <div id="view-signup" class="hidden min-h-screen hero-glow flex flex-col justify-center items-center px-4 py-12">
+    <div class="w-full max-w-md space-y-6">
+      
+      <!-- Brand Header -->
+      <div class="text-center space-y-2">
+        <div class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-emerald-500 text-black font-bold text-base shadow-sm mb-1 cursor-pointer" onclick="navigateTo('/')">
+          K
+        </div>
+        <h2 class="text-2xl font-bold text-white tracking-tight">Create your Kinetiq account</h2>
+        <p class="text-xs text-slate-400">Start managing your personal cash flow with natural language</p>
+      </div>
+
+      <!-- Signup Card -->
+      <div class="card p-6 shadow-2xl space-y-5">
+        
+        <form id="signupForm" onsubmit="handleRegistration(event)" class="space-y-3.5 text-xs">
+          
+          <div>
+            <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">First Name</label>
+            <input type="text" id="signupNameInput" placeholder="Alex" required class="w-full px-3 py-2 form-input rounded-md text-sm">
+          </div>
+
+          <div>
+            <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">Email Address</label>
+            <input type="email" id="signupEmailInput" placeholder="alex@example.com" required class="w-full px-3 py-2 form-input rounded-md text-sm">
+          </div>
+
+          <div>
+            <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">Password (min. 8 characters)</label>
+            <input type="password" id="signupPasswordInput" placeholder="••••••••" minlength="8" required class="w-full px-3 py-2 form-input rounded-md text-sm">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">Preferred Currency</label>
+              <select id="signupCurrencyInput" class="w-full px-2.5 py-2 form-input rounded-md text-xs font-mono cursor-pointer">
+                <option value="INR">₹ INR (Rupee)</option>
+                <option value="USD">$ USD (Dollar)</option>
+                <option value="EUR">€ EUR (Euro)</option>
+                <option value="GBP">£ GBP (Pound)</option>
+                <option value="AED">د.إ AED (Dirham)</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1 font-mono uppercase text-[10px]">Target Savings (%)</label>
+              <input type="number" id="signupSavingsTargetInput" placeholder="20" min="5" max="80" value="20" class="w-full px-3 py-2 form-input rounded-md text-xs font-mono">
+            </div>
+          </div>
+
+          <button type="submit" id="signupSubmitBtn" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all shadow-sm flex items-center justify-center gap-2 mt-4">
+            <span>Create Free Account</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </form>
+
+      </div>
+
+      <!-- Bottom Switcher -->
+      <div class="text-center text-xs text-slate-400">
+        <span>Already have an account?</span>
+        <button onclick="navigateTo('/login')" class="text-emerald-400 hover:underline font-semibold ml-1">Sign in</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. AUTHENTICATED FINANCIAL DASHBOARD (#/app) -->
   <!-- ========================================================================= -->
   <div id="view-app" class="hidden min-h-screen flex flex-col lg:flex-row">
 
@@ -437,7 +571,7 @@
         <!-- Auth Status Container -->
         <div id="authContainer" class="flex items-center justify-between text-xs">
           <span class="text-slate-400">Guest Sandbox</span>
-          <button onclick="openAuthModal()" class="text-emerald-400 hover:underline">Sign In</button>
+          <button onclick="navigateTo('/login')" class="text-emerald-400 hover:underline">Sign In</button>
         </div>
       </div>
     </aside>
@@ -764,58 +898,10 @@
     </div>
   </div>
 
-  <!-- AUTHENTICATION MODAL -->
-  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 hidden flex items-center justify-center p-4">
-    <div class="card max-w-md w-full p-5 shadow-2xl">
-      <div class="flex items-center justify-between pb-3 border-b border-white/[0.08] mb-4">
-        <h3 class="font-semibold text-sm text-white">Sign In to Kinetiq</h3>
-        <button onclick="closeAuthModal()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
-      </div>
-
-      <div class="flex border-b border-white/[0.08] mb-4 text-xs font-medium">
-        <button onclick="switchAuthTab('demo')" id="authTabDemo" class="pb-2 px-3 border-b-2 border-emerald-500 text-emerald-400 font-semibold">Demo Sandbox</button>
-        <button onclick="switchAuthTab('telegram')" id="authTabTg" class="pb-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-white">Telegram Sync</button>
-        <button onclick="switchAuthTab('email')" id="authTabEmail" class="pb-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-white">Email</button>
-      </div>
-
-      <!-- Demo Tab -->
-      <div id="authContentDemo" class="space-y-3.5">
-        <p class="text-xs text-slate-300 leading-relaxed">Access Kinetiq with preloaded transactions, category limits, and live cash flow pacing.</p>
-        <button onclick="loginAsDemo()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded-md transition-all">
-          Continue to Dashboard Sandbox
-        </button>
-      </div>
-
-      <!-- Telegram Tab -->
-      <div id="authContentTg" class="space-y-3.5 hidden text-center">
-        <p class="text-xs text-slate-300">Connect your account directly with the Telegram Bot:</p>
-        <div class="py-2">
-          <a id="tgDeepLinkBtn" href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-white/10 hover:bg-white/15 text-white border border-white/10 font-semibold text-xs rounded-md transition-all">
-            <i data-lucide="send" class="w-3.5 h-3.5 text-emerald-400"></i>
-            <span>Open @Akash_Expense_tracker_bot</span>
-          </a>
-        </div>
-      </div>
-
-      <!-- Email Login Tab -->
-      <form id="authContentEmail" onsubmit="handleEmailLogin(event)" class="space-y-3 hidden text-xs">
-        <div>
-          <label class="block text-slate-400 mb-1">Email</label>
-          <input type="email" id="authEmailInput" required class="w-full px-3 py-1.5 form-input rounded-md">
-        </div>
-        <div>
-          <label class="block text-slate-400 mb-1">Password</label>
-          <input type="password" id="authPasswordInput" required class="w-full px-3 py-1.5 form-input rounded-md">
-        </div>
-        <button type="submit" class="w-full py-2 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md mt-2">Sign In</button>
-      </form>
-    </div>
-  </div>
-
-  <!-- APPLICATION CONTROLLER & LOGIC -->
+  <!-- APPLICATION JAVASCRIPT CONTROLLER & ROUTER -->
   <script>
     let state = {
-      view: 'landing', // 'landing' or 'app'
+      view: 'landing', // 'landing', 'login', 'signup', 'app'
       user: null,
       token: localStorage.getItem('pulse_jwt_token') || '',
       currentPeriod: 'month',
@@ -840,7 +926,11 @@
     // Client-side Router
     function handleRoute() {
       const hash = window.location.hash || '';
-      if (hash.includes('/app') || hash.includes('/dashboard')) {
+      if (hash.includes('/login')) {
+        renderView('login');
+      } else if (hash.includes('/signup') || hash.includes('/register')) {
+        renderView('signup');
+      } else if (hash.includes('/app') || hash.includes('/dashboard')) {
         renderView('app');
       } else {
         renderView('landing');
@@ -850,6 +940,10 @@
     function navigateTo(path) {
       if (path === '/app' || path === '/dashboard') {
         window.location.hash = '/app';
+      } else if (path === '/login') {
+        window.location.hash = '/login';
+      } else if (path === '/signup' || path === '/register') {
+        window.location.hash = '/signup';
       } else {
         window.location.hash = '';
       }
@@ -859,16 +953,16 @@
 
     function renderView(viewName) {
       state.view = viewName;
-      const landingEl = document.getElementById('view-landing');
-      const appEl = document.getElementById('view-app');
+      ['landing', 'login', 'signup', 'app'].forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) {
+          if (v === viewName) el.classList.remove('hidden');
+          else el.classList.add('hidden');
+        }
+      });
 
       if (viewName === 'app') {
-        landingEl.classList.add('hidden');
-        appEl.classList.remove('hidden');
         checkAuthAndLoadDashboard();
-      } else {
-        landingEl.classList.remove('hidden');
-        appEl.classList.add('hidden');
       }
       lucide.createIcons();
     }
@@ -888,7 +982,6 @@
         tg.expand();
 
         if (tg.initData) {
-          // Inside Telegram -> Direct to App!
           navigateTo('/app');
           authenticateWithTelegram(tg.initData);
         }
@@ -921,6 +1014,136 @@
       } catch (err) {
         console.error('TMA Auth Error:', err);
       }
+    }
+
+    // =========================================================================
+    // AUTHENTICATION HANDLERS (/login & /signup)
+    // =========================================================================
+    function switchLoginMode(mode) {
+      ['email', 'telegram', 'demo'].forEach(m => {
+        const btn = document.getElementById(`loginMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
+        if (m === mode) {
+          btn.className = 'py-1.5 rounded bg-emerald-500 text-black font-semibold transition-all';
+        } else {
+          btn.className = 'py-1.5 rounded text-slate-400 hover:text-white transition-all';
+        }
+      });
+
+      const emailForm = document.getElementById('emailLoginForm');
+      const tgPanel = document.getElementById('telegramLoginPanel');
+      const demoPanel = document.getElementById('demoLoginPanel');
+
+      if (mode === 'email') {
+        emailForm.classList.remove('hidden');
+        tgPanel.classList.add('hidden');
+        demoPanel.classList.add('hidden');
+      } else if (mode === 'telegram') {
+        emailForm.classList.add('hidden');
+        tgPanel.classList.remove('hidden');
+        demoPanel.classList.add('hidden');
+      } else {
+        emailForm.classList.add('hidden');
+        tgPanel.classList.add('hidden');
+        demoPanel.classList.remove('hidden');
+      }
+    }
+
+    async function handleEmailSignIn(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmailInput').value.trim();
+      const password = document.getElementById('loginPasswordInput').value;
+      const btn = document.getElementById('loginSubmitBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Signing In...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Invalid credentials');
+
+        if (data.token) {
+          state.token = data.token;
+          localStorage.setItem('pulse_jwt_token', data.token);
+          triggerHaptic('success');
+          showToast('Signed in successfully.', 'success');
+          navigateTo('/app');
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Sign In</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
+        lucide.createIcons();
+      }
+    }
+
+    async function handleRegistration(e) {
+      e.preventDefault();
+      const firstName = document.getElementById('signupNameInput').value.trim();
+      const email = document.getElementById('signupEmailInput').value.trim();
+      const password = document.getElementById('signupPasswordInput').value;
+      const currency = document.getElementById('signupCurrencyInput').value;
+      const savingsTarget = parseFloat(document.getElementById('signupSavingsTargetInput').value) || 20;
+      const btn = document.getElementById('signupSubmitBtn');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Creating Account...</span>';
+      lucide.createIcons();
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ firstName, email, password, currency, savingsTarget }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.message || 'Registration failed');
+
+        if (data.token) {
+          state.token = data.token;
+          localStorage.setItem('pulse_jwt_token', data.token);
+          triggerHaptic('success');
+          showToast('Account created! Welcome to Kinetiq.', 'success');
+          navigateTo('/app');
+        }
+      } catch (err) {
+        showToast(err.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Create Free Account</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
+        lucide.createIcons();
+      }
+    }
+
+    async function loginAsDemo() {
+      try {
+        const res = await fetch('/api/auth/demo', { method: 'POST' });
+        const data = await res.json();
+        if (data.token) {
+          state.token = data.token;
+          localStorage.setItem('pulse_jwt_token', data.token);
+          triggerHaptic('success');
+          showToast('Signed in to Sandbox mode.', 'success');
+          navigateTo('/app');
+        }
+      } catch (err) {
+        showToast('Demo login error: ' + err.message, 'error');
+      }
+    }
+
+    function logout() {
+      state.token = '';
+      localStorage.removeItem('pulse_jwt_token');
+      showToast('Signed out.', 'info');
+      navigateTo('/');
     }
 
     // =========================================================================
@@ -1018,7 +1241,7 @@
         container.innerHTML = `
           <div class="flex items-center justify-between w-full">
             <span class="text-slate-400">Sandbox Mode</span>
-            <button onclick="openAuthModal()" class="text-emerald-400 hover:underline">Sign In</button>
+            <button onclick="navigateTo('/login')" class="text-emerald-400 hover:underline">Sign In</button>
           </div>
         `;
       }
@@ -1618,49 +1841,6 @@
       if (tab === 'transactions') titleEl.innerText = 'Transactions Ledger';
       if (tab === 'budgets') titleEl.innerText = 'Budgets & Limits';
       if (tab === 'assistant') titleEl.innerText = 'Financial Inquiries & AI Assistant';
-    }
-
-    function openAuthModal() {
-      document.getElementById('authModal').classList.remove('hidden');
-      lucide.createIcons();
-    }
-    function closeAuthModal() {
-      document.getElementById('authModal').classList.add('hidden');
-    }
-    function switchAuthTab(tab) {
-      ['demo', 'telegram', 'email'].forEach(t => {
-        document.getElementById(`authContent${t.charAt(0).toUpperCase() + t.slice(1)}`)?.classList.add('hidden');
-        const tabBtn = document.getElementById(`authTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
-        if (tabBtn) tabBtn.className = 'pb-2 px-3 border-b-2 border-transparent text-slate-400 hover:text-white';
-      });
-
-      document.getElementById(`authContent${tab.charAt(0).toUpperCase() + tab.slice(1)}`)?.classList.remove('hidden');
-      const activeBtn = document.getElementById(`authTab${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
-      if (activeBtn) activeBtn.className = 'pb-2 px-3 border-b-2 border-emerald-500 text-emerald-400 font-semibold';
-    }
-
-    async function loginAsDemo() {
-      try {
-        const res = await fetch('/api/auth/demo', { method: 'POST' });
-        const data = await res.json();
-        if (data.token) {
-          state.token = data.token;
-          localStorage.setItem('pulse_jwt_token', data.token);
-          closeAuthModal();
-          navigateTo('/app');
-          showToast('Signed in to Demo Sandbox', 'success');
-          await checkAuthAndLoadDashboard();
-        }
-      } catch (err) {
-        showToast('Demo login error: ' + err.message, 'error');
-      }
-    }
-
-    function logout() {
-      state.token = '';
-      localStorage.removeItem('pulse_jwt_token');
-      showToast('Signed out', 'info');
-      navigateTo('/');
     }
   </script>
 </body>
