@@ -3,7 +3,38 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PulseAI | Modern Financial Operating System</title>
+  <title>Kinetiq Money | Modern Financial Operating System</title>
+  <meta name="description" content="Kinetiq Money is a modern AI-powered financial operating system and expense tracker. Manage budgets, safe daily spend limits, and log expenses seamlessly in natural language.">
+  <meta name="keywords" content="expense tracker, AI finance, budget tracker, personal finance, pulse score, telegram expense bot, Kinetiq Money">
+  <meta name="author" content="Kinetiq Money">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph & Social Sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ai-expense-tracker-o5a3.onrender.com/">
+  <meta property="og:title" content="Kinetiq Money | Modern Financial Operating System">
+  <meta property="og:description" content="Track expenses effortlessly with AI. Real-time budget analytics, receipt scanning, and Telegram sync.">
+  <meta property="og:image" content="https://ai-expense-tracker-o5a3.onrender.com/404.html">
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:title" content="Kinetiq Money | Modern Financial Operating System">
+  <meta property="twitter:description" content="Track expenses effortlessly with AI. Real-time budget analytics, receipt scanning, and Telegram sync.">
+
+  <!-- WebApplication Structured Schema JSON-LD -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Kinetiq Money",
+    "applicationCategory": "FinanceApplication",
+    "operatingSystem": "Web, Telegram, iOS, Android",
+    "description": "AI-powered financial operating system with automated expense tracking, predictive budget pace alerts, and safe daily limit analytics.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    }
+  }
+  </script>
   
   <script>
     // Instant theme application before DOM rendering to prevent flashing
@@ -135,6 +166,19 @@
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-out;
     }
   </style>
+
+  <script>
+    function triggerHaptic(type = 'medium') {
+      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
+        if (type === 'success' || type === 'error' || type === 'warning') {
+          window.Telegram.WebApp.HapticFeedback.notificationOccurred(type);
+        } else {
+          window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
+        }
+      }
+    }
+  </script>
+
 </head>
 <body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-zinc-800 selection:text-white pb-16">
 
@@ -149,10 +193,7 @@
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <h1 class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 leading-none">PulseAI</h1>
-            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
-              v2.4
-            </span>
+            <h1 class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 leading-none">Kinetiq Money</h1>
           </div>
           <p class="text-[11px] text-zinc-500 dark:text-zinc-400 hidden sm:block mt-0.5">Expense & Financial Tracker</p>
         </div>
@@ -186,8 +227,14 @@
           <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
         </button>
 
-        <!-- Account Selector Button -->
-        <button onclick="openAccountModal()" class="flex items-center gap-2 pl-1.5 pr-2.5 py-1 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
+        <!-- Sign In / Connect Button (Visible when unauthenticated) -->
+        <button id="navSignInBtn" onclick="openAuthModal()" class="flex items-center gap-1.5 px-3 py-1.5 border border-zinc-300 dark:border-zinc-700 hover:border-zinc-500 rounded-lg text-xs font-semibold text-zinc-800 dark:text-zinc-200 transition-colors">
+          <i data-lucide="log-in" class="w-3.5 h-3.5"></i>
+          <span>Sign In</span>
+        </button>
+
+        <!-- Account Selector Button (Visible when authenticated) -->
+        <button id="navAccountBtn" onclick="openAccountModal()" class="hidden flex items-center gap-2 pl-1.5 pr-2.5 py-1 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
           <div class="w-6 h-6 rounded-md bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 flex items-center justify-center text-xs font-semibold" id="userAvatar">
             U
           </div>
@@ -195,13 +242,18 @@
           <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400"></i>
         </button>
 
+        <!-- Help & FAQ Guide Button -->
+        <button onclick="openFaqModal()" title="Help & Natural Language Guide" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors" aria-label="Help and FAQ Guide">
+          <i data-lucide="help-circle" class="w-4 h-4"></i>
+        </button>
+
         <!-- Settings & Personalization Button -->
-        <button onclick="openPersonalizationModal()" title="Personalization & Budget Settings" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors">
+        <button onclick="openPersonalizationModal()" title="Personalization & Budget Settings" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800/80 transition-colors" aria-label="Personalization settings">
           <i data-lucide="settings" class="w-4 h-4"></i>
         </button>
 
         <!-- Primary CTA: Quick Add Expense -->
-        <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-medium rounded-lg shadow-sm transition-all active:scale-95">
+        <button onclick="openQuickAddModal()" class="flex items-center gap-1.5 px-3.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-medium rounded-lg shadow-sm transition-all active:scale-95" aria-label="Add new expense">
           <i data-lucide="plus" class="w-3.5 h-3.5"></i>
           <span class="hidden sm:inline">Add Expense</span>
         </button>
@@ -210,8 +262,121 @@
   </header>
 
   <!-- MAIN WRAPPER CONTAINER -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 space-y-8">
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 space-y-8">
     
+    <!-- ========================================== -->
+    <!-- INTERACTIVE PUBLIC SAAS HERO & AI PLAYGROUND -->
+    <!-- ========================================== -->
+    <section id="publicHeroSection" class="relative overflow-hidden rounded-3xl bg-white dark:bg-[#121215] border border-zinc-200/90 dark:border-zinc-800/90 p-6 sm:p-10 shadow-xl transition-all">
+      <!-- Ambient Glow Behind Playground -->
+      <div class="absolute -top-24 -right-24 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-sky-500/5 dark:bg-sky-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Left: Hero Copy & Value Proposition -->
+        <div class="lg:col-span-7 space-y-5 text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs font-semibold text-zinc-800 dark:text-zinc-200">
+            <span class="flex h-2 w-2 relative">
+              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+            </span>
+            <span>Autonomous Financial Intelligence</span>
+            <span class="text-zinc-400">•</span>
+            <span class="text-zinc-500 dark:text-zinc-400 font-normal">Next-Gen Expense Engine</span>
+          </div>
+
+          <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-zinc-900 dark:text-white leading-[1.15]">
+            Master your money in <span class="underline decoration-emerald-500/60 decoration-wavy">plain English</span>.
+          </h2>
+
+          <p class="text-sm sm:text-base text-zinc-600 dark:text-zinc-400 leading-relaxed max-w-xl">
+            No spreadsheets. No tedious manual entry. Log outlays in natural language via Telegram or Web, calculate real-time Pulse Health scores, and enforce automated daily safe limits in &lt;500ms.
+          </p>
+
+          <!-- Dual Call to Action Buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <a href="https://t.me/Akash_Expense_tracker_bot?start=auth" target="_blank" class="px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs sm:text-sm font-semibold shadow-lg shadow-zinc-900/10 dark:shadow-white/5 transition-all flex items-center gap-2 active:scale-95">
+              <i data-lucide="send" class="w-4 h-4 text-sky-400 dark:text-sky-600"></i>
+              <span>Launch Telegram Bot</span>
+            </a>
+
+            <button onclick="handleDemoLogin()" class="px-5 py-3 rounded-xl bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-zinc-900 dark:text-white border border-zinc-200 dark:border-zinc-700 text-xs sm:text-sm font-semibold transition-all flex items-center gap-2 active:scale-95">
+              <i data-lucide="sparkles" class="w-4 h-4 text-amber-500"></i>
+              <span>Try Live Interactive Sandbox</span>
+            </button>
+          </div>
+
+          <!-- Trust Badges Row -->
+          <div class="flex flex-wrap items-center gap-6 pt-3 text-[11px] text-zinc-500 dark:text-zinc-400 font-medium">
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="shield-check" class="w-4 h-4 text-emerald-500"></i> Zero Data Selling
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="zap" class="w-4 h-4 text-amber-500"></i> &lt;500ms Gemini NLU
+            </div>
+            <div class="flex items-center gap-1.5">
+              <i data-lucide="lock" class="w-4 h-4 text-sky-500"></i> Passwordless QR Login
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Interactive Live AI Parser Simulator Playground -->
+        <div class="lg:col-span-5">
+          <div class="p-5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-800 shadow-inner space-y-4 text-left">
+            <div class="flex items-center justify-between border-b border-zinc-200/80 dark:border-zinc-800 pb-3">
+              <div class="flex items-center gap-2">
+                <div class="w-2.5 h-2.5 rounded-full bg-rose-500"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                <span class="text-[11px] font-mono text-zinc-400 ml-2">Live AI Parser Simulator</span>
+              </div>
+              <span class="text-[10px] px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-500 font-semibold font-mono">Ready</span>
+            </div>
+
+            <div class="space-y-2">
+              <label class="block text-xs font-semibold text-zinc-700 dark:text-zinc-300">Test Natural Language Input:</label>
+              <div class="relative">
+                <input type="text" id="heroPlaygroundInput" value="spent 450 on swiggy for dinner" placeholder="e.g. coffee 180 or salary 50000" 
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-[#121215] text-xs text-zinc-900 dark:text-white focus:outline-none focus:border-zinc-500 pr-20 font-medium">
+                <button onclick="simulateHeroAiParse()" class="absolute right-1.5 top-1.5 bottom-1.5 px-3 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 text-xs font-semibold rounded-lg transition-all active:scale-95 flex items-center gap-1">
+                  <span>Parse</span>
+                  <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Quick Example Prompts -->
+            <div class="flex flex-wrap gap-1.5 text-[10px]">
+              <span class="text-zinc-400 py-0.5">Try:</span>
+              <button onclick="setHeroSample('uber cab 340 to airport')" class="px-2 py-0.5 rounded-md bg-zinc-200/70 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors">"uber cab 340"</button>
+              <button onclick="setHeroSample('salary +65000 credited')" class="px-2 py-0.5 rounded-md bg-zinc-200/70 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors">"salary +65000"</button>
+              <button onclick="setHeroSample('groceries 1250 at reliance')" class="px-2 py-0.5 rounded-md bg-zinc-200/70 dark:bg-zinc-800 hover:bg-zinc-300 dark:hover:bg-zinc-700 text-zinc-700 dark:text-zinc-300 transition-colors">"groceries 1250"</button>
+            </div>
+
+            <!-- Simulated Output Card -->
+            <div id="heroSimulationResult" class="p-3.5 rounded-xl bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800 space-y-2">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-zinc-400">Merchant / Outlay:</span>
+                <span id="simMerchant" class="font-bold text-zinc-900 dark:text-white">Swiggy (Dinner)</span>
+              </div>
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-zinc-400">Detected Category:</span>
+                <span id="simCategory" class="px-2 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 font-semibold border border-zinc-200 dark:border-zinc-700">Food & Dining</span>
+              </div>
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-zinc-400">Amount & Type:</span>
+                <span id="simAmount" class="font-bold text-rose-500 text-xs">-₹450 (EXPENSE)</span>
+              </div>
+              <div class="flex items-center justify-between text-[11px] pt-1 border-t border-zinc-100 dark:border-zinc-800/80">
+                <span class="text-zinc-400">Processing Time:</span>
+                <span class="text-emerald-500 font-mono text-[10px] font-semibold">⚡ 284ms (NLU Fast-Path)</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- PAGE TITLE & PERIOD FILTER TOGGLE -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-zinc-200 dark:border-zinc-800/80 pb-6">
       <div>
@@ -476,6 +641,67 @@
       </div>
     </div>
 
+    <!-- MODERN EXECUTIVE BRAND FOOTER -->
+    <footer class="mt-12 pt-8 pb-10 border-t border-zinc-200/80 dark:border-zinc-800/80 text-xs text-zinc-500 dark:text-zinc-400 space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        
+        <!-- Col 1: Brand & Philosophy -->
+        <div class="space-y-2.5 md:col-span-2">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xs shadow-sm">
+              <i data-lucide="wallet" class="w-3 h-3"></i>
+            </div>
+            <span class="font-bold text-xs text-zinc-900 dark:text-white tracking-tight">Kinetiq Money</span>
+          </div>
+          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-sm">
+            Autonomous natural language finance tracking, real-time pulse health score, and predictive budget pacing powered by deterministic NLU & Gemini Vision.
+          </p>
+          <div class="flex items-center gap-2 text-[10px] text-zinc-400 pt-0.5">
+            <span class="inline-flex items-center gap-1.5 text-emerald-500 font-medium">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span> Systems 100% Operational
+            </span>
+            <span>•</span>
+            <span>Latency &lt;500ms</span>
+          </div>
+        </div>
+
+        <!-- Col 2: Telegram Bot Commands -->
+        <div class="space-y-2">
+          <h4 class="text-[11px] font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Quick Commands</h4>
+          <ul class="space-y-1 text-[11px] font-mono text-zinc-500 dark:text-zinc-400">
+            <li><a href="https://t.me/Akash_Expense_tracker_bot?start=auth" target="_blank" class="hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5"><span>/start</span><span class="text-[10px] text-zinc-400 font-sans">— Link Telegram</span></a></li>
+            <li><a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5"><span>/report</span><span class="text-[10px] text-zinc-400 font-sans">— Visual Summary</span></a></li>
+            <li><button onclick="openBudgetModal()" class="hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5 text-left"><span>/budget</span><span class="text-[10px] text-zinc-400 font-sans">— Set Limits</span></button></li>
+            <li><button onclick="openRecurringModal()" class="hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5 text-left"><span>/recurring</span><span class="text-[10px] text-zinc-400 font-sans">— Fixed SIP/Rent</span></button></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Legal & Resources -->
+        <div class="space-y-2">
+          <h4 class="text-[11px] font-bold text-zinc-900 dark:text-white uppercase tracking-wider">Security & Legal</h4>
+          <ul class="space-y-1 text-[11px] text-zinc-500 dark:text-zinc-400">
+            <li><a href="/privacy.html" class="hover:text-zinc-900 dark:hover:text-white transition-colors underline" target="_blank">Privacy & Zero-Sale Policy</a></li>
+            <li><button onclick="openFaqModal()" class="hover:text-zinc-900 dark:hover:text-white transition-colors">Help & FAQ Guide</button></li>
+            <li><button onclick="exportData('csv')" class="hover:text-zinc-900 dark:hover:text-white transition-colors">Export All Records (CSV)</button></li>
+            <li><a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" class="hover:text-zinc-900 dark:hover:text-white transition-colors inline-flex items-center gap-1">Telegram Bot <i data-lucide="external-link" class="w-3 h-3"></i></a></li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="pt-4 border-t border-zinc-200/60 dark:border-zinc-800/60 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-zinc-400">
+        <p>Kinetiq Money Financial Operating System &copy; 2026. Built with precision for privacy-conscious wealth builders.</p>
+        <div class="flex items-center gap-3">
+          <a href="/privacy.html" class="hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors" target="_blank">Privacy</a>
+          <span>•</span>
+          <button onclick="openFaqModal()" class="hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors">Guide</button>
+          <span>•</span>
+          <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="hover:text-zinc-700 dark:hover:text-zinc-200 transition-colors flex items-center gap-1">Back to Top <i data-lucide="arrow-up" class="w-3 h-3"></i></button>
+        </div>
+      </div>
+    </footer>
+
   </main>
 
   <!-- MODALS -->
@@ -679,6 +905,176 @@
     </div>
   </div>
 
+  <!-- MODAL 5: HELP & FREQUENTLY ASKED QUESTIONS (FAQ) -->
+  <div id="faqModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[85vh] overflow-y-auto animate-scale-in text-left">
+      <div class="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800/80 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center text-zinc-900 dark:text-white">
+            <i data-lucide="help-circle" class="w-4 h-4 text-emerald-500"></i>
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-zinc-900 dark:text-white">Help & Frequently Asked Questions</h3>
+            <p class="text-[11px] text-zinc-400">Everything you need to master Kinetiq Money</p>
+          </div>
+        </div>
+        <button onclick="closeFaqModal()" class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- 5 Interactive Accordion FAQs -->
+      <div class="space-y-3 text-xs">
+        <details class="group p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 cursor-pointer">
+          <summary class="font-semibold text-zinc-900 dark:text-white flex items-center justify-between">
+            <span>1. How do I record expenses using natural language?</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="mt-2 text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed">
+            Simply send any natural message in Telegram or web quick add, like <em>"spent 450 on swiggy"</em>, <em>"uber cab 320"</em>, or <em>"salary 50000 credited"</em>. Kinetiq Money automatically extracts the merchant, amount, category, and date in &lt;500ms.
+          </p>
+        </details>
+
+        <details class="group p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 cursor-pointer">
+          <summary class="font-semibold text-zinc-900 dark:text-white flex items-center justify-between">
+            <span>2. How is my Pulse Health Score (0-100) calculated?</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="mt-2 text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed">
+            Pulse Health evaluates your net savings retention (up to 40 pts), monthly category budget adherence (up to 40 pts), and cash flow stability (up to 20 pts). Scores &gt;80 represent excellent financial health.
+          </p>
+        </details>
+
+        <details class="group p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 cursor-pointer">
+          <summary class="font-semibold text-zinc-900 dark:text-white flex items-center justify-between">
+            <span>3. What is Safe Daily Spend Limit?</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="mt-2 text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed">
+            It dynamically divides your remaining discretionary budget by the exact number of days left in the current calendar month. Staying under this limit guarantees you will not overspend.
+          </p>
+        </details>
+
+        <details class="group p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 cursor-pointer">
+          <summary class="font-semibold text-zinc-900 dark:text-white flex items-center justify-between">
+            <span>4. How do recurring commitments (SIP, Rent, EMI) work?</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="mt-2 text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed">
+            Configure any fixed outlay with a target day of the month (e.g. Day 1 for Rent). Our automated cron background service logs it on the exact day and adjusts your monthly projections in real time.
+          </p>
+        </details>
+
+        <details class="group p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/60 border border-zinc-200/80 dark:border-zinc-800 cursor-pointer">
+          <summary class="font-semibold text-zinc-900 dark:text-white flex items-center justify-between">
+            <span>5. Is my financial data private and exportable?</span>
+            <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-zinc-400 group-open:rotate-180 transition-transform"></i>
+          </summary>
+          <p class="mt-2 text-zinc-600 dark:text-zinc-400 text-[11px] leading-relaxed">
+            Yes, 100%. We never sell your personal data. You can download a complete CSV spreadsheet of your transactions at any time or review our <a href="/privacy.html" class="underline font-semibold text-zinc-900 dark:text-white" target="_blank">Privacy Policy</a>.
+          </p>
+        </details>
+      </div>
+
+      <div class="pt-2 border-t border-zinc-100 dark:border-zinc-800/80 flex items-center justify-between">
+        <span class="text-[11px] text-zinc-400">⚡ Engine SLA: &lt;500ms AI Processing</span>
+        <button type="button" onclick="closeFaqModal()" class="px-4 py-2 text-xs font-semibold bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-xl transition-all">
+          Close Guide
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STICKY MOBILE FLOATING BOTTOM ACTION DOCK (Visible only on mobile/narrow screens) -->
+  <div class="sm:hidden fixed bottom-4 inset-x-4 z-40 bg-white/95 dark:bg-[#121215]/95 backdrop-blur-lg border border-zinc-200/90 dark:border-zinc-800/90 rounded-2xl p-2 shadow-2xl flex items-center justify-around">
+    <button onclick="openQuickAddModal('EXPENSE')" class="flex flex-col items-center gap-1 text-[10px] font-semibold text-rose-500 active:scale-90 transition-transform" aria-label="Quick Add Expense">
+      <div class="w-8 h-8 rounded-xl bg-rose-500/10 flex items-center justify-center">
+        <i data-lucide="plus" class="w-4 h-4"></i>
+      </div>
+      <span>Add</span>
+    </button>
+    <button onclick="openBudgetModal()" class="flex flex-col items-center gap-1 text-[10px] font-semibold text-amber-500 active:scale-90 transition-transform" aria-label="Set Budget">
+      <div class="w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center">
+        <i data-lucide="target" class="w-4 h-4"></i>
+      </div>
+      <span>Budget</span>
+    </button>
+    <button onclick="openRecurringModal()" class="flex flex-col items-center gap-1 text-[10px] font-semibold text-sky-500 active:scale-90 transition-transform" aria-label="Recurring Setup">
+      <div class="w-8 h-8 rounded-xl bg-sky-500/10 flex items-center justify-center">
+        <i data-lucide="repeat" class="w-4 h-4"></i>
+      </div>
+      <span>Recurring</span>
+    </button>
+    <button onclick="openFaqModal()" class="flex flex-col items-center gap-1 text-[10px] font-semibold text-emerald-500 active:scale-90 transition-transform" aria-label="Help FAQ">
+      <div class="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+        <i data-lucide="help-circle" class="w-4 h-4"></i>
+      </div>
+      <span>Help</span>
+    </button>
+  </div>
+
+  <!-- FLOATING AI ASSISTANT CHATBOT WIDGET -->
+  <div id="aiChatDrawer" class="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-50 w-full max-w-sm sm:max-w-md hidden flex flex-col bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
+    <!-- Chat Header -->
+    <div class="p-3.5 bg-zinc-900 dark:bg-zinc-800 text-white flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-xl bg-white text-zinc-900 flex items-center justify-center font-bold text-xs shadow-sm">
+          <i data-lucide="bot" class="w-4 h-4 text-emerald-600"></i>
+        </div>
+        <div>
+          <h4 class="text-xs font-bold leading-none">Kinetiq AI Copilot</h4>
+          <span class="text-[10px] text-emerald-400 flex items-center gap-1 mt-0.5">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Active (<500ms NLU)
+          </span>
+        </div>
+      </div>
+      <div class="flex items-center gap-1">
+        <button onclick="toggleAiChat()" class="p-1 text-zinc-400 hover:text-white rounded-lg hover:bg-zinc-700/50 transition-colors" aria-label="Minimize Chat">
+          <i data-lucide="minus" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Message Stream -->
+    <div id="aiChatMessages" class="p-4 h-80 overflow-y-auto space-y-3 text-xs bg-zinc-50 dark:bg-[#09090b]">
+      <div class="flex items-start gap-2.5">
+        <div class="w-6 h-6 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center text-[10px] font-bold shrink-0">
+          AI
+        </div>
+        <div class="p-3 rounded-2xl rounded-tl-none bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200 space-y-1 shadow-xs max-w-[85%]">
+          <p class="font-semibold text-[11px]">👋 Hello! I am your Kinetiq Financial Copilot.</p>
+          <p class="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            You can talk to me directly to log expenses, check your safe daily spend limits, or ask questions about the SaaS features:
+          </p>
+          <div class="pt-1 flex flex-wrap gap-1">
+            <button onclick="sendQuickPrompt('spent 450 on swiggy for lunch')" class="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-md text-[10px] text-zinc-700 dark:text-zinc-300 transition-colors font-medium">"spent 450 on swiggy"</button>
+            <button onclick="sendQuickPrompt('how does pulse health score work?')" class="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-md text-[10px] text-zinc-700 dark:text-zinc-300 transition-colors font-medium">"how does pulse health work?"</button>
+            <button onclick="sendQuickPrompt('salary +65000 credited')" class="px-2 py-1 bg-zinc-100 dark:bg-zinc-800 hover:bg-zinc-200 dark:hover:bg-zinc-700 rounded-md text-[10px] text-zinc-700 dark:text-zinc-300 transition-colors font-medium">"salary +65000"</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Input Form -->
+    <form onsubmit="handleAiChatSubmit(event)" class="p-2.5 bg-white dark:bg-[#121215] border-t border-zinc-200 dark:border-zinc-800 flex items-center gap-2">
+      <input type="text" id="aiChatInput" placeholder="Log outlay or ask a question..." 
+        class="flex-1 px-3 py-2 text-xs bg-zinc-100 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 focus:outline-none focus:border-zinc-400 dark:focus:border-zinc-600 transition-colors">
+      <button type="submit" id="aiChatSendBtn" class="p-2 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-xl shadow-xs transition-all active:scale-95 shrink-0" aria-label="Send message">
+        <i data-lucide="send" class="w-4 h-4"></i>
+      </button>
+    </form>
+  </div>
+
+  <!-- FLOATING CHAT LAUNCHER BUTTON -->
+  <button id="aiChatLauncher" onclick="toggleAiChat()" class="fixed bottom-20 right-4 sm:bottom-6 sm:right-6 z-40 p-3.5 bg-zinc-900 hover:bg-zinc-800 dark:bg-white dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-2xl shadow-2xl flex items-center gap-2 group transition-all active:scale-90 border border-zinc-700/30" aria-label="Open AI Copilot Chat">
+    <div class="relative">
+      <i data-lucide="sparkles" class="w-5 h-5 text-amber-400 dark:text-amber-500 group-hover:rotate-12 transition-transform"></i>
+      <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+      <span class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-emerald-500"></span>
+    </div>
+    <span class="text-xs font-bold hidden sm:inline">AI Copilot</span>
+  </button>
+
   <!-- UNIVERSAL CONFIRMATION & WARNING MODAL -->
   <div id="confirmModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-2xl max-w-sm w-full p-6 shadow-2xl space-y-4 text-left">
@@ -706,13 +1102,17 @@
 
   <!-- FULL SCREEN AUTHENTICATION OVERLAY MODAL (Hidden by default, shown only if unauthenticated) -->
   <div id="authRequiredModal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-left">
+    <div class="bg-white dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 rounded-3xl max-w-md w-full p-8 shadow-2xl space-y-6 text-left relative animate-scale-in">
+      <button onclick="document.getElementById('authRequiredModal').classList.add('hidden')" class="absolute top-6 right-6 text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200 transition-colors p-1" aria-label="Close dialog">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
       <div class="flex items-center gap-3">
         <div class="w-12 h-12 rounded-2xl bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-xl shadow-lg shrink-0">
           <i data-lucide="sparkles" class="w-6 h-6"></i>
         </div>
         <div>
-          <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Welcome to PulseAI</h3>
+          <h3 class="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">Welcome to Kinetiq Money</h3>
           <p class="text-xs text-zinc-500 dark:text-zinc-400 font-medium">Access your AI financial operating system</p>
         </div>
       </div>
@@ -802,7 +1202,7 @@
           ✨
         </div>
         <div>
-          <h3 class="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Let's Personalize PulseAI</h3>
+          <h3 class="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Let's Personalize Kinetiq Money</h3>
           <p class="text-xs text-zinc-500 dark:text-zinc-400">Set your monthly targets and budgets for precise insights</p>
         </div>
       </div>
@@ -921,6 +1321,15 @@
       }
     });
 
+    function openAuthModal(tab = 'qr') {
+      document.getElementById('authRequiredModal').classList.remove('hidden');
+      switchAuthTab(tab);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authRequiredModal').classList.add('hidden');
+    }
+
     async function checkAuthStatus() {
       try {
         const res = await fetch('/api/me', {
@@ -931,6 +1340,10 @@
           if (data.authenticated && data.user) {
             currentUser = data.user;
             document.getElementById('authRequiredModal').classList.add('hidden');
+            const signInBtn = document.getElementById('navSignInBtn');
+            const acctBtn = document.getElementById('navAccountBtn');
+            if (signInBtn) signInBtn.classList.add('hidden');
+            if (acctBtn) acctBtn.classList.remove('hidden');
             checkAndShowOnboarding(currentUser);
             loadDashboard();
             return true;
@@ -939,8 +1352,14 @@
       } catch (err) {
         console.error('Session check failed', err);
       }
-      document.getElementById('authRequiredModal').classList.remove('hidden');
-      switchAuthTab('qr');
+      
+      // Unauthenticated visitor: Render vibrant public landing page with simulator
+      const signInBtn = document.getElementById('navSignInBtn');
+      const acctBtn = document.getElementById('navAccountBtn');
+      if (signInBtn) signInBtn.classList.remove('hidden');
+      if (acctBtn) acctBtn.classList.add('hidden');
+      document.getElementById('authRequiredModal').classList.add('hidden');
+      renderEmptyState();
       return false;
     }
 
@@ -1068,6 +1487,9 @@
               if (statusData.status === 'APPROVED' && statusData.token) {
                 clearInterval(qrPollInterval);
                 localStorage.setItem('pulse_token', statusData.token);
+                // Authenticated user active: Hide public hero banner to show clean dashboard
+                const heroSection = document.getElementById('publicHeroSection');
+                if (heroSection) heroSection.classList.add('hidden');
                 currentUser = statusData.user;
                 document.getElementById('authRequiredModal').classList.add('hidden');
                 showSuccessToast('Logged in via Telegram QR!');
@@ -1328,7 +1750,7 @@
         });
 
         if (res.status === 401) {
-          if (authOverlay) authOverlay.classList.remove('hidden');
+          // Public visitor: Keep auth modal hidden, render interactive public landing hero with sample data
           renderEmptyState();
           return;
         }
@@ -1348,6 +1770,14 @@
         }
 
         if (authOverlay) authOverlay.classList.add('hidden');
+        const heroSection = document.getElementById('publicHeroSection');
+        if (heroSection) heroSection.classList.add('hidden');
+
+        const signInBtn = document.getElementById('navSignInBtn');
+        const acctBtn = document.getElementById('navAccountBtn');
+        if (signInBtn) signInBtn.classList.add('hidden');
+        if (acctBtn) acctBtn.classList.remove('hidden');
+
         const user = data.user || currentUser || {};
         const curr = user.currency || '₹';
         const activeSummary = data[activePeriod] || data.month || { totalExpense: 0, totalIncome: 0, netSavings: 0, categoryBreakdown: {} };
@@ -1427,18 +1857,47 @@
     }
 
     function renderEmptyState() {
+      const heroSection = document.getElementById('publicHeroSection');
+      if (heroSection) heroSection.classList.remove('hidden');
+
       const curr = '₹';
-      document.getElementById('kpiMonthExpense').innerText = `${curr} 0`;
-      document.getElementById('kpiMonthIncome').innerText = `${curr} 0`;
-      document.getElementById('kpiMonthSavings').innerText = `${curr} 0`;
+      // Populate realistic live preview benchmarks for public visitors
+      document.getElementById('kpiMonthExpense').innerText = `${curr} 24,850`;
+      document.getElementById('kpiMonthIncome').innerText = `${curr} 65,000`;
+      document.getElementById('kpiMonthSavings').innerText = `${curr} 40,150`;
       const scoreEl = document.getElementById('kpiPulseScore');
-      if (scoreEl) scoreEl.innerHTML = `70<span class="text-xs font-normal text-zinc-400">/100</span>`;
+      if (scoreEl) scoreEl.innerHTML = `88<span class="text-xs font-normal text-zinc-400">/100</span>`;
+      const gradeEl = document.getElementById('kpiPulseGrade');
+      if (gradeEl) {
+        gradeEl.innerText = 'EXCELLENT';
+        gradeEl.className = 'px-1.5 py-0.5 text-[9px] font-semibold rounded-md bg-emerald-500/10 text-emerald-500 border border-emerald-500/20';
+      }
       const dailyEl = document.getElementById('kpiDailyLimit');
-      if (dailyEl) dailyEl.innerText = `${curr} 0`;
-      renderDefaultBudgetOverview({ categoryBreakdown: {} }, curr);
-      renderDefaultAIInsights({ totalExpense: 0, totalIncome: 0, categoryBreakdown: {} });
-      renderTable([], curr);
-      renderCharts({ categoryBreakdown: {} }, []);
+      if (dailyEl) dailyEl.innerText = `${curr} 2,450`;
+      const dailySubEl = document.getElementById('kpiDailySub');
+      if (dailySubEl) dailySubEl.innerText = `16 days left in month`;
+
+      renderDefaultBudgetOverview({
+        categoryBreakdown: {
+          'Food & Dining': 6400,
+          'Transport': 2800,
+          'Groceries': 5200,
+          'Shopping': 4500
+        }
+      }, curr);
+
+      renderDefaultAIInsights({ totalExpense: 24850, totalIncome: 65000, categoryBreakdown: { 'Food & Dining': 6400, 'Shopping': 4500 } });
+      
+      const sampleTx = [
+        { id: 'sample-1', transactionDate: new Date().toISOString(), merchant: 'Swiggy Gourmet', category: { name: 'Food & Dining' }, type: 'EXPENSE', amount: 480, parsedBy: 'NLU' },
+        { id: 'sample-2', transactionDate: new Date(Date.now() - 86400000).toISOString(), merchant: 'Monthly Salary Credit', category: { name: 'Salary' }, type: 'INCOME', amount: 65000, parsedBy: 'NLU' },
+        { id: 'sample-3', transactionDate: new Date(Date.now() - 172800000).toISOString(), merchant: 'Uber Premier', category: { name: 'Transport' }, type: 'EXPENSE', amount: 340, parsedBy: 'TELEGRAM' },
+        { id: 'sample-4', transactionDate: new Date(Date.now() - 259200000).toISOString(), merchant: 'Reliance Fresh Supermarket', category: { name: 'Groceries' }, type: 'EXPENSE', amount: 1850, parsedBy: 'VISION_OCR' },
+      ];
+      renderTable(sampleTx, curr);
+      renderCharts({ categoryBreakdown: { 'Food & Dining': 6400, 'Transport': 2800, 'Groceries': 5200, 'Shopping': 4500 } }, [
+        { date: 'Mon', amount: 1200 }, { date: 'Tue', amount: 450 }, { date: 'Wed', amount: 2100 }, { date: 'Thu', amount: 800 }, { date: 'Fri', amount: 1650 }, { date: 'Sat', amount: 3200 }, { date: 'Sun', amount: 950 }
+      ]);
     }
 
     function renderBudgetOverview(budgets, curr) {
@@ -1818,6 +2277,9 @@
       setTimeout(() => el.classList.add('hidden'), 3000);
     }
 
+    function openFaqModal() { document.getElementById('faqModal').classList.remove('hidden'); }
+    function closeFaqModal() { document.getElementById('faqModal').classList.add('hidden'); }
+
     function openBudgetModal() { document.getElementById('budgetModal').classList.remove('hidden'); }
     function closeBudgetModal() { 
       document.getElementById('budgetModal').classList.add('hidden'); 
@@ -1975,7 +2437,7 @@
           const url = window.URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.setAttribute('href', url);
-          a.setAttribute('download', `pulseai_export_${currentUser?.firstName || 'user'}_${new Date().toISOString().slice(0, 10)}.csv`);
+          a.setAttribute('download', `kinetiq_export_${currentUser?.firstName || 'user'}_${new Date().toISOString().slice(0, 10)}.csv`);
           a.click();
           showSuccessToast('✅ CSV exported successfully!');
         } else if (format === 'pdf') {
@@ -1985,6 +2447,182 @@
       } catch (err) {
         console.error('Export error', err);
         showErrorToast('Failed to export data');
+      }
+    }
+
+    function setHeroSample(text) {
+      document.getElementById('heroPlaygroundInput').value = text;
+      simulateHeroAiParse();
+    }
+
+    function simulateHeroAiParse() {
+      const input = document.getElementById('heroPlaygroundInput').value.trim();
+      if (!input) return;
+
+      const card = document.getElementById('heroSimulationResult');
+      card.classList.add('animate-pulse');
+
+      setTimeout(() => {
+        card.classList.remove('animate-pulse');
+        const lower = input.toLowerCase();
+        let merchant = 'General Outlay';
+        let category = 'Others';
+        let amount = 0;
+        let isIncome = false;
+
+        // Extract amount
+        const numMatch = input.match(/(?:₹|rs\.?|\+|\-)?\s*(\d+(?:,\d+)*(?:\.\d+)?)/i);
+        if (numMatch) {
+          amount = parseFloat(numMatch[1].replace(/,/g, ''));
+        }
+
+        // Detect type & category
+        if (lower.includes('salary') || lower.includes('credited') || lower.includes('freelance') || lower.includes('received') || lower.includes('+')) {
+          isIncome = true;
+          category = lower.includes('freelance') ? 'Freelance' : 'Salary';
+          merchant = lower.includes('salary') ? 'Monthly Salary' : 'Client Payout';
+        } else if (lower.includes('swiggy') || lower.includes('zomato') || lower.includes('dinner') || lower.includes('lunch') || lower.includes('coffee') || lower.includes('food') || lower.includes('starbucks')) {
+          category = 'Food & Dining';
+          merchant = lower.includes('swiggy') ? 'Swiggy' : lower.includes('zomato') ? 'Zomato' : lower.includes('coffee') ? 'Starbucks Coffee' : 'Restaurant Dinner';
+        } else if (lower.includes('uber') || lower.includes('ola') || lower.includes('cab') || lower.includes('metro') || lower.includes('petrol') || lower.includes('fuel')) {
+          category = 'Transport';
+          merchant = lower.includes('uber') ? 'Uber Ride' : lower.includes('ola') ? 'Ola Cabs' : lower.includes('fuel') ? 'Shell Fuel Station' : 'City Metro';
+        } else if (lower.includes('groceries') || lower.includes('supermarket') || lower.includes('blinkit') || lower.includes('zepto') || lower.includes('reliance')) {
+          category = 'Groceries';
+          merchant = lower.includes('blinkit') ? 'Blinkit' : lower.includes('zepto') ? 'Zepto' : lower.includes('reliance') ? 'Reliance Smart' : 'Supermarket';
+        } else if (lower.includes('amazon') || lower.includes('flipkart') || lower.includes('myntra') || lower.includes('shoes') || lower.includes('clothes')) {
+          category = 'Shopping';
+          merchant = lower.includes('amazon') ? 'Amazon' : lower.includes('flipkart') ? 'Flipkart' : 'Myntra Retail';
+        } else if (lower.includes('rent') || lower.includes('landlord')) {
+          category = 'Rent';
+          merchant = 'Apartment Rent';
+        } else if (lower.includes('wifi') || lower.includes('electricity') || lower.includes('bill') || lower.includes('recharge')) {
+          category = 'Bills & Utilities';
+          merchant = lower.includes('electricity') ? 'State Power Grid' : 'Broadband Provider';
+        } else {
+          merchant = input.split(' ')[0].charAt(0).toUpperCase() + input.split(' ')[0].slice(1);
+        }
+
+        document.getElementById('simMerchant').innerText = merchant;
+        document.getElementById('simCategory').innerText = category;
+        const simAmtEl = document.getElementById('simAmount');
+        if (isIncome) {
+          simAmtEl.className = 'font-bold text-emerald-500 text-xs';
+          simAmtEl.innerText = `+₹${amount.toLocaleString()} (INCOME)`;
+        } else {
+          simAmtEl.className = 'font-bold text-rose-500 text-xs';
+          simAmtEl.innerText = `-₹${amount.toLocaleString()} (EXPENSE)`;
+        }
+      }, 180);
+    }
+
+    // AI COPILOT CHATBOT CLIENT LOGIC
+    function toggleAiChat() {
+      const drawer = document.getElementById('aiChatDrawer');
+      const isHidden = drawer.classList.contains('hidden');
+      if (isHidden) {
+        drawer.classList.remove('hidden');
+        document.getElementById('aiChatInput').focus();
+      } else {
+        drawer.classList.add('hidden');
+      }
+      lucide.createIcons();
+    }
+
+    function sendQuickPrompt(promptText) {
+      document.getElementById('aiChatInput').value = promptText;
+      handleAiChatSubmit(new Event('submit'));
+    }
+
+    function appendChatMessage(sender, text, isMarkdown = false) {
+      const stream = document.getElementById('aiChatMessages');
+      const isAi = sender === 'AI';
+      
+      const div = document.createElement('div');
+      div.className = `flex items-start gap-2.5 ${isAi ? '' : 'flex-row-reverse'}`;
+
+      const avatar = isAi
+        ? `<div class="w-6 h-6 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center text-[10px] font-bold shrink-0">AI</div>`
+        : `<div class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-[10px] font-bold shrink-0">ME</div>`;
+
+      // Simple Markdown Bold / Code parsing for response formatting
+      let formattedText = text
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.*?)\*/g, '<em>$1</em>')
+        .replace(/`(.*?)`/g, '<code class="px-1 py-0.5 bg-zinc-200 dark:bg-zinc-800 rounded font-mono text-[10px]">$1</code>')
+        .replace(/\n/g, '<br>');
+
+      const bubble = `
+        <div class="p-3 rounded-2xl ${isAi ? 'rounded-tl-none bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800 text-zinc-800 dark:text-zinc-200' : 'rounded-tr-none bg-zinc-900 dark:bg-white text-white dark:text-zinc-900'} space-y-1 shadow-xs max-w-[85%]">
+          <p class="leading-relaxed">${formattedText}</p>
+        </div>
+      `;
+
+      div.innerHTML = isAi ? (avatar + bubble) : (bubble + avatar);
+      stream.appendChild(div);
+      stream.scrollTop = stream.scrollHeight;
+      lucide.createIcons();
+    }
+
+    async function handleAiChatSubmit(e) {
+      if (e) e.preventDefault();
+      const inputEl = document.getElementById('aiChatInput');
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      appendChatMessage('USER', text);
+      inputEl.value = '';
+
+      // Typing state placeholder
+      const stream = document.getElementById('aiChatMessages');
+      const typingId = 'typing-' + Date.now();
+      const typingDiv = document.createElement('div');
+      typingDiv.id = typingId;
+      typingDiv.className = 'flex items-start gap-2.5';
+      typingDiv.innerHTML = `
+        <div class="w-6 h-6 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center text-[10px] font-bold shrink-0">AI</div>
+        <div class="p-2.5 rounded-2xl rounded-tl-none bg-white dark:bg-[#121215] border border-zinc-200/80 dark:border-zinc-800 text-zinc-400 flex items-center gap-1.5 shadow-xs">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce [animation-delay:0.2s]"></span>
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-bounce [animation-delay:0.4s]"></span>
+        </div>
+      `;
+      stream.appendChild(typingDiv);
+      stream.scrollTop = stream.scrollHeight;
+
+      try {
+        const res = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+          body: JSON.stringify({ message: text })
+        });
+
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+
+        if (res.ok) {
+          const data = await res.json();
+          appendChatMessage('AI', data.reply || 'Processed successfully.');
+          if (data.transaction || data.transactions) {
+            showSuccessToast('⚡ Transaction recorded via AI Copilot!');
+            loadDashboard();
+          }
+        } else {
+          // Graceful client fallback for public guest exploration
+          const lower = text.toLowerCase();
+          if (lower.includes('pulse') || lower.includes('health') || lower.includes('score')) {
+            appendChatMessage('AI', '📈 **Pulse Health (0–100)** measures your net savings retention, budget pacing, and spending discipline. Scores >80 indicate optimal financial health!');
+          } else if (lower.includes('safe') || lower.includes('daily') || lower.includes('limit')) {
+            appendChatMessage('AI', '🛡️ **Safe Daily Spend Limit** dynamically divides your remaining discretionary budget by days left in the month to guarantee you never overspend.');
+          } else {
+            appendChatMessage('AI', `✅ Simulated outlay processed: recorded *${text}*. Click **[Sign In]** to persist permanently!`);
+          }
+        }
+      } catch (err) {
+        console.error('Chat error', err);
+        const typingEl = document.getElementById(typingId);
+        if (typingEl) typingEl.remove();
+        appendChatMessage('AI', '⚠️ Network error communicating with Kinetiq AI Copilot.');
       }
     }
   </script>

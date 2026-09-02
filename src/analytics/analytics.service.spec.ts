@@ -9,20 +9,32 @@ describe('AnalyticsService (Pulse Score & Daily Limits)', () => {
     transaction: {
       findMany: jest.fn().mockResolvedValue([
         { type: 'INCOME', amount: 65000, transactionDate: new Date() },
-        { type: 'EXPENSE', amount: 20000, transactionDate: new Date(), category: { name: 'Rent' } },
-        { type: 'EXPENSE', amount: 5000, transactionDate: new Date(), category: { name: 'Food' } },
+        {
+          type: 'EXPENSE',
+          amount: 20000,
+          transactionDate: new Date(),
+          category: { name: 'Rent' },
+        },
+        {
+          type: 'EXPENSE',
+          amount: 5000,
+          transactionDate: new Date(),
+          category: { name: 'Food' },
+        },
       ]),
       findFirst: jest.fn().mockResolvedValue(null),
     },
     budget: {
-      findMany: jest.fn().mockResolvedValue([
-        { monthlyLimit: 30000, category: { name: 'Rent' } },
-      ]),
+      findMany: jest
+        .fn()
+        .mockResolvedValue([
+          { monthlyLimit: 30000, category: { name: 'Rent' } },
+        ]),
     },
     recurringTransaction: {
-      findMany: jest.fn().mockResolvedValue([
-        { amount: 15000, type: 'EXPENSE' },
-      ]),
+      findMany: jest
+        .fn()
+        .mockResolvedValue([{ amount: 15000, type: 'EXPENSE' }]),
     },
   };
 
@@ -45,7 +57,8 @@ describe('AnalyticsService (Pulse Score & Daily Limits)', () => {
   });
 
   it('should calculate recommended daily discretionary limit', async () => {
-    const result = await service.calculateDailyDiscretionaryLimit('user_test_1');
+    const result =
+      await service.calculateDailyDiscretionaryLimit('user_test_1');
     expect(result.recommendedDailyLimit).toBeGreaterThan(0);
     expect(result.daysRemaining).toBeGreaterThan(0);
     expect(result.currency).toBe('INR');

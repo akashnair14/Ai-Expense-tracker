@@ -5,7 +5,6 @@ import { CategoryDictionaryMapper } from './mappers/category-dictionary.mapper';
 import { LlmIntentAdapter } from './adapters/llm-intent.adapter';
 import { ConversationContextService } from './services/conversation-context.service';
 import { ToolDispatcherService } from './services/tool-dispatcher.service';
-import { NLUIntentResponse } from './schemas/intent.schema';
 
 export interface ProcessedIntentResult {
   intent: string;
@@ -20,21 +19,39 @@ export class NluService {
   private readonly logger = new Logger(NluService.name);
 
   constructor(
-    private readonly contextService: ConversationContextService,
-    private readonly toolDispatcher: ToolDispatcherService,
+    private readonly contextService: ConversationContextService = new ConversationContextService(),
+    private readonly toolDispatcher: ToolDispatcherService = null as any,
   ) {}
 
-  public async processUserInput(userId: string, input: string): Promise<ProcessedIntentResult> {
+  public async processUserInput(
+    userId: string,
+    input: string,
+  ): Promise<ProcessedIntentResult> {
     this.logger.log(`Processing input for user ${userId}: "${input}"`);
 
-    // Level 1: Deterministic Fast Regex Parser
+    // Level 1A: Batch Multi-Item Parser (e.g. "Lunch 200, tea 40, cab 180")
+    const batchResult = RegexParser.parseBatch(input);
+    if (batchResult && batchResult.length >= 2) {
+      this.logger.log(
+        `Parsed batch list of ${batchResult.length} items deterministically via Regex`,
+      );
+      this.contextService.addMessage(userId, 'user', input);
+      return {
+        intent: 'CREATE_TRANSACTION',
+        transactions: batchResult,
+      };
+    }
+
+    // Level 1B: Deterministic Fast Single Regex Parser / Bank SMS Parser
     const regexResult = RegexParser.parse(input);
     if (regexResult && regexResult.amount > 0) {
       if (regexResult.category === 'Others') {
         const dictCat = CategoryDictionaryMapper.categorize(input);
         regexResult.category = dictCat.category;
       }
-      this.logger.log(`Parsed deterministically via Regex & Dict with confidence ${regexResult.confidence}`);
+      this.logger.log(
+        `Parsed deterministically via Regex & Dict with confidence ${regexResult.confidence}`,
+      );
       this.contextService.addMessage(userId, 'user', input);
 
       return {
@@ -44,9 +61,14 @@ export class NluService {
     }
 
     // Level 2: Gemini / LLM Intent & Tool Engine with Short-Term Context Memory
-    this.logger.log('Regex matched nothing, routing to LLM Intent & Tool Router...');
+    this.logger.log(
+      'Regex matched nothing, routing to LLM Intent & Tool Router...',
+    );
     const history = this.contextService.getHistory(userId);
-    const intentResponse = await LlmIntentAdapter.classifyAndDispatch(input, history);
+    const intentResponse = await LlmIntentAdapter.classifyAndDispatch(
+      input,
+      history,
+    );
 
     this.contextService.addMessage(userId, 'user', input);
 
@@ -57,24 +79,29 @@ export class NluService {
       };
     }
 
-    this.logger.log(`Classified intent as ${intentResponse.intent} (Confidence: ${intentResponse.confidence})`);
+    this.logger.log(
+      `Classified intent as ${intentResponse.intent} (Confidence: ${intentResponse.confidence})`,
+    );
 
     // Handle Transactions extracted by LLM
     if (intentResponse.transactions && intentResponse.transactions.length > 0) {
-      const parsedTransactions: ParsedTransaction[] = intentResponse.transactions.map((tx) => ({
-        type: tx.type,
-        amount: tx.amount,
-        originalAmount: tx.originalAmount || undefined,
-        currency: tx.currency,
-        merchant: tx.merchant || undefined,
-        category: tx.category,
-        description: tx.description,
-        transactionDate: tx.transactionDateISO ? new Date(tx.transactionDateISO) : new Date(),
-        splitCount: tx.splitCount,
-        rawText: input,
-        parsedBy: 'LLM',
-        confidence: intentResponse.confidence,
-      }));
+      const parsedTransactions: ParsedTransaction[] =
+        intentResponse.transactions.map((tx) => ({
+          type: tx.type,
+          amount: tx.amount,
+          originalAmount: tx.originalAmount || undefined,
+          currency: tx.currency,
+          merchant: tx.merchant || undefined,
+          category: tx.category,
+          description: tx.description,
+          transactionDate: tx.transactionDateISO
+            ? new Date(tx.transactionDateISO)
+            : new Date(),
+          splitCount: tx.splitCount,
+          rawText: input,
+          parsedBy: 'LLM',
+          confidence: intentResponse.confidence,
+        }));
 
       return {
         intent: intentResponse.intent,
@@ -86,7 +113,10 @@ export class NluService {
     // Handle Tool Executions
     if (intentResponse.toolCalls && intentResponse.toolCalls.length > 0) {
       const toolCall = intentResponse.toolCalls[0];
-      const toolResult = await this.toolDispatcher.executeTool(userId, toolCall);
+      const toolResult = await this.toolDispatcher.executeTool(
+        userId,
+        toolCall,
+      );
 
       return {
         intent: intentResponse.intent,
@@ -130,4 +160,3 @@ export class NluService {
     };
   }
 }
-

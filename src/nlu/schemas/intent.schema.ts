@@ -53,8 +53,12 @@ export const NLUIntentResponseSchema = z.object({
   toolCalls: z.array(LLMToolCallSchema).optional(),
   replyText: z.string().optional(),
   targetCategory: z.string().optional(),
-  targetPeriod: z.enum(['today', 'yesterday', 'week', 'month', 'year']).optional(),
-  correctionField: z.enum(['amount', 'category', 'merchant', 'description']).optional(),
+  targetPeriod: z
+    .enum(['today', 'yesterday', 'week', 'month', 'year'])
+    .optional(),
+  correctionField: z
+    .enum(['amount', 'category', 'merchant', 'description'])
+    .optional(),
   correctionValue: z.string().optional(),
 });
 

@@ -23,8 +23,10 @@ export class HealthController {
       database: dbStatus,
       memory: {
         rssMb: Math.round((memoryUsage.rss / 1024 / 1024) * 100) / 100,
-        heapTotalMb: Math.round((memoryUsage.heapTotal / 1024 / 1024) * 100) / 100,
-        heapUsedMb: Math.round((memoryUsage.heapUsed / 1024 / 1024) * 100) / 100,
+        heapTotalMb:
+          Math.round((memoryUsage.heapTotal / 1024 / 1024) * 100) / 100,
+        heapUsedMb:
+          Math.round((memoryUsage.heapUsed / 1024 / 1024) * 100) / 100,
       },
     };
   }

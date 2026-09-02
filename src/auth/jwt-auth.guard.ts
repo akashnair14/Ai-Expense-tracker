@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  Logger,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AuthService } from './auth.service';
@@ -14,15 +20,20 @@ export class JwtAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest<Request & { user?: any }>();
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: any }>();
     const cookies = this.parseCookies(request.headers.cookie);
     const sessionToken = cookies['pulse_session'];
-    const authHeader = (request.headers['authorization'] || request.headers['x-telegram-init-data']) as string;
+    const authHeader = (request.headers['authorization'] ||
+      request.headers['x-telegram-init-data']) as string;
 
     // 1. Try JWT from HttpOnly Cookie or Bearer / raw Authorization header
     let token = sessionToken;
     if (!token && authHeader && !authHeader.includes('hash=')) {
-      token = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
+      token = authHeader.startsWith('Bearer ')
+        ? authHeader.substring(7)
+        : authHeader;
     }
 
     if (token) {
@@ -40,9 +51,14 @@ export class JwtAuthGuard implements CanActivate {
 
     // 2. Telegram Mini App initData HMAC Verification Fallback
     if (authHeader && authHeader.includes('hash=')) {
-      const initDataStr = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
+      const initDataStr = authHeader.startsWith('Bearer ')
+        ? authHeader.substring(7)
+        : authHeader;
       const botToken = process.env.TELEGRAM_BOT_TOKEN;
-      const isMock = process.env.NODE_ENV === 'test' || !botToken || botToken === 'MOCK_TELEGRAM_TOKEN';
+      const isMock =
+        process.env.NODE_ENV === 'test' ||
+        !botToken ||
+        botToken === 'MOCK_TELEGRAM_TOKEN';
 
       let telegramUserObj: any = null;
 
@@ -53,7 +69,9 @@ export class JwtAuthGuard implements CanActivate {
       }
 
       if (telegramUserObj && telegramUserObj.id) {
-        let user = await this.authService.validateUserByTelegramId(String(telegramUserObj.id));
+        let user = await this.authService.validateUserByTelegramId(
+          String(telegramUserObj.id),
+        );
         if (!user) {
           const loginRes = await this.authService.validateAndLoginTelegramUser({
             id: telegramUserObj.id,
@@ -73,7 +91,9 @@ export class JwtAuthGuard implements CanActivate {
     }
 
     // 3. Reject unauthenticated requests
-    throw new UnauthorizedException('Authentication required. Invalid or missing session credentials.');
+    throw new UnauthorizedException(
+      'Authentication required. Invalid or missing session credentials.',
+    );
   }
 
   private parseCookies(cookieHeader?: string): Record<string, string> {
@@ -89,7 +109,10 @@ export class JwtAuthGuard implements CanActivate {
     return list;
   }
 
-  private verifyTelegramInitData(initData: string, botToken: string): any | null {
+  private verifyTelegramInitData(
+    initData: string,
+    botToken: string,
+  ): any | null {
     try {
       const urlParams = new URLSearchParams(initData);
       const hash = urlParams.get('hash');
@@ -101,8 +124,14 @@ export class JwtAuthGuard implements CanActivate {
         .sort()
         .join('\n');
 
-      const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
-      const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+      const secretKey = crypto
+        .createHmac('sha256', 'WebAppData')
+        .update(botToken)
+        .digest();
+      const calculatedHash = crypto
+        .createHmac('sha256', secretKey)
+        .update(dataCheckString)
+        .digest('hex');
 
       if (calculatedHash !== hash) return null;
 

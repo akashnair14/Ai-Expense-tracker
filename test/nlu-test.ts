@@ -28,10 +28,14 @@ async function runTests() {
     const res = await nlu.parseText(input);
     console.log(`Input: "${input}"`);
     console.log(` -> Type: ${res.type}`);
-    console.log(` -> Amount: ${res.amount}${res.originalAmount ? ` (Original ${res.originalAmount}, Split ${res.splitCount})` : ''}`);
+    console.log(
+      ` -> Amount: ${res.amount}${res.originalAmount ? ` (Original ${res.originalAmount}, Split ${res.splitCount})` : ''}`,
+    );
     console.log(` -> Category: ${res.category}`);
     console.log(` -> Merchant: ${res.merchant || 'N/A'}`);
-    console.log(` -> ParsedBy: ${res.parsedBy} (Confidence: ${res.confidence})`);
+    console.log(
+      ` -> ParsedBy: ${res.parsedBy} (Confidence: ${res.confidence})`,
+    );
     console.log('----------------------------------------------------');
   }
 }

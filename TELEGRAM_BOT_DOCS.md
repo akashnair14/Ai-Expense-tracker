@@ -1,6 +1,6 @@
-# PulseAI Telegram Expense Tracker Bot — Complete System & Feature Documentation
+# Kinetiq Money Telegram Expense Tracker Bot — Complete System & Feature Documentation
 
-> **Overview**: PulseAI is an AI-powered financial intelligence assistant integrated with Telegram and a companion Web Dashboard. It allows users to log expenses/income using natural language text, manage category budgets interactively via buttons, automate recurring schedules (SIP, rent, salaries), and log into their desktop web dashboard via QR code scanning.
+> **Overview**: Kinetiq Money is an AI-powered financial intelligence assistant integrated with Telegram and a companion Web Dashboard. It allows users to log expenses/income using natural language text, manage category budgets interactively via buttons, automate recurring schedules (SIP, rent, salaries), and log into their desktop web dashboard via QR code scanning.
 
 ---
 

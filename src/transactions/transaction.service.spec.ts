@@ -2,11 +2,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TransactionService } from './transaction.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditService } from '../common/audit/audit.service';
+import { ForexService } from '../common/forex/forex.service';
 
 describe('TransactionService', () => {
   let service: TransactionService;
   let prismaMock: any;
   let eventEmitterMock: any;
+  let auditServiceMock: any;
 
   beforeEach(async () => {
     prismaMock = {
@@ -35,11 +38,28 @@ describe('TransactionService', () => {
       emit: jest.fn(),
     };
 
+    auditServiceMock = {
+      log: jest.fn().mockResolvedValue(undefined),
+    };
+
+    const forexServiceMock = {
+      convert: jest.fn().mockImplementation((amount, from, target) => ({
+        originalAmount: amount,
+        fromCurrency: from,
+        targetCurrency: target,
+        convertedAmount: amount,
+        exchangeRate: 1.0,
+      })),
+      formatDualCurrency: jest.fn().mockReturnValue('Dual Currency String'),
+    };
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TransactionService,
         { provide: PrismaService, useValue: prismaMock },
         { provide: EventEmitter2, useValue: eventEmitterMock },
+        { provide: AuditService, useValue: auditServiceMock },
+        { provide: ForexService, useValue: forexServiceMock },
       ],
     }).compile();
 
@@ -52,7 +72,9 @@ describe('TransactionService', () => {
 
     const user = await service.getOrCreateUser('12345');
     expect(user).toEqual(mockUser);
-    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({ where: { telegramId: '12345' } });
+    expect(prismaMock.user.findUnique).toHaveBeenCalledWith({
+      where: { telegramId: '12345' },
+    });
   });
 
   it('should create new user and seed default categories if user not found', async () => {
@@ -71,7 +93,10 @@ describe('TransactionService', () => {
     const mockCat = { id: 'c-1', name: 'Food' };
     prismaMock.user.findUnique.mockResolvedValue(mockUser);
     prismaMock.category.findFirst.mockResolvedValue(mockCat);
-    prismaMock.transaction.create.mockResolvedValue({ id: 'tx-1', amount: 5000 });
+    prismaMock.transaction.create.mockResolvedValue({
+      id: 'tx-1',
+      amount: 5000,
+    });
     prismaMock.budget.findUnique.mockResolvedValue({
       monthlyLimit: 4000,
       category: mockCat,
@@ -95,5 +120,55 @@ describe('TransactionService', () => {
         isExceeded: true,
       }),
     );
+  });
+
+  describe('Validation & Error Handling', () => {
+    it('should reject manual transaction with NaN or non-positive amount', async () => {
+      await expect(
+        service.createManualTransaction('12345', {
+          amount: NaN,
+          categoryName: 'Food',
+        }),
+      ).rejects.toThrow();
+
+      await expect(
+        service.createManualTransaction('12345', {
+          amount: -250,
+          categoryName: 'Food',
+        }),
+      ).rejects.toThrow();
+
+      await expect(
+        service.createManualTransaction('12345', {
+          amount: Infinity,
+          categoryName: 'Food',
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('should reject recording parsed transaction with invalid amount', async () => {
+      await expect(
+        service.recordParsedTransaction('12345', {
+          type: 'EXPENSE',
+          amount: -50,
+          currency: 'INR',
+          category: 'Food',
+          description: 'Lunch',
+          transactionDate: new Date(),
+          splitCount: 1,
+          rawText: 'Lunch -50',
+          parsedBy: 'REGEX',
+          confidence: 0.9,
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('should reject invalid budget limits', async () => {
+      await expect(
+        service.setBudgetLimit('12345', 'Food', -1000),
+      ).rejects.toThrow();
+      await expect(service.setBudgetLimit('12345', '', 5000)).rejects.toThrow();
+      await expect(service.setBudgetLimit('', 'Food', 5000)).rejects.toThrow();
+    });
   });
 });

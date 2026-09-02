@@ -1,4 +1,10 @@
-import { Injectable, CanActivate, ExecutionContext, UnauthorizedException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  UnauthorizedException,
+  Logger,
+} from '@nestjs/common';
 import { Request } from 'express';
 import * as crypto from 'crypto';
 
@@ -14,25 +20,37 @@ export class TelegramWebAppAuthGuard implements CanActivate {
   private readonly logger = new Logger(TelegramWebAppAuthGuard.name);
 
   canActivate(context: ExecutionContext): boolean {
-    const request = context.switchToHttp().getRequest<Request & { user?: AuthenticatedUser }>();
-    const authHeader = (request.headers['authorization'] || request.headers['x-telegram-init-data']) as string;
-    const requestTelegramId = (request.params?.telegramId as string) || (request.body?.telegramId as string);
+    const request = context
+      .switchToHttp()
+      .getRequest<Request & { user?: AuthenticatedUser }>();
+    const authHeader = (request.headers['authorization'] ||
+      request.headers['x-telegram-init-data']) as string;
+    const requestTelegramId =
+      (request.params?.telegramId as string) ||
+      (request.body?.telegramId as string);
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
     // 1. Check for Authorization header or Telegram initData
     if (authHeader) {
-      const initDataStr = authHeader.startsWith('Bearer ') ? authHeader.substring(7) : authHeader;
+      const initDataStr = authHeader.startsWith('Bearer ')
+        ? authHeader.substring(7)
+        : authHeader;
 
       // If initData is a standard Telegram HMAC signed string (contains hash=)
       if (initDataStr.includes('hash=')) {
         if (botToken && botToken !== 'MOCK_TELEGRAM_TOKEN') {
-          const validatedUser = this.verifyTelegramInitData(initDataStr, botToken);
+          const validatedUser = this.verifyTelegramInitData(
+            initDataStr,
+            botToken,
+          );
           if (validatedUser) {
             request.user = validatedUser;
             return true;
           }
-          throw new UnauthorizedException('Invalid Telegram WebApp initData HMAC signature');
+          throw new UnauthorizedException(
+            'Invalid Telegram WebApp initData HMAC signature',
+          );
         } else {
           // Dev/Mock mode without active bot token: parse user object from initData string
           const parsedUser = this.extractUserFromInitData(initDataStr);
@@ -67,10 +85,15 @@ export class TelegramWebAppAuthGuard implements CanActivate {
     }
 
     // 3. Reject unauthenticated requests lacking credentials
-    throw new UnauthorizedException('Authentication required. Missing Telegram WebApp initData or valid Telegram ID');
+    throw new UnauthorizedException(
+      'Authentication required. Missing Telegram WebApp initData or valid Telegram ID',
+    );
   }
 
-  private verifyTelegramInitData(initData: string, botToken: string): AuthenticatedUser | null {
+  private verifyTelegramInitData(
+    initData: string,
+    botToken: string,
+  ): AuthenticatedUser | null {
     try {
       const urlParams = new URLSearchParams(initData);
       const hash = urlParams.get('hash');
@@ -85,8 +108,14 @@ export class TelegramWebAppAuthGuard implements CanActivate {
         .join('\n');
 
       // HMAC-SHA256 of botToken with secret key "WebAppData"
-      const secretKey = crypto.createHmac('sha256', 'WebAppData').update(botToken).digest();
-      const calculatedHash = crypto.createHmac('sha256', secretKey).update(dataCheckString).digest('hex');
+      const secretKey = crypto
+        .createHmac('sha256', 'WebAppData')
+        .update(botToken)
+        .digest();
+      const calculatedHash = crypto
+        .createHmac('sha256', secretKey)
+        .update(dataCheckString)
+        .digest('hex');
 
       if (calculatedHash !== hash) {
         return null;

@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /prisma/
+
+Sitemap: https://ai-expense-tracker-o5a3.onrender.com/sitemap.xml

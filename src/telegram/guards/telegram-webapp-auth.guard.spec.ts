@@ -8,7 +8,11 @@ describe('TelegramWebAppAuthGuard', () => {
     guard = new TelegramWebAppAuthGuard();
   });
 
-  function createMockContext(headers: Record<string, string>, params: Record<string, string> = {}, body: any = {}): ExecutionContext {
+  function createMockContext(
+    headers: Record<string, string>,
+    params: Record<string, string> = {},
+    body: any = {},
+  ): ExecutionContext {
     const req = {
       headers,
       params,
@@ -34,7 +38,8 @@ describe('TelegramWebAppAuthGuard', () => {
 
   it('should throw UnauthorizedException when auth header is missing in non-dev mode', () => {
     process.env.NODE_ENV = 'production';
-    process.env.TELEGRAM_BOT_TOKEN = '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11';
+    process.env.TELEGRAM_BOT_TOKEN =
+      '123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11';
 
     const ctx = createMockContext({});
     expect(() => guard.canActivate(ctx)).toThrow(UnauthorizedException);

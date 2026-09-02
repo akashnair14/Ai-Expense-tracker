@@ -1,69 +1,194 @@
 export class CategoryDictionaryMapper {
   private static MAPPINGS: Record<string, string[]> = {
-    'Food': [
-      'lunch', 'dinner', 'breakfast', 'zomato', 'swiggy', 'burger', 'pizza', 'restaurant',
-      'cafe', 'coffee', 'starbucks', 'mcdonalds', 'kfc', 'food', 'snack', 'tea', 'chai',
-      'shawarma', 'biryani', 'buffet', 'pastries', 'bakery', 'cake', 'ice cream', 'juice',
-      'sandwich', 'subway', 'dominos', 'burger king', 'barbeque nation', 'water bottle'
+    Food: [
+      'lunch',
+      'dinner',
+      'breakfast',
+      'zomato',
+      'swiggy',
+      'burger',
+      'pizza',
+      'restaurant',
+      'cafe',
+      'coffee',
+      'starbucks',
+      'mcdonalds',
+      'kfc',
+      'food',
+      'snack',
+      'tea',
+      'chai',
+      'shawarma',
+      'biryani',
+      'buffet',
+      'pastries',
+      'bakery',
+      'cake',
+      'ice cream',
+      'juice',
+      'sandwich',
+      'subway',
+      'dominos',
+      'burger king',
+      'barbeque nation',
+      'water bottle',
     ],
-    'Groceries': [
-      'groceries', 'supermarket', 'blinkit', 'zepto', 'instamart', 'bigbasket', 'milk',
-      'vegetables', 'fruits', 'mart', 'rice', 'bread', 'eggs', 'cooking oil', 'curd', 'provisions'
+    Groceries: [
+      'groceries',
+      'supermarket',
+      'blinkit',
+      'zepto',
+      'instamart',
+      'bigbasket',
+      'milk',
+      'vegetables',
+      'fruits',
+      'mart',
+      'rice',
+      'bread',
+      'eggs',
+      'cooking oil',
+      'curd',
+      'provisions',
     ],
-    'Transport': [
-      'uber', 'ola', 'rapido', 'cab', 'taxi', 'auto', 'metro', 'bus', 'train', 'flight',
-      'rickshaw', 'parking', 'toll', 'fastag', 'car wash'
+    Transport: [
+      'uber',
+      'ola',
+      'rapido',
+      'cab',
+      'taxi',
+      'auto',
+      'metro',
+      'bus',
+      'train',
+      'flight',
+      'rickshaw',
+      'parking',
+      'toll',
+      'fastag',
+      'car wash',
     ],
-    'Travel': [
-      'flight', 'irctc', 'makemytrip', 'hotel', 'airbnb', 'train ticket'
+    Travel: [
+      'flight',
+      'irctc',
+      'makemytrip',
+      'hotel',
+      'airbnb',
+      'train ticket',
     ],
-    'Fuel': [
-      'petrol', 'diesel', 'cng', 'fuel', 'gas station', 'shell', 'hpcl', 'bpcl', 'iocl'
+    Fuel: [
+      'petrol',
+      'diesel',
+      'cng',
+      'fuel',
+      'gas station',
+      'shell',
+      'hpcl',
+      'bpcl',
+      'iocl',
     ],
-    'Bills': [
-      'electricity', 'water', 'wifi', 'internet', 'broadband', 'recharge', 'mobile', 'bill',
-      'utility', 'piped gas', 'jio', 'airtel', 'postpaid', 'credit card'
+    Bills: [
+      'electricity',
+      'water',
+      'wifi',
+      'internet',
+      'broadband',
+      'recharge',
+      'mobile',
+      'bill',
+      'utility',
+      'piped gas',
+      'jio',
+      'airtel',
+      'postpaid',
+      'credit card',
     ],
-    'Rent': [
-      'rent', 'house rent', 'flat rent', 'apartment rent'
+    Rent: ['rent', 'house rent', 'flat rent', 'apartment rent'],
+    EMI: ['emi', 'loan', 'car loan', 'home loan'],
+    Entertainment: [
+      'movie',
+      'cinema',
+      'tickets',
+      'netflix',
+      'spotify',
+      'prime',
+      'youtube',
+      'gaming',
+      'concert',
+      'bookmyshow',
+      'popcorn',
     ],
-    'EMI': [
-      'emi', 'loan', 'car loan', 'home loan'
+    Shopping: [
+      'amazon',
+      'flipkart',
+      'myntra',
+      'clothes',
+      'shoes',
+      'electronics',
+      'shopping',
+      'mall',
+      'zara',
+      'nike',
+      'decathlon',
+      'h&m',
+      'airpods',
+      'book',
+      'watch',
+      'stationery',
+      'notebook',
+      't-shirt',
+      'jeans',
+      'shirt',
+      'headphones',
     ],
-    'Entertainment': [
-      'movie', 'cinema', 'tickets', 'netflix', 'spotify', 'prime', 'youtube', 'gaming',
-      'concert', 'bookmyshow', 'popcorn'
+    Salary: ['salary', 'paycheck', 'payroll'],
+    Freelance: [
+      'freelance',
+      'client payment',
+      'client consulting',
+      'upwork',
+      'fiverr',
+      'contract',
+      'payout',
     ],
-    'Shopping': [
-      'amazon', 'flipkart', 'myntra', 'clothes', 'shoes', 'electronics', 'shopping', 'mall',
-      'zara', 'nike', 'decathlon', 'h&m', 'airpods', 'book', 'watch', 'stationery', 'notebook',
-      't-shirt', 'jeans', 'shirt', 'headphones'
+    Healthcare: [
+      'pharmacy',
+      'medicine',
+      'hospital',
+      'doctor',
+      'clinic',
+      'lab test',
+      'dental',
+      'eye test',
+      'gym',
+      'medicines',
+      'apollo',
     ],
-    'Salary': [
-      'salary', 'paycheck', 'payroll'
+    Insurance: [
+      'insurance',
+      'premium',
+      'health insurance',
+      'life insurance',
+      'term insurance',
     ],
-    'Freelance': [
-      'freelance', 'client payment', 'client consulting', 'upwork', 'fiverr', 'contract', 'payout'
+    Investment: [
+      'stocks',
+      'mutual fund',
+      'crypto',
+      'sip',
+      'zerodha',
+      'groww',
+      'dividend',
+      'profit',
     ],
-    'Healthcare': [
-      'pharmacy', 'medicine', 'hospital', 'doctor', 'clinic', 'lab test', 'dental', 'eye test',
-      'gym', 'medicines', 'apollo'
-    ],
-    'Insurance': [
-      'insurance', 'premium', 'health insurance', 'life insurance', 'term insurance'
-    ],
-    'Investment': [
-      'stocks', 'mutual fund', 'crypto', 'sip', 'zerodha', 'groww', 'dividend', 'profit'
-    ],
-    'Gift': [
-      'cashback', 'gift', 'flowers', 'donation', 'bonus'
-    ],
-    'Business': [
-      'sold', 'sales', 'business', 'vendor'
-    ]
+    Gift: ['cashback', 'gift', 'flowers', 'donation', 'bonus'],
+    Business: ['sold', 'sales', 'business', 'vendor'],
   };
 
-  public static categorize(text: string): { category: string; confidence: number } {
+  public static categorize(text: string): {
+    category: string;
+    confidence: number;
+  } {
     const lower = text.toLowerCase();
 
     for (const [category, keywords] of Object.entries(this.MAPPINGS)) {

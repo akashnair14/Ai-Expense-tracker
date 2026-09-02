@@ -3,8 +3,14 @@ import { Logger } from '@nestjs/common';
 import { ParsedTransaction } from '../interfaces/nlu-parser.interface';
 
 export class LlmFallbackAdapter {
-  public static async parseWithLLM(input: string): Promise<ParsedTransaction | null> {
-    const apiKey = process.env.LLM_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.GROQ_API_KEY;
+  public static async parseWithLLM(
+    input: string,
+  ): Promise<ParsedTransaction | null> {
+    const apiKey =
+      process.env.LLM_API_KEY ||
+      process.env.OPENAI_API_KEY ||
+      process.env.GEMINI_API_KEY ||
+      process.env.GROQ_API_KEY;
     const provider = (process.env.LLM_PROVIDER || 'groq').toLowerCase(); // groq | gemini | openai | openrouter
 
     if (!apiKey) {
@@ -35,19 +41,21 @@ Return ONLY valid JSON matching this schema:
             contents: [
               {
                 parts: [
-                  { text: `${systemPrompt}\n\nParse this input message: "${input}"` }
-                ]
-              }
+                  {
+                    text: `${systemPrompt}\n\nParse this input message: "${input}"`,
+                  },
+                ],
+              },
             ],
             generationConfig: {
-              responseMimeType: "application/json",
+              responseMimeType: 'application/json',
               temperature: 0.1,
-            }
+            },
           },
           {
             headers: { 'Content-Type': 'application/json' },
             timeout: 7000,
-          }
+          },
         );
 
         const content = response.data.candidates[0]?.content?.parts[0]?.text;
@@ -57,12 +65,16 @@ Return ONLY valid JSON matching this schema:
         return {
           type: parsed.type || 'EXPENSE',
           amount: Number(parsed.amount) || 0,
-          originalAmount: parsed.originalAmount ? Number(parsed.originalAmount) : undefined,
+          originalAmount: parsed.originalAmount
+            ? Number(parsed.originalAmount)
+            : undefined,
           currency: parsed.currency || 'INR',
           merchant: parsed.merchant || undefined,
           category: parsed.category || 'Others',
           description: parsed.description || input,
-          transactionDate: parsed.transactionDateISO ? new Date(parsed.transactionDateISO) : new Date(),
+          transactionDate: parsed.transactionDateISO
+            ? new Date(parsed.transactionDateISO)
+            : new Date(),
           splitCount: Number(parsed.splitCount) || 1,
           rawText: input,
           parsedBy: 'LLM',
@@ -70,14 +82,20 @@ Return ONLY valid JSON matching this schema:
         };
       }
 
-      if (provider === 'groq' || provider === 'openai' || provider === 'openrouter') {
-        const baseUrl = provider === 'groq' 
-          ? 'https://api.groq.com/openai/v1/chat/completions'
-          : provider === 'openrouter'
-          ? 'https://openrouter.ai/api/v1/chat/completions'
-          : 'https://api.openai.com/v1/chat/completions';
+      if (
+        provider === 'groq' ||
+        provider === 'openai' ||
+        provider === 'openrouter'
+      ) {
+        const baseUrl =
+          provider === 'groq'
+            ? 'https://api.groq.com/openai/v1/chat/completions'
+            : provider === 'openrouter'
+              ? 'https://openrouter.ai/api/v1/chat/completions'
+              : 'https://api.openai.com/v1/chat/completions';
 
-        const model = provider === 'groq' ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+        const model =
+          provider === 'groq' ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
 
         const response = await axios.post(
           baseUrl,
@@ -92,11 +110,11 @@ Return ONLY valid JSON matching this schema:
           },
           {
             headers: {
-              'Authorization': `Bearer ${apiKey}`,
+              Authorization: `Bearer ${apiKey}`,
               'Content-Type': 'application/json',
             },
             timeout: 5000,
-          }
+          },
         );
 
         const content = response.data.choices[0]?.message?.content;
@@ -106,12 +124,16 @@ Return ONLY valid JSON matching this schema:
         return {
           type: parsed.type || 'EXPENSE',
           amount: Number(parsed.amount) || 0,
-          originalAmount: parsed.originalAmount ? Number(parsed.originalAmount) : undefined,
+          originalAmount: parsed.originalAmount
+            ? Number(parsed.originalAmount)
+            : undefined,
           currency: parsed.currency || 'INR',
           merchant: parsed.merchant || undefined,
           category: parsed.category || 'Others',
           description: parsed.description || input,
-          transactionDate: parsed.transactionDateISO ? new Date(parsed.transactionDateISO) : new Date(),
+          transactionDate: parsed.transactionDateISO
+            ? new Date(parsed.transactionDateISO)
+            : new Date(),
           splitCount: Number(parsed.splitCount) || 1,
           rawText: input,
           parsedBy: 'LLM',
@@ -120,7 +142,9 @@ Return ONLY valid JSON matching this schema:
       }
     } catch (err: any) {
       const logger = new Logger('LlmFallbackAdapter');
-      logger.warn(`LLM Fallback parsing error (${provider}): ${err?.response?.data?.error?.message || err?.message || err}`);
+      logger.warn(
+        `LLM Fallback parsing error (${provider}): ${err?.response?.data?.error?.message || err?.message || err}`,
+      );
     }
 
     return null;

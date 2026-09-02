@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
 import { JwtAuthGuard } from './jwt-auth.guard';
+import { OptionalJwtAuthGuard } from './optional-jwt-auth.guard';
 import { PrismaModule } from '../prisma/prisma.module';
 import { TransactionModule } from '../transactions/transaction.module';
 
@@ -15,13 +16,16 @@ import { TransactionModule } from '../transactions/transaction.module';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        secret: config.get<string>('SESSION_SECRET') || config.get<string>('JWT_SECRET') || 'pulseai_jwt_secret_key_2026_super_secure',
+        secret:
+          config.get<string>('SESSION_SECRET') ||
+          config.get<string>('JWT_SECRET') ||
+          'pulseai_jwt_secret_key_2026_super_secure',
         signOptions: { expiresIn: '30d' },
       }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtAuthGuard],
-  exports: [AuthService, JwtAuthGuard, JwtModule],
+  providers: [AuthService, JwtAuthGuard, OptionalJwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard, OptionalJwtAuthGuard, JwtModule],
 })
 export class AuthModule {}

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy | Kinetiq Money</title>
+  <meta name="description" content="Kinetiq Money Privacy Policy. Transparent financial data handling, zero selling of personal records, and encrypted storage.">
+  
+  <script>
+    (function() {
+      const savedTheme = localStorage.getItem('pulse_theme') || 'dark';
+      document.documentElement.classList.remove('light', 'dark');
+      document.documentElement.classList.add(savedTheme);
+    })();
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS & Lucide Icons -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-zinc-800 selection:text-white p-6 sm:p-12">
+
+  <!-- TOP BRAND NAV -->
+  <header class="max-w-3xl w-full mx-auto flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-6 mb-8">
+    <a href="/" class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-lg bg-zinc-900 dark:bg-white text-white dark:text-zinc-900 flex items-center justify-center font-bold text-sm shadow-sm">
+        <i data-lucide="wallet" class="w-4 h-4"></i>
+      </div>
+      <div class="flex items-center gap-2">
+        <h1 class="text-sm font-semibold tracking-tight text-zinc-900 dark:text-zinc-100 leading-none">Kinetiq Money</h1>
+        <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400 border border-zinc-200 dark:border-zinc-700">
+          Legal
+        </span>
+      </div>
+    </a>
+
+    <div class="flex items-center gap-3">
+      <a href="/" class="text-xs font-semibold text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5">
+        <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+        <span>Dashboard</span>
+      </a>
+      <button onclick="toggleTheme()" class="p-2 text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors" aria-label="Toggle theme">
+        <i data-lucide="sun" class="w-4 h-4 hidden dark:block"></i>
+        <i data-lucide="moon" class="w-4 h-4 block dark:hidden"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- PRIVACY POLICY BODY -->
+  <main class="max-w-3xl w-full mx-auto space-y-8 text-xs leading-relaxed text-zinc-700 dark:text-zinc-300">
+    <div class="space-y-2">
+      <h2 class="text-2xl font-bold tracking-tight text-zinc-900 dark:text-white">Privacy Policy</h2>
+      <p class="text-zinc-400">Last updated: August 2026</p>
+    </div>
+
+    <div class="p-4 rounded-2xl bg-zinc-100 dark:bg-[#121215] border border-zinc-200 dark:border-zinc-800 flex items-start gap-3">
+      <i data-lucide="shield-check" class="w-5 h-5 text-emerald-500 shrink-0 mt-0.5"></i>
+      <div class="space-y-1">
+        <h3 class="font-bold text-zinc-900 dark:text-white text-sm">Zero Data Selling Commitment</h3>
+        <p class="text-[11px] text-zinc-500 dark:text-zinc-400">Kinetiq Money will never sell, rent, monetize, or share your financial records, transaction amounts, or personal identities with third-party advertisers or data brokers.</p>
+      </div>
+    </div>
+
+    <section class="space-y-3">
+      <h3 class="text-base font-bold text-zinc-900 dark:text-white">1. Information We Collect</h3>
+      <p>When you use Kinetiq Money (via Telegram Bot or WebApp), we store only what is necessary to categorize and calculate your financial health:</p>
+      <ul class="list-disc pl-5 space-y-1 text-zinc-600 dark:text-zinc-400">
+        <li><strong>Account Identifiers:</strong> Telegram User ID, username, and first name (or email address if registered directly).</li>
+        <li><strong>Transaction Data:</strong> Amounts, merchants, categories, dates, and recurring frequency parameters you submit.</li>
+        <li><strong>Personalization Targets:</strong> Monthly spending budgets, income benchmarks, and savings goals you configure.</li>
+      </ul>
+    </section>
+
+    <section class="space-y-3">
+      <h3 class="text-base font-bold text-zinc-900 dark:text-white">2. How AI is Used</h3>
+      <p>Kinetiq Money utilizes Google Gemini 1.5 Flash Vision and deterministic NLU regex models exclusively to extract transaction parameters (e.g. amount, merchant, category) from your messages or receipt uploads. Prompts and receipt images are processed strictly for extraction and are not retained for external LLM public training.</p>
+    </section>
+
+    <section class="space-y-3">
+      <h3 class="text-base font-bold text-zinc-900 dark:text-white">3. Security & Storage</h3>
+      <p>All database records are hosted within secure, encrypted PostgreSQL infrastructure with SSL-enforced connections. API communications use HTTPS with rate limiting and JWT session authorization.</p>
+    </section>
+
+    <section class="space-y-3">
+      <h3 class="text-base font-bold text-zinc-900 dark:text-white">4. Your Data Rights & Deletion</h3>
+      <p>You have full ownership of your data at all times. You can:</p>
+      <ul class="list-disc pl-5 space-y-1 text-zinc-600 dark:text-zinc-400">
+        <li><strong>Export:</strong> Download a full timestamped CSV of your records at any time.</li>
+        <li><strong>Delete:</strong> Delete individual records with immediate confirmation warnings or clear historical balances.</li>
+      </ul>
+    </section>
+
+    <section class="space-y-3">
+      <h3 class="text-base font-bold text-zinc-900 dark:text-white">5. Contact & Support</h3>
+      <p>For questions or assistance regarding your data, reach out directly through the official Kinetiq Money Telegram Bot support channels.</p>
+    </section>
+  </main>
+
+  <footer class="max-w-3xl w-full mx-auto text-center text-zinc-400 text-xs py-12 border-t border-zinc-200 dark:border-zinc-800 mt-12">
+    Kinetiq Money Financial OS &copy; 2026. All rights reserved.
+  </footer>
+
+  <script>
+    lucide.createIcons();
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.classList.contains('dark');
+      if (isDark) {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('pulse_theme', 'light');
+      } else {
+        html.classList.remove('light');
+        html.classList.add('dark');
+        localStorage.setItem('pulse_theme', 'dark');
+      }
+      lucide.createIcons();
+    }
+  </script>
+</body>
+</html>

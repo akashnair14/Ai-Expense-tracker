@@ -2,6 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { PrismaService } from '../prisma/prisma.service';
+import { AuditService } from '../common/audit/audit.service';
 import { addMonths } from 'date-fns';
 
 @Injectable()
@@ -11,6 +12,7 @@ export class RecurringService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly eventEmitter: EventEmitter2,
+    private readonly auditService: AuditService,
   ) {}
 
   @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT)
@@ -35,7 +37,13 @@ export class RecurringService {
       try {
         const scheduledDate = new Date(rec.nextRun);
         // Normalize scheduled date to midnight for idempotency key
-        const normalizedScheduledDate = new Date(Date.UTC(scheduledDate.getUTCFullYear(), scheduledDate.getUTCMonth(), scheduledDate.getUTCDate()));
+        const normalizedScheduledDate = new Date(
+          Date.UTC(
+            scheduledDate.getUTCFullYear(),
+            scheduledDate.getUTCMonth(),
+            scheduledDate.getUTCDate(),
+          ),
+        );
 
         // Use Prisma interactive transaction for atomic execution and idempotency record
         await this.prisma.$transaction(async (tx) => {
@@ -50,7 +58,9 @@ export class RecurringService {
           });
 
           if (existingExec) {
-            this.logger.warn(`Recurring schedule ${rec.id} already executed for date ${normalizedScheduledDate.toISOString()}. Skipping duplicate.`);
+            this.logger.warn(
+              `Recurring schedule ${rec.id} already executed for date ${normalizedScheduledDate.toISOString()}. Skipping duplicate.`,
+            );
             return;
           }
 
@@ -87,7 +97,21 @@ export class RecurringService {
             },
           });
 
-          // 5. Emit asynchronous notification event
+          // 5. Audit Log
+          await this.auditService.log({
+            userId: rec.userId,
+            action: 'RECURRING_EXECUTED',
+            entityType: 'RECURRING_TRANSACTION',
+            entityId: rec.id,
+            source: 'SCHEDULER',
+            details: {
+              scheduledDate: normalizedScheduledDate.toISOString(),
+              amount: Number(rec.amount),
+              description: rec.description,
+            },
+          });
+
+          // 6. Emit asynchronous notification event
           this.eventEmitter.emit('recurring.auto_posted', {
             telegramId: rec.user.telegramId,
             description: rec.description || 'Recurring Payment',
@@ -99,9 +123,14 @@ export class RecurringService {
           });
         });
 
-        this.logger.log(`Successfully processed recurring transaction ${rec.id} for user ${rec.userId}`);
+        this.logger.log(
+          `Successfully processed recurring transaction ${rec.id} for user ${rec.userId}`,
+        );
       } catch (err: any) {
-        this.logger.error(`Error processing recurring transaction ${rec.id}: ${err.message}`, err.stack);
+        this.logger.error(
+          `Error processing recurring transaction ${rec.id}: ${err.message}`,
+          err.stack,
+        );
       }
     }
   }
@@ -111,4 +140,3 @@ export class RecurringService {
     return this.handleRecurringCron();
   }
 }
-

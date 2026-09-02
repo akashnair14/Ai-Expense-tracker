@@ -7,6 +7,52 @@ describe('RegexParser', () => {
     expect(res?.amount).toBe(250);
     expect(res?.type).toBe('EXPENSE');
     expect(res?.currency).toBe('INR');
+    expect(res?.description).toBe('Lunch');
+    expect(res?.merchant).toBeUndefined();
+  });
+
+  it('should parse "200 rupees for lunch" cleanly without setting rupees as merchant or in description', () => {
+    const res = RegexParser.parse('200 rupees for lunch');
+    expect(res).not.toBeNull();
+    expect(res?.amount).toBe(200);
+    expect(res?.currency).toBe('INR');
+    expect(res?.description).toBe('Lunch');
+    expect(res?.merchant).toBeUndefined();
+  });
+
+  it('should parse shorthand number multipliers correctly (k, lakh, cr)', () => {
+    const kRes = RegexParser.parse('Rent 15k');
+    expect(kRes).not.toBeNull();
+    expect(kRes?.amount).toBe(15000);
+
+    const decimalKRes = RegexParser.parse('Spent 2.5k on shopping');
+    expect(decimalKRes).not.toBeNull();
+    expect(decimalKRes?.amount).toBe(2500);
+
+    const lakhRes = RegexParser.parse('Freelance income +1.5 lakhs');
+    expect(lakhRes).not.toBeNull();
+    expect(lakhRes?.amount).toBe(150000);
+    expect(lakhRes?.type).toBe('INCOME');
+  });
+
+  it('should parse Bank & UPI SMS alerts', () => {
+    const sms =
+      'Dear UPI user A/C *1234 debited by Rs.450.00 on 16-Aug-26 to ZOMATO UPI Ref 123456';
+    const res = RegexParser.parse(sms);
+    expect(res).not.toBeNull();
+    expect(res?.amount).toBe(450);
+    expect(res?.type).toBe('EXPENSE');
+    expect(res?.merchant).toBe('Zomato');
+  });
+
+  it('should parse multi-item batch lists', () => {
+    const batch = 'Lunch 200, tea 40, cab 180';
+    const res = RegexParser.parseBatch(batch);
+    expect(res).not.toBeNull();
+    expect(res?.length).toBe(3);
+    expect(res![0].amount).toBe(200);
+    expect(res![1].amount).toBe(40);
+    expect(res![2].amount).toBe(180);
   });
 
   it('should detect income keywords correctly', () => {
@@ -29,6 +75,7 @@ describe('RegexParser', () => {
     expect(res?.originalAmount).toBe(800);
     expect(res?.splitCount).toBe(4);
     expect(res?.amount).toBe(200);
+    expect(res?.merchant).toBe('Zomato');
   });
 
   it('should return null when no amount is present', () => {

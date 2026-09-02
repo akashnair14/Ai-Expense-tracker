@@ -1,8 +1,24 @@
-import { Controller, Post, Get, Body, Res, Req, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Body,
+  Res,
+  Req,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  BadRequestException,
+} from '@nestjs/common';
 import { Response, Request } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { TelegramAuthData } from './telegram-verifier.util';
+import {
+  RegisterWithEmailSchema,
+  LoginWithEmailSchema,
+  CompleteOnboardingSchema,
+} from '../common/validation/schemas';
 
 @Controller('api')
 export class AuthController {
@@ -15,10 +31,18 @@ export class AuthController {
 
   @Get('auth/qr/status')
   checkQr(@Req() req: any, @Res({ passthrough: true }) res: any) {
-    const sessionId = req.query.sessionId as string;
+    const sessionId = (req.query?.sessionId as string) || '';
+    if (!sessionId || typeof sessionId !== 'string') {
+      throw new BadRequestException('Session ID is required');
+    }
     const session = this.authService.checkQrSession(sessionId);
 
-    if (session && 'status' in session && session.status === 'APPROVED' && (session as any).token) {
+    if (
+      session &&
+      'status' in session &&
+      session.status === 'APPROVED' &&
+      (session as any).token
+    ) {
       (res as Response).cookie('pulse_session', (session as any).token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
@@ -33,8 +57,20 @@ export class AuthController {
 
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
-  async register(@Body() body: { email: string; password: string; name?: string }, @Res({ passthrough: true }) res: any) {
-    const { token, user } = await this.authService.registerWithEmail(body.email, body.password, body.name);
+  async register(@Body() body: any, @Res({ passthrough: true }) res: any) {
+    const validation = RegisterWithEmailSchema.safeParse(body);
+    if (!validation.success) {
+      const errorMsg = validation.error.issues
+        .map((i) => `${i.path.join('.')}: ${i.message}`)
+        .join(', ');
+      throw new BadRequestException(`Validation failed: ${errorMsg}`);
+    }
+
+    const { token, user } = await this.authService.registerWithEmail(
+      validation.data.email,
+      validation.data.password,
+      validation.data.name,
+    );
 
     (res as Response).cookie('pulse_session', token, {
       httpOnly: true,
@@ -49,8 +85,22 @@ export class AuthController {
 
   @Post('auth/login')
   @HttpCode(HttpStatus.OK)
-  async loginWithEmail(@Body() body: { email: string; password: string }, @Res({ passthrough: true }) res: any) {
-    const { token, user } = await this.authService.loginWithEmail(body.email, body.password);
+  async loginWithEmail(
+    @Body() body: any,
+    @Res({ passthrough: true }) res: any,
+  ) {
+    const validation = LoginWithEmailSchema.safeParse(body);
+    if (!validation.success) {
+      const errorMsg = validation.error.issues
+        .map((i) => `${i.path.join('.')}: ${i.message}`)
+        .join(', ');
+      throw new BadRequestException(`Validation failed: ${errorMsg}`);
+    }
+
+    const { token, user } = await this.authService.loginWithEmail(
+      validation.data.email,
+      validation.data.password,
+    );
 
     (res as Response).cookie('pulse_session', token, {
       httpOnly: true,
@@ -81,22 +131,30 @@ export class AuthController {
 
   @Post('auth/telegram')
   @HttpCode(HttpStatus.OK)
-  async loginWithTelegram(@Body() body: TelegramAuthData, @Res({ passthrough: true }) res: any) {
-    const { token, user } = await this.authService.validateAndLoginTelegramUser(body);
+  async loginWithTelegram(
+    @Body() body: any,
+    @Res({ passthrough: true }) res: any,
+  ) {
+    let authResult: any;
 
-    // Set secure HttpOnly session cookie
-    (res as Response).cookie('pulse_session', token, {
+    if (body?.initData && typeof body.initData === 'string') {
+      authResult = await this.authService.validateAndLoginTelegramMiniApp(body.initData);
+    } else {
+      authResult = await this.authService.validateAndLoginTelegramUser(body as TelegramAuthData);
+    }
+
+    (res as Response).cookie('pulse_session', authResult.token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
       path: '/',
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      maxAge: 30 * 24 * 60 * 60 * 1000,
     });
 
     return {
       authenticated: true,
-      token,
-      user,
+      token: authResult.token,
+      user: authResult.user,
     };
   }
 
@@ -114,7 +172,7 @@ export class AuthController {
         lastName: u.lastName || '',
         username: u.username || '',
         profilePhotoUrl: u.profilePhotoUrl || '',
-        currency: u.currency || '₹',
+        currency: u.currency || 'INR',
         isOnboarded: u.isOnboarded ?? false,
         monthlyIncome: u.monthlyIncome ? Number(u.monthlyIncome) : null,
         targetSavingsRate: u.targetSavingsRate ?? 20,
@@ -124,25 +182,22 @@ export class AuthController {
 
   @Post('user/onboarding')
   @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  async saveOnboarding(
-    @Req() req: any,
-    @Body() body: {
-      firstName?: string;
-      currency?: string;
-      monthlyIncome?: number;
-      targetSavingsRate?: number;
-      budgets?: Array<{ category: string; limit: number }>;
-    },
-  ) {
-    const user = (req as Request & { user: any }).user;
-    return this.authService.completeOnboarding(user.id, body);
+  async completeOnboarding(@Req() req: any, @Body() body: any) {
+    const userId = (req as Request & { user: any }).user.id;
+    const validation = CompleteOnboardingSchema.safeParse(body);
+    if (!validation.success) {
+      const errorMsg = validation.error.issues
+        .map((i) => `${i.path.join('.')}: ${i.message}`)
+        .join(', ');
+      throw new BadRequestException(`Validation failed: ${errorMsg}`);
+    }
+
+    return this.authService.completeOnboarding(userId, validation.data);
   }
 
   @Post('auth/logout')
-  @HttpCode(HttpStatus.OK)
   logout(@Res({ passthrough: true }) res: any) {
     (res as Response).clearCookie('pulse_session', { path: '/' });
-    return { authenticated: false, message: 'Logged out successfully' };
+    return { success: true, message: 'Logged out successfully' };
   }
 }

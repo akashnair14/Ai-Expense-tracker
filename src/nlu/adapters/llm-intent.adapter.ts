@@ -1,21 +1,20 @@
 import axios from 'axios';
 import { Logger } from '@nestjs/common';
-import { NLUIntentResponse, NLUIntentResponseSchema } from '../schemas/intent.schema';
+import {
+  NLUIntentResponse,
+  NLUIntentResponseSchema,
+} from '../schemas/intent.schema';
 import { ChatMessage } from '../services/conversation-context.service';
 
 export class LlmIntentAdapter {
   private static readonly logger = new Logger(LlmIntentAdapter.name);
 
-  public static async classifyAndDispatch(input: string, context: ChatMessage[] = []): Promise<NLUIntentResponse | null> {
-    const apiKey = process.env.LLM_API_KEY || process.env.OPENAI_API_KEY || process.env.GEMINI_API_KEY || process.env.GROQ_API_KEY;
-    const provider = (process.env.LLM_PROVIDER || 'groq').toLowerCase();
-
-    if (!apiKey) {
-      return null;
-    }
-
+  public static async classifyAndDispatch(
+    input: string,
+    context: ChatMessage[] = [],
+  ): Promise<NLUIntentResponse | null> {
     const todayStr = new Date().toISOString().split('T')[0];
-    const systemPrompt = `You are PulseAI, an expert financial assistant and NLU intent router.
+    const systemPrompt = `You are Kinetiq Money, an expert financial assistant and NLU intent router.
 Current Date: ${todayStr}.
 
 Your task is to analyze user input, determine their intent, extract transactions, and/or choose the appropriate tool call.
@@ -76,80 +75,132 @@ CRITICAL: Return ONLY valid JSON matching this schema:
       content: m.content,
     }));
 
-    try {
-      if (provider === 'gemini') {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
-        const contents = [
-          ...contextMessages.map((m) => ({
-            role: m.role === 'assistant' ? 'model' : 'user',
-            parts: [{ text: m.content }],
-          })),
-          {
-            role: 'user',
-            parts: [{ text: `${systemPrompt}\n\nUser Message: "${input}"` }],
-          },
-        ];
+    // Tier 1: Try Primary Configured Provider
+    const primaryProvider = (process.env.LLM_PROVIDER || 'groq').toLowerCase();
+    const primaryKey = process.env.LLM_API_KEY || process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
 
-        const response = await axios.post(
-          url,
-          {
-            contents,
-            generationConfig: {
-              responseMimeType: 'application/json',
-              temperature: 0.1,
-            },
-          },
-          { headers: { 'Content-Type': 'application/json' }, timeout: 7000 },
-        );
+    // 1. Try Groq if key available
+    const groqKey = process.env.GROQ_API_KEY || (primaryProvider === 'groq' ? primaryKey : null);
+    if (groqKey) {
+      try {
+        const groqModels = ['qwen/qwen3.8-27b', 'groq/compound', 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile'];
+        for (const model of groqModels) {
+          try {
+            const res = await axios.post(
+              'https://api.groq.com/openai/v1/chat/completions',
+              {
+                model,
+                messages: [
+                  { role: 'system', content: systemPrompt },
+                  ...contextMessages,
+                  { role: 'user', content: input },
+                ],
+                response_format: { type: 'json_object' },
+                temperature: 0.1,
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${groqKey}`,
+                  'Content-Type': 'application/json',
+                },
+                timeout: 5000,
+              },
+            );
 
-        const content = response.data.candidates[0]?.content?.parts[0]?.text;
-        if (!content) return null;
-
-        const rawJson = JSON.parse(content);
-        return NLUIntentResponseSchema.parse(rawJson);
+            const content = res.data.choices[0]?.message?.content;
+            if (content) {
+              const rawJson = JSON.parse(content);
+              return NLUIntentResponseSchema.parse(rawJson);
+            }
+          } catch (modelErr: any) {
+            if (modelErr?.response?.status === 404) continue; // Try next model name
+            throw modelErr;
+          }
+        }
+      } catch (err: any) {
+        this.logger.warn(`Primary Groq LLM failed (${err?.message || err}). Escalating to Gemini fallback...`);
       }
+    }
 
-      if (provider === 'groq' || provider === 'openai' || provider === 'openrouter') {
-        const baseUrl =
-          provider === 'groq'
-            ? 'https://api.groq.com/openai/v1/chat/completions'
-            : provider === 'openrouter'
-            ? 'https://openrouter.ai/api/v1/chat/completions'
-            : 'https://api.openai.com/v1/chat/completions';
+    // Tier 2: Fallback to Google Gemini (gemini-3.5-flash-lite / gemini-2.5-flash)
+    const geminiKey = process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
+    if (geminiKey) {
+      try {
+        const geminiModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-2.5-flash'];
+        for (const model of geminiModels) {
+          try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+            const contents = [
+              ...contextMessages.map((m) => ({
+                role: m.role === 'assistant' ? 'model' : 'user',
+                parts: [{ text: m.content }],
+              })),
+              {
+                role: 'user',
+                parts: [{ text: `${systemPrompt}\n\nUser Message: "${input}"` }],
+              },
+            ];
 
-        const model = provider === 'groq' ? 'llama-3.3-70b-versatile' : 'gpt-4o-mini';
+            const response = await axios.post(
+              url,
+              {
+                contents,
+                generationConfig: {
+                  responseMimeType: 'application/json',
+                  temperature: 0.1,
+                },
+              },
+              { headers: { 'Content-Type': 'application/json' }, timeout: 7000 },
+            );
 
-        const messages = [
-          { role: 'system', content: systemPrompt },
-          ...contextMessages,
-          { role: 'user', content: input },
-        ];
+            const content = response.data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (content) {
+              const rawJson = JSON.parse(content);
+              return NLUIntentResponseSchema.parse(rawJson);
+            }
+          } catch (mErr: any) {
+            if (mErr?.response?.status === 404) continue;
+            throw mErr;
+          }
+        }
+      } catch (err: any) {
+        this.logger.warn(`Gemini LLM fallback failed (${err?.message || err}).`);
+      }
+    }
 
-        const response = await axios.post(
-          baseUrl,
+    // Tier 3: Fallback to OpenAI (if OPENAI_API_KEY configured)
+    const openaiKey = process.env.OPENAI_API_KEY || (primaryProvider === 'openai' ? primaryKey : null);
+    if (openaiKey) {
+      try {
+        const res = await axios.post(
+          'https://api.openai.com/v1/chat/completions',
           {
-            model,
-            messages,
+            model: 'gpt-4o-mini',
+            messages: [
+              { role: 'system', content: systemPrompt },
+              ...contextMessages,
+              { role: 'user', content: input },
+            ],
             response_format: { type: 'json_object' },
             temperature: 0.1,
           },
           {
             headers: {
-              Authorization: `Bearer ${apiKey}`,
+              Authorization: `Bearer ${openaiKey}`,
               'Content-Type': 'application/json',
             },
             timeout: 6000,
           },
         );
 
-        const content = response.data.choices[0]?.message?.content;
-        if (!content) return null;
-
-        const rawJson = JSON.parse(content);
-        return NLUIntentResponseSchema.parse(rawJson);
+        const content = res.data.choices[0]?.message?.content;
+        if (content) {
+          const rawJson = JSON.parse(content);
+          return NLUIntentResponseSchema.parse(rawJson);
+        }
+      } catch (err: any) {
+        this.logger.warn(`OpenAI fallback failed (${err?.message || err}).`);
       }
-    } catch (err: any) {
-      this.logger.warn(`LLM Intent Router error (${provider}): ${err?.response?.data?.error?.message || err?.message || err}`);
     }
 
     return null;

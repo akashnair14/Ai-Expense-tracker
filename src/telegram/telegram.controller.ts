@@ -14,4 +14,3 @@ export class TelegramController {
     return { status: 'ok' };
   }
 }
-

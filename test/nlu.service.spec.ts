@@ -32,7 +32,9 @@ describe('NluService (Unit)', () => {
     }).compile();
 
     service = module.get<NluService>(NluService);
-    contextService = module.get<ConversationContextService>(ConversationContextService);
+    contextService = module.get<ConversationContextService>(
+      ConversationContextService,
+    );
   });
 
   it('should parse deterministic simple transaction instantly without LLM', async () => {
@@ -46,7 +48,11 @@ describe('NluService (Unit)', () => {
 
   it('should maintain short-term rolling conversation context', async () => {
     contextService.addMessage('user_123', 'user', 'Dinner 500');
-    contextService.addMessage('user_123', 'assistant', 'Recorded ₹500 under Food & Dining');
+    contextService.addMessage(
+      'user_123',
+      'assistant',
+      'Recorded ₹500 under Food & Dining',
+    );
 
     const history = contextService.getHistory('user_123');
     expect(history.length).toBe(2);

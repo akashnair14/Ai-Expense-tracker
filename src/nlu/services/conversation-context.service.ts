@@ -18,7 +18,12 @@ export class ConversationContextService {
   private readonly MAX_HISTORY = 6;
   private readonly TTL_MS = 15 * 60 * 1000; // 15 minutes context TTL
 
-  public addMessage(userId: string, role: 'user' | 'assistant', content: string, metadata?: ChatMessage['metadata']) {
+  public addMessage(
+    userId: string,
+    role: 'user' | 'assistant',
+    content: string,
+    metadata?: ChatMessage['metadata'],
+  ) {
     const list = this.getCleanHistory(userId);
     list.push({
       role,

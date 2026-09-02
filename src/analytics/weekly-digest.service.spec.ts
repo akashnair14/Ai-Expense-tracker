@@ -9,9 +9,11 @@ describe('WeeklyDigestService (Cron Digest)', () => {
 
   const mockPrisma = {
     user: {
-      findMany: jest.fn().mockResolvedValue([
-        { id: 'user_1', telegramId: '12345678', currency: '₹' },
-      ]),
+      findMany: jest
+        .fn()
+        .mockResolvedValue([
+          { id: 'user_1', telegramId: '12345678', currency: '₹' },
+        ]),
     },
   };
 

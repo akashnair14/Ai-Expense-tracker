@@ -10,6 +10,8 @@ import { TransactionModule } from './transactions/transaction.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { AnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
+import { AuditModule } from './common/audit/audit.module';
+import { ForexModule } from './common/forex/forex.module';
 import { HealthController } from './health/health.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -19,11 +21,15 @@ import { AppService } from './app.service';
     ConfigModule.forRoot({ isGlobal: true }),
     ScheduleModule.forRoot(),
     EventEmitterModule.forRoot(),
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 60, // Limit each IP to 60 requests per minute
-    }]),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 60,
+      },
+    ]),
     PrismaModule,
+    AuditModule,
+    ForexModule,
     NluModule,
     TransactionModule,
     TelegramModule,

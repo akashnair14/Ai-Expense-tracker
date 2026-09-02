@@ -17,7 +17,9 @@ export class WeeklyDigestService {
   // Run every Sunday at 8:00 PM (20:00)
   @Cron('0 20 * * 0')
   async sendWeeklyMoneyReport() {
-    this.logger.log('📊 Compiling and delivering Weekly Money Digest to users...');
+    this.logger.log(
+      '📊 Compiling and delivering Weekly Money Digest to users...',
+    );
 
     const users = await this.prisma.user.findMany({
       where: {
@@ -30,8 +32,13 @@ export class WeeklyDigestService {
       if (!user.telegramId) continue;
 
       try {
-        const weekSummary = await this.analyticsService.getSummaryReport(user.id, 'week');
-        const pulseScore = await this.analyticsService.calculatePulseScore(user.id);
+        const weekSummary = await this.analyticsService.getSummaryReport(
+          user.id,
+          'week',
+        );
+        const pulseScore = await this.analyticsService.calculatePulseScore(
+          user.id,
+        );
         const topExpenses = Object.entries(weekSummary.categoryBreakdown)
           .sort((a, b) => b[1] - a[1])
           .slice(0, 3);
@@ -57,7 +64,9 @@ export class WeeklyDigestService {
           message: msg,
         });
       } catch (err: any) {
-        this.logger.error(`Failed to send weekly digest to ${user.telegramId}: ${err.message}`);
+        this.logger.error(
+          `Failed to send weekly digest to ${user.telegramId}: ${err.message}`,
+        );
       }
     }
   }
