@@ -1549,27 +1549,37 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
         from.last_name,
       );
 
-      if (text === '📅 Today') {
+      const cleanText = text.trim();
+
+      if (cleanText === '📅 Today' || cleanText.toLowerCase() === 'today') {
         await this.showTodaySummary(ctx, user);
         return;
       }
-      if (text === '🗓️ Month') {
+      if (cleanText === '🗓️ Month' || cleanText.toLowerCase() === 'month') {
         await this.showMonthSummary(ctx, user);
         return;
       }
-      if (text === '🎯 Budget') {
+      if (cleanText.includes('Pulse') || cleanText.toLowerCase() === 'pulse') {
+        await this.showPulseScore(ctx, user);
+        return;
+      }
+      if (cleanText.includes('History') || cleanText.toLowerCase() === 'history') {
+        await this.showTransactionHistory(ctx, user, 1);
+        return;
+      }
+      if (cleanText === '🎯 Budget' || cleanText.toLowerCase() === 'budget') {
         await this.showInteractiveBudgetDashboard(ctx, user);
         return;
       }
-      if (text === '📊 Report') {
+      if (cleanText === '📊 Report' || cleanText.toLowerCase() === 'report') {
         await this.showReportSummary(ctx, user);
         return;
       }
-      if (text === '💻 Dashboard') {
+      if (cleanText.includes('Mini App') || cleanText.includes('Dashboard') || cleanText.toLowerCase() === 'dashboard') {
         await this.showDashboard(ctx);
         return;
       }
-      if (text === '📘 Help') {
+      if (cleanText === '📘 Help' || cleanText.toLowerCase() === 'help') {
         await this.showHelp(ctx);
         return;
       }
