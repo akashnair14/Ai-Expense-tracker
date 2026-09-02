@@ -27,6 +27,14 @@ export class TelegramWebhookGuard implements CanActivate {
         );
       }
     } else {
+      if (process.env.NODE_ENV === 'production') {
+        this.logger.error(
+          'CRITICAL: TELEGRAM_WEBHOOK_SECRET is not configured in production. Rejecting unverified webhook.',
+        );
+        throw new ForbiddenException(
+          'Telegram Webhook Secret is not configured on server',
+        );
+      }
       this.logger.warn(
         'TELEGRAM_WEBHOOK_SECRET is not configured in .env. Webhook security check skipped in dev mode.',
       );

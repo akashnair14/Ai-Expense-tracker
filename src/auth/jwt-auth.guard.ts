@@ -55,15 +55,19 @@ export class JwtAuthGuard implements CanActivate {
         ? authHeader.substring(7)
         : authHeader;
       const botToken = process.env.TELEGRAM_BOT_TOKEN;
-      const isMock =
-        process.env.NODE_ENV === 'test' ||
-        !botToken ||
-        botToken === 'MOCK_TELEGRAM_TOKEN';
+      const isTestEnv = process.env.NODE_ENV === 'test';
+      const isMock = isTestEnv && (!botToken || botToken === 'MOCK_TELEGRAM_TOKEN');
 
       let telegramUserObj: any = null;
 
-      if (!isMock && botToken) {
+      if (!isMock) {
+        if (!botToken) {
+          throw new UnauthorizedException('Telegram bot token not configured on server');
+        }
         telegramUserObj = this.verifyTelegramInitData(initDataStr, botToken);
+        if (!telegramUserObj) {
+          throw new UnauthorizedException('Invalid Telegram WebApp HMAC signature');
+        }
       } else {
         telegramUserObj = this.extractUserFromInitData(initDataStr);
       }

@@ -1,26 +1,52 @@
-import {
-  verifyTelegramWidgetData,
-  TelegramAuthData,
-} from './telegram-verifier.util';
+import { ExecutionContext, UnauthorizedException, ForbiddenException } from '@nestjs/common';
+import { TelegramWebAppAuthGuard } from '../telegram/guards/telegram-webapp-auth.guard';
+import { TelegramWebhookGuard } from '../telegram/guards/telegram-webhook.guard';
 
-describe('Telegram Verification Utility', () => {
-  it('should reject invalid or missing hash payloads', () => {
-    const invalidPayload: TelegramAuthData = {
-      id: 123456789,
-      auth_date: Math.floor(Date.now() / 1000),
-      hash: '',
-    };
-    expect(verifyTelegramWidgetData(invalidPayload, 'mock_bot_token')).toBe(
-      false,
-    );
+describe('Production Authentication Security Hardening', () => {
+  let webappGuard: TelegramWebAppAuthGuard;
+  let webhookGuard: TelegramWebhookGuard;
+  const originalEnv = process.env.NODE_ENV;
+
+  beforeEach(() => {
+    webappGuard = new TelegramWebAppAuthGuard();
+    webhookGuard = new TelegramWebhookGuard();
   });
 
-  it('should reject old auth_date logins older than 24 hours', () => {
-    const oldPayload: TelegramAuthData = {
-      id: 123456789,
-      auth_date: Math.floor(Date.now() / 1000) - 90000,
-      hash: 'somehash',
+  afterEach(() => {
+    process.env.NODE_ENV = originalEnv;
+  });
+
+  function createMockContext(headers: Record<string, string>, params: Record<string, string> = {}, body: any = {}): ExecutionContext {
+    const req = {
+      headers,
+      params,
+      body,
+      user: undefined,
+      ip: '127.0.0.1',
     };
-    expect(verifyTelegramWidgetData(oldPayload, 'mock_bot_token')).toBe(false);
+    return {
+      switchToHttp: () => ({
+        getRequest: () => req,
+      }),
+    } as any;
+  }
+
+  it('strictly rejects plain numeric Telegram ID bypass in production', () => {
+    process.env.NODE_ENV = 'production';
+    const ctx = createMockContext({ authorization: '123456789' });
+    expect(() => webappGuard.canActivate(ctx)).toThrow(UnauthorizedException);
+  });
+
+  it('strictly rejects parameter telegramId bypass in production', () => {
+    process.env.NODE_ENV = 'production';
+    const ctx = createMockContext({}, { telegramId: '123456789' });
+    expect(() => webappGuard.canActivate(ctx)).toThrow(UnauthorizedException);
+  });
+
+  it('strictly rejects webhook traffic in production if secret is not configured', () => {
+    process.env.NODE_ENV = 'production';
+    delete process.env.TELEGRAM_WEBHOOK_SECRET;
+    const ctx = createMockContext({});
+    expect(() => webhookGuard.canActivate(ctx)).toThrow(ForbiddenException);
   });
 });

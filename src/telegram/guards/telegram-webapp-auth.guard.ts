@@ -31,6 +31,9 @@ export class TelegramWebAppAuthGuard implements CanActivate {
 
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
 
+    const isProduction = process.env.NODE_ENV === 'production';
+    const isTestEnv = process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'development';
+
     // 1. Check for Authorization header or Telegram initData
     if (authHeader) {
       const initDataStr = authHeader.startsWith('Bearer ')
@@ -51,18 +54,27 @@ export class TelegramWebAppAuthGuard implements CanActivate {
           throw new UnauthorizedException(
             'Invalid Telegram WebApp initData HMAC signature',
           );
-        } else {
-          // Dev/Mock mode without active bot token: parse user object from initData string
+        } else if (isTestEnv) {
+          // Dev/Mock test mode without active bot token: parse user object from initData string
           const parsedUser = this.extractUserFromInitData(initDataStr);
           if (parsedUser) {
             request.user = parsedUser;
             return true;
           }
+        } else {
+          throw new UnauthorizedException(
+            'Telegram bot token not configured on server',
+          );
         }
       }
 
-      // If header is a plain Telegram ID string (e.g. numeric ID from web session)
+      // If header is a plain Telegram ID string: only permitted in non-production test/dev
       if (/^\d+$/.test(initDataStr.trim())) {
+        if (isProduction) {
+          throw new UnauthorizedException(
+            'Cryptographic HMAC signature required in production',
+          );
+        }
         const cleanId = initDataStr.trim();
         request.user = {
           id: Number(cleanId),
@@ -73,8 +85,13 @@ export class TelegramWebAppAuthGuard implements CanActivate {
       }
     }
 
-    // 2. Fallback to explicit parameter / body telegramId if passed in request
+    // 2. Fallback to explicit parameter / body telegramId: only permitted in non-production test/dev
     if (requestTelegramId && /^\d+$/.test(requestTelegramId.trim())) {
+      if (isProduction) {
+        throw new UnauthorizedException(
+          'Cryptographic HMAC signature required in production',
+        );
+      }
       const cleanId = requestTelegramId.trim();
       request.user = {
         id: Number(cleanId),

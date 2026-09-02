@@ -179,12 +179,15 @@ export class AuthService {
 
   async validateAndLoginTelegramUser(authData: TelegramAuthData) {
     const botToken = process.env.TELEGRAM_BOT_TOKEN;
-    const isMock =
-      process.env.NODE_ENV === 'test' ||
-      !botToken ||
-      botToken === 'MOCK_TELEGRAM_TOKEN';
+    const isTestEnv = process.env.NODE_ENV === 'test';
+    const isMock = isTestEnv && (!botToken || botToken === 'MOCK_TELEGRAM_TOKEN');
 
     if (!isMock) {
+      if (!botToken) {
+        throw new UnauthorizedException(
+          'Telegram authentication unavailable: missing bot token configuration',
+        );
+      }
       const isValid = verifyTelegramWidgetData(authData, botToken);
       if (!isValid) {
         throw new UnauthorizedException(
@@ -243,13 +246,18 @@ export class AuthService {
     }
 
     const parsedUser = JSON.parse(userJson);
-    const isMock =
-      process.env.NODE_ENV === 'test' ||
-      !botToken ||
-      botToken === 'MOCK_TELEGRAM_TOKEN' ||
-      hash === 'miniapp_auto_sso';
+    const isTestEnv = process.env.NODE_ENV === 'test';
+    const isMock = isTestEnv && (!botToken || botToken === 'MOCK_TELEGRAM_TOKEN' || hash === 'miniapp_auto_sso');
 
-    if (!isMock && hash) {
+    if (!isMock) {
+      if (!botToken) {
+        throw new UnauthorizedException(
+          'Telegram MiniApp authentication unavailable: missing bot token configuration',
+        );
+      }
+      if (!hash) {
+        throw new UnauthorizedException('Missing Telegram WebApp HMAC signature hash');
+      }
       urlParams.delete('hash');
       const dataCheckString = Array.from(urlParams.entries())
         .map(([key, val]) => `${key}=${val}`)
