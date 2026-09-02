@@ -1769,6 +1769,23 @@
       handleAssistantQuery();
     }
 
+    
+    function formatAiResponse(text) {
+      if (!text) return '';
+      // Replace bold **text**
+      let formatted = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-semibold">$1</strong>');
+      // Replace italic *text*
+      formatted = formatted.replace(/\*(.*?)\*/g, '<em class="text-slate-300">$1</em>');
+      // Replace code `text`
+      formatted = formatted.replace(/`(.*?)`/g, '<code class="px-1.5 py-0.5 rounded bg-white/10 font-mono text-emerald-300 text-[11px]">$1</code>');
+      // Replace bullet points \n• or \n-
+      formatted = formatted.replace(/\n• /g, '<br><span class="text-emerald-400">▸</span> ');
+      formatted = formatted.replace(/\n- /g, '<br><span class="text-emerald-400">▸</span> ');
+      // Replace newlines with <br>
+      formatted = formatted.replace(/\n/g, '<br>');
+      return formatted;
+    }
+
     async function handleAssistantQuery() {
       const input = document.getElementById('assistantQueryInput');
       const text = input.value.trim();
@@ -1815,12 +1832,12 @@
 
         const data = await res.json();
         pendingDiv.innerHTML = `
-          <div class="w-5 h-5 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0">
+          <div class="w-5 h-5 rounded bg-emerald-500/10 text-emerald-400 flex items-center justify-center font-bold text-[10px] shrink-0 mt-0.5">
             K
           </div>
-          <div>
-            <span class="font-semibold text-white block mb-0.5">Kinetiq Assistant</span>
-            <p class="text-slate-200 leading-relaxed">${data.reply || 'Financial calculations complete.'}</p>
+          <div class="space-y-1">
+            <span class="font-semibold text-white block">Kinetiq Assistant</span>
+            <div class="text-slate-300 leading-relaxed text-xs space-y-1">${formatAiResponse(data.reply || 'Financial calculations complete.')}</div>
           </div>
         `;
       } catch (err) {

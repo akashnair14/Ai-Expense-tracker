@@ -44,46 +44,13 @@ export class AnalyticsController {
   ) {
     let user = req.user;
     if (!message || !message.trim()) {
-      return { reply: 'Please provide a message or expense description.' };
+      return { reply: 'Please provide a message, expense description, or financial question.' };
     }
 
     const trimmedMsg = message.trim();
     const lower = trimmedMsg.toLowerCase();
 
-    // 1. Instant informational guidance for SaaS questions
-    if (
-      lower.includes('pulse') ||
-      lower.includes('health') ||
-      lower.includes('score')
-    ) {
-      return {
-        reply:
-          '📈 **Pulse Health (0–100)** measures your net savings retention, budget pacing, and spending discipline. Scores >80 indicate optimal financial health! You can log your expenses in natural language to update your score.',
-      };
-    }
-    if (
-      lower.includes('safe') ||
-      lower.includes('daily') ||
-      lower.includes('limit')
-    ) {
-      return {
-        reply:
-          '🛡️ **Safe Daily Spend Limit** dynamically divides your remaining discretionary budget by the exact days left in the month to guarantee you never overspend.',
-      };
-    }
-    if (
-      lower.includes('recurring') ||
-      lower.includes('sip') ||
-      lower.includes('rent') ||
-      lower.includes('emi')
-    ) {
-      return {
-        reply:
-          '🔁 **Recurring Outlays:** Set up recurring commitments (like Rent on 1st or SIP on 5th) and Kinetiq will auto-log them and project your cashflow in real time.',
-      };
-    }
-
-    // 2. If unauthenticated guest and trying to log transactions, assign demo user or guide them
+    // 1. Assign demo user if unauthenticated guest
     if (!user) {
       let demoUser = await this.prisma.user.findUnique({
         where: { email: 'demo@pulseai.internal' },
@@ -101,13 +68,79 @@ export class AnalyticsController {
       user = demoUser;
     }
 
+    const curr = user.currency === 'USD' ? '$' : user.currency === 'EUR' ? '€' : user.currency === 'GBP' ? '£' : user.currency === 'AED' ? 'AED ' : '₹';
+
+    // 2. Intelligent Contextual Financial Inquiries (Safe daily spend, food spend, largest expenses, savings)
+    if (lower.includes('food') || lower.includes('dining') || lower.includes('restaurant') || lower.includes('eat') || lower.includes('swiggy') || lower.includes('zomato')) {
+      const summary = await this.analyticsService.getSummaryReport(user.id, 'month');
+      const foodSpent = summary.categoryBreakdown['Food & Dining'] || summary.categoryBreakdown['Food'] || 0;
+      const budget = await this.prisma.budget.findFirst({
+        where: { userId: user.id, category: { name: { contains: 'Food', mode: 'insensitive' } } },
+      });
+
+      const budgetText = budget ? ` (Budget limit: ${curr}${Number(budget.monthlyLimit).toLocaleString()}, ${Math.round((foodSpent / Number(budget.monthlyLimit)) * 100)}% used)` : '';
+      return {
+        reply: `🍔 **Food & Dining Expenditure (This Month):**\n• Total Spent: **${curr}${Number(foodSpent).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}**${budgetText}\n• Status: ${foodSpent > 8000 ? '⚠️ High burn rate — consider moderating dining out' : '✅ Well within safe monthly pacing'}.`,
+        financialContext: { category: 'Food & Dining', spent: foodSpent, limit: budget ? Number(budget.monthlyLimit) : null }
+      };
+    }
+
+    if (lower.includes('safe') || lower.includes('daily') || lower.includes('can i spend') || lower.includes('allowance')) {
+      const daily = await this.analyticsService.calculateDailyDiscretionaryLimit(user.id);
+      const summary = await this.analyticsService.getSummaryReport(user.id, 'month');
+
+      const amtMatch = trimmedMsg.match(/(\d+)/);
+      let spendFeasibility = '';
+      if (amtMatch) {
+        const proposedAmt = parseFloat(amtMatch[1]);
+        if (proposedAmt <= daily.recommendedDailyLimit) {
+          spendFeasibility = `\n\n💡 **Decision:** Yes, spending **${curr}${proposedAmt.toLocaleString()}** today is within your safe daily threshold of ${curr}${daily.recommendedDailyLimit.toLocaleString()}.`;
+        } else {
+          spendFeasibility = `\n\n⚠️ **Decision:** An outlay of **${curr}${proposedAmt.toLocaleString()}** exceeds your daily allowance (${curr}${daily.recommendedDailyLimit.toLocaleString()}) by ${curr}${(proposedAmt - daily.recommendedDailyLimit).toLocaleString()}. It will reduce your remaining daily budget for the next ${daily.daysRemaining} days.`;
+        }
+      }
+
+      return {
+        reply: `🛡️ **Safe Daily Spend Analysis:**\n• Recommended Allowance: **${curr}${daily.recommendedDailyLimit.toLocaleString()} / day**\n• Cycle Status: **${daily.daysRemaining} days remaining** in current month\n• Net Savings Pacing: **${curr}${summary.netSavings.toLocaleString()}**${spendFeasibility}`,
+        financialContext: { recommendedDailyLimit: daily.recommendedDailyLimit, daysRemaining: daily.daysRemaining }
+      };
+    }
+
+    if (lower.includes('top') || lower.includes('largest') || lower.includes('biggest') || lower.includes('highest')) {
+      const topTxs = await this.prisma.transaction.findMany({
+        where: { userId: user.id, isDeleted: false, type: 'EXPENSE' },
+        orderBy: { amount: 'desc' },
+        take: 4,
+        include: { category: true }
+      });
+
+      if (topTxs.length === 0) {
+        return { reply: '📊 No expense transactions recorded yet for this period.' };
+      }
+
+      const listStr = topTxs.map((t, idx) => `${idx + 1}. **${t.merchant || t.description}**: ${curr}${Number(t.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} *(${t.category?.name || 'General'} on ${new Date(t.transactionDate).toLocaleDateString()})*`).join('\n');
+
+      return {
+        reply: `📈 **Largest Recorded Outlays:**\n${listStr}\n\nThese represent your highest capital outflows for the current cycle.`,
+        transactions: topTxs
+      };
+    }
+
+    if (lower.includes('saving') || lower.includes('net') || lower.includes('burn rate') || lower.includes('income')) {
+      const summary = await this.analyticsService.getSummaryReport(user.id, 'month');
+      const savingsRate = summary.totalIncome > 0 ? Math.round((summary.netSavings / summary.totalIncome) * 100) : 0;
+      return {
+        reply: `💰 **Monthly Cash Flow & Retention:**\n• Total Inflow: **${curr}${summary.totalIncome.toLocaleString()}**\n• Total Outflow: **${curr}${summary.totalExpense.toLocaleString()}**\n• Net Capital Preserved: **${curr}${summary.netSavings.toLocaleString()}** (${savingsRate}% savings rate)\n• Transaction Volume: **${summary.transactionCount} entries**`,
+        financialContext: summary
+      };
+    }
+
+    // 3. Process Transaction Creation via NLU
     const nluResult = await this.nluService.processUserInput(
       user.id,
       trimmedMsg,
     );
-    const curr = user.currency || '₹';
 
-    // 3. Transaction extraction & auto-creation
     if (nluResult.transactions && nluResult.transactions.length > 0) {
       const createdTxList: any[] = [];
       for (const txData of nluResult.transactions) {
@@ -125,33 +158,23 @@ export class AnalyticsController {
 
       const tx: any = createdTxList[0];
       const isExpense = tx.type === 'EXPENSE';
-      const actionText = isExpense ? 'Logged expense' : 'Recorded income';
+      const actionText = isExpense ? 'Logged Expense' : 'Recorded Income';
+      
+      const daily = await this.analyticsService.calculateDailyDiscretionaryLimit(user.id);
+
       return {
-        reply: `✅ **${actionText}:** ${curr}${Number(tx.amount).toLocaleString()} for *${tx.merchant || tx.description}* (${tx.category?.name || 'Others'}).\n\nYour live dashboard has been updated!`,
+        reply: `✅ **${actionText}:** ${curr}${Number(tx.amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} for **${tx.merchant || tx.description}** *(${tx.category?.name || 'General'})*\n• Safe Daily Spend: ${curr}${daily.recommendedDailyLimit.toLocaleString()} / day (${daily.daysRemaining} days remaining)`,
         transaction: tx,
         transactions: createdTxList,
       };
     }
 
-    // 4. Tool Query Result
-    if (nluResult.toolResult) {
-      return {
-        reply:
-          nluResult.replyText ||
-          (typeof nluResult.toolResult === 'string'
-            ? nluResult.toolResult
-            : JSON.stringify(nluResult.toolResult)),
-        toolResult: nluResult.toolResult,
-      };
-    }
-
-    // 5. Fallback conversational reply
     if (nluResult.replyText) {
       return { reply: nluResult.replyText };
     }
 
     return {
-      reply: `💡 **Kinetiq Assistant:**\n• To add an expense, type: \`spent 450 on swiggy\` or \`uber 320\`\n• To log income: \`salary +65000 credited\`\n• To ask a question: \`what is pulse health?\``,
+      reply: `💡 **Kinetiq Assistant:**\n• Log transactions: \`Swiggy 350 for dinner\` or \`Salary 65000\`\n• Check spending: \`How much did I spend on food this month?\`\n• Check limits: \`Can I spend ₹800 today?\`\n• Show outlays: \`Show my largest expenses\``,
     };
   }
 
