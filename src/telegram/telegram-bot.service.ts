@@ -170,7 +170,8 @@ export class TelegramBotService implements OnModuleInit {
     return text.replace(/([_*\[\]()~`>#+\-=|{}.!\\])/g, '\\$1');
   }
 
-  private getPersistentKeyboard() {
+    private getPersistentKeyboard() {
+    const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
     return new Keyboard()
       .text('📅 Today')
       .text('🗓️ Month')
@@ -180,7 +181,7 @@ export class TelegramBotService implements OnModuleInit {
       .text('🎯 Budget')
       .text('📊 Report')
       .row()
-      .text('📱 Open Mini App')
+      .webApp('📱 Open Mini App', appUrl)
       .text('📘 Help')
       .resized();
   }
@@ -1550,36 +1551,37 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
       );
 
       const cleanText = text.trim();
+      const normalized = cleanText.toLowerCase().replace(/[^\w\s]/gi, '').trim();
 
-      if (cleanText === '📅 Today' || cleanText.toLowerCase() === 'today') {
+      if (normalized === 'today' || cleanText === '📅 Today') {
         await this.showTodaySummary(ctx, user);
         return;
       }
-      if (cleanText === '🗓️ Month' || cleanText.toLowerCase() === 'month') {
+      if (normalized === 'month' || cleanText === '🗓️ Month') {
         await this.showMonthSummary(ctx, user);
         return;
       }
-      if (cleanText.includes('Pulse') || cleanText.toLowerCase() === 'pulse') {
+      if (normalized.includes('pulse') || cleanText.includes('Pulse')) {
         await this.showPulseScore(ctx, user);
         return;
       }
-      if (cleanText.includes('History') || cleanText.toLowerCase() === 'history') {
+      if (normalized.includes('history') || cleanText.includes('History')) {
         await this.showTransactionHistory(ctx, user, 1);
         return;
       }
-      if (cleanText === '🎯 Budget' || cleanText.toLowerCase() === 'budget') {
+      if (normalized.includes('budget') || cleanText.includes('Budget')) {
         await this.showInteractiveBudgetDashboard(ctx, user);
         return;
       }
-      if (cleanText === '📊 Report' || cleanText.toLowerCase() === 'report') {
+      if (normalized.includes('report') || cleanText.includes('Report')) {
         await this.showReportSummary(ctx, user);
         return;
       }
-      if (cleanText.includes('Mini App') || cleanText.includes('Dashboard') || cleanText.toLowerCase() === 'dashboard') {
+      if (normalized.includes('mini app') || normalized.includes('dashboard') || cleanText.includes('Mini App')) {
         await this.showDashboard(ctx);
         return;
       }
-      if (cleanText === '📘 Help' || cleanText.toLowerCase() === 'help') {
+      if (normalized.includes('help') || cleanText.includes('Help')) {
         await this.showHelp(ctx);
         return;
       }
