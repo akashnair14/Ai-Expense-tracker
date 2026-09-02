@@ -6,6 +6,13 @@ describe('AnalyticsService (Pulse Score & Daily Limits)', () => {
   let service: AnalyticsService;
 
   const mockPrisma = {
+    user: {
+      findUnique: jest.fn().mockResolvedValue({
+        monthlyIncome: 65000,
+        targetSavingsRate: 20,
+        currency: 'INR',
+      }),
+    },
     transaction: {
       findMany: jest.fn().mockResolvedValue([
         { type: 'INCOME', amount: 65000, transactionDate: new Date() },

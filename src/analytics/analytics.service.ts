@@ -218,8 +218,17 @@ export class AnalyticsService {
       fixedMonthly += Number(r.amount);
     }
 
-    const projectedIncome = Math.max(monthSummary.totalIncome, 40000); // Default benchmark if income not logged yet
-    const targetSavings = projectedIncome * 0.2; // 20% target savings
+    // Query user profile for configured baseline income & target savings rate
+    const userProfile = await this.prisma.user.findUnique({
+      where: { id: userId },
+      select: { monthlyIncome: true, targetSavingsRate: true, currency: true },
+    });
+
+    const userBaseIncome = userProfile?.monthlyIncome ? Number(userProfile.monthlyIncome) : 0;
+    const projectedIncome = Math.max(monthSummary.totalIncome, userBaseIncome > 0 ? userBaseIncome : 40000);
+    const savingsRate = (userProfile?.targetSavingsRate ?? 20) / 100;
+    const targetSavings = projectedIncome * savingsRate;
+    
     const remainingDiscretionaryPool = Math.max(
       0,
       projectedIncome -
@@ -238,7 +247,7 @@ export class AnalyticsService {
       projectedIncome,
       fixedCommitments: fixedMonthly,
       spentSoFar: monthSummary.totalExpense,
-      currency: 'INR',
+      currency: userProfile?.currency || 'INR',
     };
   }
 
