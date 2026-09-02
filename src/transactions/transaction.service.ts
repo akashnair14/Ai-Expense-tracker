@@ -23,6 +23,75 @@ export class TransactionService {
   ) {}
 
   
+  
+  public async updateTransactionDetails(
+    userId: string,
+    txId: string,
+    data: {
+      amount?: number;
+      merchant?: string;
+      description?: string;
+      categoryName?: string;
+      type?: 'EXPENSE' | 'INCOME';
+      transactionDate?: Date | string;
+    },
+  ) {
+    const user = await this.prisma.user.findFirst({
+      where: { OR: [{ id: userId }, { telegramId: userId }] },
+    });
+    if (!user) throw new BadRequestException('User not found');
+
+    const existingTx = await this.prisma.transaction.findFirst({
+      where: { id: txId, userId: user.id, isDeleted: false },
+    });
+    if (!existingTx) throw new BadRequestException('Transaction not found');
+
+    let categoryId = existingTx.categoryId;
+    if (data.categoryName) {
+      let category = await this.prisma.category.findFirst({
+        where: {
+          userId: user.id,
+          name: { equals: data.categoryName, mode: 'insensitive' },
+        },
+      });
+      if (!category) {
+        category = await this.prisma.category.create({
+          data: {
+            userId: user.id,
+            name: data.categoryName,
+            type: data.type || existingTx.type,
+          },
+        });
+      }
+      categoryId = category.id;
+    }
+
+    const updateData: any = {};
+    if (data.amount !== undefined && !isNaN(data.amount)) updateData.amount = new Prisma.Decimal(data.amount);
+    if (data.merchant !== undefined) updateData.merchant = data.merchant;
+    if (data.description !== undefined) updateData.description = data.description;
+    if (data.type) updateData.type = data.type;
+    if (categoryId) updateData.categoryId = categoryId;
+    if (data.transactionDate) updateData.transactionDate = new Date(data.transactionDate);
+
+    const updated = await this.prisma.transaction.update({
+      where: { id: txId },
+      data: updateData,
+      include: { category: true },
+    });
+
+    await this.auditService.log({
+      userId: user.id,
+      action: 'TRANSACTION_UPDATED',
+      entityType: 'TRANSACTION',
+      entityId: txId,
+      source: 'WEB',
+      details: { updatedFields: Object.keys(updateData) },
+    });
+
+    return updated;
+  }
+
   public async updateTransactionCategory(
     userId: string,
     txId: string,

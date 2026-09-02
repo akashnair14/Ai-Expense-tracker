@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Patch,
   Delete,
   Param,
   Body,
@@ -263,6 +264,21 @@ export class AnalyticsController {
       user.id,
       validation.data,
     );
+  }
+
+  
+  @Patch(['api/transactions/:id', 'analytics/transaction/:id'])
+  @UseGuards(JwtAuthGuard)
+  async updateTransaction(
+    @Param('id') id: string,
+    @Body() body: any,
+    @Req() req: Request & { user: User },
+  ) {
+    const user = req.user;
+    if (!id || typeof id !== 'string') {
+      throw new BadRequestException('Transaction ID is required');
+    }
+    return this.transactionService.updateTransactionDetails(user.id, id.trim(), body);
   }
 
   @Delete(['api/transactions/:id', 'analytics/transaction/:id'])
