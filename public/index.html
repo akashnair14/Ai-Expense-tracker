@@ -418,12 +418,12 @@
           <a href="#pricing" class="hover:text-emerald-400 transition-colors">Pricing</a>
         </nav>
 
-        <div class="flex items-center gap-3">
-          <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-3.5 py-1.5 rounded-lg hover:bg-white/[0.05] transition-all">
+        <div id="landingAuthContainer" class="flex items-center gap-3">
+          <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-3.5 py-1.5 rounded-lg hover:bg-white/[0.05] transition-all cursor-pointer">
             Sign In
           </button>
-          <button onclick="navigateTo('/signup')" class="px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-400 text-black font-bold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-1.5 active:scale-95">
-            <span>Launch OS</span>
+          <button onclick="navigateTo('/signup')" class="px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-400 text-black font-bold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span>Get Started</span>
             <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
           </button>
         </div>
@@ -1138,7 +1138,7 @@
             </div>
 
             <button onclick="navigateTo('/signup')" class="w-full py-3.5 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-black font-bold text-xs sm:text-sm transition-all shadow-lg shadow-emerald-500/25 active:scale-95">
-              Launch Pro Free Trial
+              Start Pro Free Trial
             </button>
           </div>
 
@@ -3205,6 +3205,7 @@
       lucide.createIcons();
       populateCategoryDropdown([]);
       initTelegramMiniApp();
+      updateLandingAuthUI();
       handleRoute();
     });
 
@@ -4268,12 +4269,14 @@
     function logout() {
       stopLiveSync();
       state.token = '';
+      state.user = null;
       if (state.sync) {
         state.sync.lastTxId = null;
         state.sync.lastUpdatedAt = null;
         state.sync.lastCount = null;
       }
       localStorage.removeItem('pulse_jwt_token');
+      updateAuthUI(false);
       showToast('Signed out.', 'info');
       navigateTo('/');
     }
@@ -4961,8 +4964,39 @@
           bannerEl.classList.remove('hidden');
         }
       }
+      
+      // Update Landing Page Header CTA
+      updateLandingAuthUI(isLoggedIn);
 
       lucide.createIcons();
+    }
+
+    function updateLandingAuthUI(isLoggedIn) {
+      const landingContainer = document.getElementById('landingAuthContainer');
+      if (!landingContainer) return;
+      const hasToken = isLoggedIn !== undefined 
+        ? (isLoggedIn && !!state.token) 
+        : !!(state.token || localStorage.getItem('pulse_jwt_token'));
+        
+      if (hasToken) {
+        landingContainer.innerHTML = `
+          <button onclick="navigateTo('/app')" class="px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-400 text-black font-bold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span>Open Dashboard</span>
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+      } else {
+        landingContainer.innerHTML = `
+          <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-3.5 py-1.5 rounded-lg hover:bg-white/[0.05] transition-all cursor-pointer">
+            Sign In
+          </button>
+          <button onclick="navigateTo('/signup')" class="px-4 py-2 bg-gradient-to-r from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-400 text-black font-bold text-xs rounded-xl transition-all shadow-md shadow-emerald-500/20 hover:shadow-emerald-500/30 flex items-center gap-1.5 active:scale-95 cursor-pointer">
+            <span>Get Started</span>
+            <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+      }
+      if (window.lucide) lucide.createIcons();
     }
 
     async function loadDemoData() {
