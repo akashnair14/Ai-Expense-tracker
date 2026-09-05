@@ -47,7 +47,12 @@ export class NluService {
     if (regexResult && regexResult.amount > 0) {
       if (regexResult.category === 'Others') {
         const dictCat = CategoryDictionaryMapper.categorize(input);
-        regexResult.category = dictCat.category;
+        regexResult.category =
+          dictCat.category !== 'Others'
+            ? dictCat.category
+            : regexResult.type === 'INCOME'
+              ? 'Salary'
+              : 'Others';
       }
       this.logger.log(
         `Parsed deterministically via Regex & Dict with confidence ${regexResult.confidence}`,

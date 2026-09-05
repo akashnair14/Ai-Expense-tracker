@@ -138,7 +138,7 @@ export class RegexParser {
     if (!hasSmsMarkers || !hasTxnVerbs) return null;
 
     let type: 'EXPENSE' | 'INCOME' = 'EXPENSE';
-    if (/\b(?:credited|deposited|refunded|received)\b/i.test(text)) {
+    if (/\b(?:credited|deposited|refunded|received|income)\b/i.test(text)) {
       type = 'INCOME';
     }
 
@@ -273,19 +273,31 @@ export class RegexParser {
     let transactionDate = new Date();
     let merchant: string | undefined = undefined;
 
-    // 1. Detect Income keywords
+    // 1. Detect Income keywords (excluding tax payments)
+    const isIncomeTax =
+      lowerText.includes('income tax') || lowerText.includes('tax paid');
     if (
-      lowerText.includes('salary') ||
-      lowerText.includes('received') ||
-      lowerText.includes('freelance') ||
-      lowerText.includes('cashback') ||
-      lowerText.includes('credited') ||
-      lowerText.includes('payout') ||
-      lowerText.includes('dividend') ||
-      lowerText.includes('profit') ||
-      lowerText.includes('refund') ||
-      lowerText.includes('sold') ||
-      text.includes('+')
+      !isIncomeTax &&
+      (lowerText.includes('salary') ||
+        lowerText.includes('income') ||
+        lowerText.includes('earned') ||
+        lowerText.includes('earning') ||
+        lowerText.includes('earnings') ||
+        lowerText.includes('received') ||
+        lowerText.includes('freelance') ||
+        lowerText.includes('cashback') ||
+        lowerText.includes('credited') ||
+        lowerText.includes('deposited') ||
+        lowerText.includes('payout') ||
+        lowerText.includes('dividend') ||
+        lowerText.includes('profit') ||
+        lowerText.includes('refund') ||
+        lowerText.includes('sold') ||
+        lowerText.includes('stipend') ||
+        lowerText.includes('bonus') ||
+        lowerText.includes('allowance') ||
+        lowerText.includes('got paid') ||
+        text.includes('+'))
     ) {
       type = 'INCOME';
     }
@@ -388,7 +400,7 @@ export class RegexParser {
         '',
       )
       .replace(
-        /\b(paid|paying|spent|spend|spending|received|credited|debited|got|bought|purchased|cost|costs)\b/gi,
+        /\b(paid|paying|spent|spend|spending|received|credited|debited|got|bought|purchased|cost|costs|earned|earning|earnings)\b/gi,
         '',
       )
       .trim();
@@ -445,13 +457,21 @@ export class RegexParser {
       merchant = undefined;
     }
 
+    const dict = CategoryDictionaryMapper.categorize(text);
+    const category =
+      dict.category !== 'Others'
+        ? dict.category
+        : type === 'INCOME'
+          ? 'Salary'
+          : 'Others';
+
     return {
       type,
       amount,
       originalAmount: splitCount > 1 ? originalAmount : undefined,
       currency,
       merchant: merchant ? this.capitalize(merchant) : undefined,
-      category: 'Others',
+      category,
       description,
       transactionDate,
       splitCount,

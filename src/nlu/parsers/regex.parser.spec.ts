@@ -62,6 +62,30 @@ describe('RegexParser', () => {
     expect(res?.type).toBe('INCOME');
   });
 
+  it('should detect "income 30000" as INCOME under Salary category', () => {
+    const res = RegexParser.parse('income 30000');
+    expect(res).not.toBeNull();
+    expect(res?.amount).toBe(30000);
+    expect(res?.type).toBe('INCOME');
+    expect(res?.category).toBe('Salary');
+  });
+
+  it('should detect "income tax 5000" as EXPENSE under Bills category', () => {
+    const res = RegexParser.parse('income tax 5000');
+    expect(res).not.toBeNull();
+    expect(res?.amount).toBe(5000);
+    expect(res?.type).toBe('EXPENSE');
+    expect(res?.category).toBe('Bills');
+  });
+
+  it('should detect "earned 25000" as INCOME under Salary category', () => {
+    const res = RegexParser.parse('earned 25000');
+    expect(res).not.toBeNull();
+    expect(res?.amount).toBe(25000);
+    expect(res?.type).toBe('INCOME');
+    expect(res?.category).toBe('Salary');
+  });
+
   it('should handle ordinal date expressions without over-matching day as amount', () => {
     const res = RegexParser.parse('Lunch on 25th 300');
     expect(res).not.toBeNull();
