@@ -9,10 +9,11 @@ import {
   Body,
   UseGuards,
   Req,
+  Res,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
-import { Request } from 'express';
+import type { Request, Response } from 'express';
 import { AnalyticsService } from './analytics.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { TransactionService } from '../transactions/transaction.service';
@@ -666,9 +667,51 @@ export class AnalyticsController {
     };
   }
 
+  @Get(['api/transactions/sync-check', 'analytics/sync-check'])
+  @UseGuards(JwtAuthGuard)
+  async checkSyncStatus(
+    @Req() req: Request & { user: User },
+    @Res({ passthrough: true }) res?: Response,
+  ) {
+    if (res) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
+    const user = req.user;
+
+    const [latestTx, totalCount] = await Promise.all([
+      this.prisma.transaction.findFirst({
+        where: { userId: user.id, isDeleted: false },
+        orderBy: { updatedAt: 'desc' },
+        select: { id: true, updatedAt: true, amount: true, merchant: true, description: true },
+      }),
+      this.prisma.transaction.count({
+        where: { userId: user.id, isDeleted: false },
+      }),
+    ]);
+
+    return {
+      latestTxId: latestTx?.id || null,
+      lastUpdatedAt: latestTx?.updatedAt?.toISOString() || null,
+      merchant: latestTx?.merchant || latestTx?.description || null,
+      amount: latestTx ? Number(latestTx.amount) : null,
+      count: totalCount,
+      timestamp: Date.now(),
+    };
+  }
+
   @Get(['api/transactions', 'analytics/dashboard-data'])
   @UseGuards(JwtAuthGuard)
-  async getDashboardData(@Req() req: Request & { user: User }) {
+  async getDashboardData(
+    @Req() req: Request & { user: User },
+    @Res({ passthrough: true }) res?: Response,
+  ) {
+    if (res) {
+      res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+      res.setHeader('Pragma', 'no-cache');
+      res.setHeader('Expires', '0');
+    }
     const user = req.user;
 
     const todaySummary = await this.analyticsService.getSummaryReport(

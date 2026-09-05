@@ -56,6 +56,25 @@ export class AuthController {
     return session;
   }
 
+  @Get('auth/telegram/link-code')
+  @UseGuards(JwtAuthGuard)
+  generateLinkCode(@Req() req: any) {
+    return this.authService.generateTelegramLinkToken(req.user.id);
+  }
+
+  @Get('auth/telegram/link-status')
+  @UseGuards(JwtAuthGuard)
+  async checkLinkStatus(@Req() req: any) {
+    const user = await this.authService.validateUserById(req.user.id);
+    const token = req.query?.token as string | undefined;
+    const sessionStatus = token ? this.authService.checkLinkStatus(token) : null;
+    return {
+      isLinked: !!user?.telegramId || !!sessionStatus?.isLinked,
+      telegramId: user?.telegramId || null,
+      username: user?.username || sessionStatus?.username || null,
+    };
+  }
+
   @Post('auth/register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() body: any, @Res({ passthrough: true }) res: any) {

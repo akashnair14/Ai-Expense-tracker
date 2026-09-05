@@ -21,6 +21,7 @@ export interface CreateAuditLogParams {
     | 'AUTH_TELEGRAM_LOGIN'
     | 'AUTH_TELEGRAM_MINIAPP_LOGIN'
     | 'AUTH_QR_LOGIN_APPROVED'
+    | 'TELEGRAM_ACCOUNT_LINKED'
     | 'ONBOARDING_COMPLETED'
     | 'CURRENCY_PREFERENCE_UPDATED';
   entityType?:

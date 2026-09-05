@@ -847,6 +847,48 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
         }
       }
 
+      if (payload && payload.startsWith('link_')) {
+        if (!ctx.from) {
+          await ctx.reply(`⚠️ User context not found.`);
+          return;
+        }
+
+        const linkResult = await this.authService.linkTelegramAccount(
+          payload,
+          ctx.from.id,
+          ctx.from.username,
+          ctx.from.first_name,
+          ctx.from.last_name,
+        );
+
+        if (linkResult.success) {
+          const appUrl = process.env.WEB_APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+          const linkKeyboard = new InlineKeyboard()
+            .webApp('🚀 Open Web Dashboard', appUrl)
+            .row()
+            .text('📅 Today Summary', 'cmd_today')
+            .text('🔙 Main Menu', 'cmd_menu');
+
+          await ctx.reply(
+            `🎉 *Telegram Account Successfully Linked!*\n\n` +
+            `🔗 Connected to: *${this.escapeMd(linkResult.email || 'Your Account')}*\n\n` +
+            `Your Telegram messenger and Web Dashboard are now synchronized into a single unified financial ledger!\n\n` +
+            `💡 *Try logging your first expense right now:*\n` +
+            `• \`Lunch 250\`\n` +
+            `• \`Uber 180 to office\`\n` +
+            `• \`Coffee 120 with friend\`\n\n` +
+            `⚡ Any entry you type here will appear live on your dashboard instantly without refreshing!`,
+            { parse_mode: 'Markdown', reply_markup: linkKeyboard },
+          );
+          return;
+        } else {
+          await ctx.reply(
+            `⚠️ This Telegram connection link has expired or is invalid.\n\nPlease return to your Web Dashboard, click *Connect Telegram*, and tap the fresh link.`,
+          );
+          return;
+        }
+      }
+
       if (!ctx.from) return;
       const user = await this.transactionService.getOrCreateUser(
         ctx.from.id,

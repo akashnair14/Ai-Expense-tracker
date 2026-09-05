@@ -26,9 +26,18 @@ export interface QrSession {
   token?: string;
 }
 
+export interface LinkSession {
+  token: string;
+  userId: string;
+  status: 'PENDING' | 'LINKED' | 'EXPIRED';
+  createdAt: number;
+  telegramUsername?: string;
+}
+
 @Injectable()
 export class AuthService {
   private qrSessions = new Map<string, QrSession>();
+  private linkSessions = new Map<string, LinkSession>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -372,6 +381,125 @@ export class AuthService {
     });
 
     return true;
+  }
+
+  generateTelegramLinkToken(userId: string) {
+    const token = `link_${crypto.randomBytes(16).toString('hex')}`;
+    const botName = process.env.TELEGRAM_BOT_USERNAME || 'Akash_Expense_tracker_bot';
+    const deepLink = `https://t.me/${botName}?start=${token}`;
+
+    this.linkSessions.set(token, {
+      token,
+      userId,
+      status: 'PENDING',
+      createdAt: Date.now(),
+    });
+
+    setTimeout(() => {
+      this.linkSessions.delete(token);
+    }, 600000); // 10 minutes
+
+    return { token, deepLink };
+  }
+
+  checkLinkStatus(token: string) {
+    const session = this.linkSessions.get(token);
+    if (!session) return { status: 'EXPIRED', isLinked: false };
+    return {
+      status: session.status,
+      isLinked: session.status === 'LINKED',
+      username: session.telegramUsername,
+    };
+  }
+
+  async linkTelegramAccount(
+    token: string,
+    telegramId: string | number,
+    username?: string,
+    firstName?: string,
+    lastName?: string,
+  ): Promise<{ success: boolean; message?: string; email?: string | null }> {
+    const session = this.linkSessions.get(token);
+    if (!session || session.status !== 'PENDING') {
+      return { success: false, message: 'Invalid or expired linking token' };
+    }
+
+    const stringTelegramId = String(telegramId);
+    const targetUser = await this.prisma.user.findUnique({
+      where: { id: session.userId },
+    });
+    if (!targetUser) {
+      return { success: false, message: 'Target user not found' };
+    }
+
+    // Check if an existing orphan user holds this telegramId
+    const existingTgUser = await this.prisma.user.findUnique({
+      where: { telegramId: stringTelegramId },
+    });
+
+    if (existingTgUser && existingTgUser.id !== targetUser.id) {
+      if (existingTgUser.email && existingTgUser.email !== targetUser.email) {
+        return { success: false, message: 'This Telegram account is already linked to another registered email account.' };
+      }
+      // Reassign transactions recorded under the temporary telegram profile to target user
+      await this.prisma.transaction.updateMany({
+        where: { userId: existingTgUser.id },
+        data: { userId: targetUser.id },
+      });
+      // Reassign budgets
+      await this.prisma.budget.updateMany({
+        where: { userId: existingTgUser.id },
+        data: { userId: targetUser.id },
+      });
+      // Reassign recurring transactions
+      await this.prisma.recurringTransaction.updateMany({
+        where: { userId: existingTgUser.id },
+        data: { userId: targetUser.id },
+      });
+      // Clean up orphan user record
+      try {
+        await this.prisma.user.delete({
+          where: { id: existingTgUser.id },
+        });
+      } catch {
+        await this.prisma.user.update({
+          where: { id: existingTgUser.id },
+          data: { telegramId: null, isActive: false },
+        });
+      }
+    }
+
+    // Link telegramId to target user
+    const updatedUser = await this.prisma.user.update({
+      where: { id: targetUser.id },
+      data: {
+        telegramId: stringTelegramId,
+        username: username || targetUser.username,
+        firstName: targetUser.firstName || firstName,
+        lastName: targetUser.lastName || lastName,
+      },
+    });
+
+    session.status = 'LINKED';
+    session.telegramUsername = username || String(telegramId);
+
+    await this.auditService.log({
+      userId: targetUser.id,
+      action: 'TELEGRAM_ACCOUNT_LINKED',
+      entityType: 'USER',
+      entityId: targetUser.id,
+      source: 'TELEGRAM',
+      details: {
+        telegramId: stringTelegramId,
+        username,
+        email: targetUser.email,
+      },
+    });
+
+    return {
+      success: true,
+      email: targetUser.email,
+    };
   }
 
   async completeOnboarding(

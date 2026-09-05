@@ -37,6 +37,14 @@ describe('AnalyticsController - Copilot Natural Language Understanding', () => {
       }),
       updateMany: jest.fn().mockResolvedValue({ count: 1 }),
       create: jest.fn().mockResolvedValue({ id: 'tx-new', amount: 150 }),
+      findFirst: jest.fn().mockResolvedValue({
+        id: 'tx-latest-123',
+        amount: 350,
+        merchant: 'Telegram Lunch',
+        description: 'Lunch expense',
+        updatedAt: new Date('2026-09-05T12:00:00Z'),
+      }),
+      count: jest.fn().mockResolvedValue(15),
     },
     budget: {
       findFirst: jest.fn().mockResolvedValue({
@@ -154,5 +162,22 @@ describe('AnalyticsController - Copilot Natural Language Understanding', () => {
     expect(res).toBeDefined();
     expect(res.reply).toContain('Transport');
     expect(res.reply).toContain('850');
+  });
+
+  it('should return sync status and set no-cache headers in checkSyncStatus', async () => {
+    const req = { user: mockUser } as any;
+    const res = { setHeader: jest.fn() } as any;
+    const syncStatus = await controller.checkSyncStatus(req, res);
+
+    expect(syncStatus).toBeDefined();
+    expect(syncStatus.latestTxId).toBe('tx-latest-123');
+    expect(syncStatus.merchant).toBe('Telegram Lunch');
+    expect(syncStatus.amount).toBe(350);
+    expect(syncStatus.count).toBe(15);
+    expect(syncStatus.timestamp).toBeGreaterThan(0);
+    expect(res.setHeader).toHaveBeenCalledWith(
+      'Cache-Control',
+      'no-store, no-cache, must-revalidate, proxy-revalidate',
+    );
   });
 });
