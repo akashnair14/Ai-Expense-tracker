@@ -4777,14 +4777,15 @@
         state.rawDashboardData = data;
         renderDashboard(data);
 
-        // Update baseline sync tracking
-        if (data.recentTransactions && data.recentTransactions.length > 0) {
-          const latest = data.recentTransactions[0];
-          state.sync.lastTxId = latest.id;
-          state.sync.lastUpdatedAt = latest.updatedAt || latest.transactionDate;
+        // Update baseline sync tracking with exact backend source of truth
+        if (data.latestTxId) {
+          state.sync.lastTxId = data.latestTxId;
+        } else if (data.recentTransactions && data.recentTransactions.length > 0) {
+          state.sync.lastTxId = data.recentTransactions[0].id;
         }
-        state.sync.lastCount = (data.today?.transactionCount || 0) + (data.month?.transactionCount || 0);
-        updateSyncUI('synced');
+        if (data.totalCount !== undefined) {
+          state.sync.lastCount = data.totalCount;
+        }
 
         // Ensure live polling is active when authenticated and in app
         if (state.token && state.view === 'app' && !state.sync.isPolling) {
@@ -4803,19 +4804,19 @@
       }
       state.sync.isPolling = true;
 
-      // Poll every 3.5 seconds
+      // Poll smoothly every 5 seconds in foreground
       state.sync.pollTimer = setInterval(() => {
         if (state.view !== 'app' || !state.token) {
           stopLiveSync();
           return;
         }
-        // If document is hidden, only poll every 5th tick (~17.5s) to save battery
+        // If document is hidden, only poll every 4th tick (~20s) to save battery
         if (document.visibilityState === 'hidden') {
           state.sync.hiddenTick = (state.sync.hiddenTick || 0) + 1;
-          if (state.sync.hiddenTick % 5 !== 0) return;
+          if (state.sync.hiddenTick % 4 !== 0) return;
         }
         checkSyncStatus();
-      }, 3500);
+      }, 5000);
     }
 
     function stopLiveSync() {
@@ -4845,38 +4846,28 @@
 
         const data = await res.json();
         const prevTxId = state.sync.lastTxId;
-        const prevUpdatedAt = state.sync.lastUpdatedAt;
         const prevCount = state.sync.lastCount;
 
+        // Accurate change detection on transaction ID or count change
         const hasChanged = 
-          (prevTxId !== null && data.latestTxId !== prevTxId) ||
-          (prevUpdatedAt !== null && data.lastUpdatedAt !== prevUpdatedAt) ||
-          (prevCount !== null && data.count !== prevCount);
+          (prevTxId !== null && data.latestTxId !== null && data.latestTxId !== prevTxId) ||
+          (prevCount !== null && data.count !== null && data.count !== prevCount);
 
         // First initialization
         if (prevTxId === null && prevCount === null) {
           state.sync.lastTxId = data.latestTxId;
-          state.sync.lastUpdatedAt = data.lastUpdatedAt;
           state.sync.lastCount = data.count;
           return;
         }
 
         if (hasChanged || force) {
           state.sync.lastTxId = data.latestTxId;
-          state.sync.lastUpdatedAt = data.lastUpdatedAt;
           state.sync.lastCount = data.count;
           state.sync.isSyncing = true;
-          updateSyncUI('syncing');
 
+          // Completely silent background refresh: no toasts, no UI flicker
           await checkAuthAndLoadDashboard(true);
           state.sync.isSyncing = false;
-          updateSyncUI('synced');
-
-          if (hasChanged) {
-            triggerHaptic('success');
-            const entryDesc = data.merchant ? ` (${data.merchant})` : '';
-            showToast(`⚡ Real-time Sync: Latest Telegram transaction loaded!${entryDesc}`, 'success');
-          }
         }
       } catch (err) {
         console.warn('Sync check error:', err);

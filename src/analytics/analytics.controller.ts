@@ -731,12 +731,22 @@ export class AnalyticsController {
       'year',
     );
 
-    const recentTransactions = await this.prisma.transaction.findMany({
-      where: { userId: user.id, isDeleted: false },
-      orderBy: { transactionDate: 'desc' },
-      take: 20,
-      include: { category: true },
-    });
+    const [recentTransactions, totalCount, latestTx] = await Promise.all([
+      this.prisma.transaction.findMany({
+        where: { userId: user.id, isDeleted: false },
+        orderBy: { transactionDate: 'desc' },
+        take: 20,
+        include: { category: true },
+      }),
+      this.prisma.transaction.count({
+        where: { userId: user.id, isDeleted: false },
+      }),
+      this.prisma.transaction.findFirst({
+        where: { userId: user.id, isDeleted: false },
+        orderBy: { updatedAt: 'desc' },
+        select: { id: true, updatedAt: true },
+      }),
+    ]);
 
     const now = new Date();
     const budgets = await this.prisma.budget.findMany({
@@ -790,6 +800,8 @@ export class AnalyticsController {
       weeklyTrend,
       budgetOverview,
       aiInsights,
+      totalCount,
+      latestTxId: latestTx?.id || null,
       recentTransactions: recentTransactions.map((t) => ({
         ...t,
         amount: Number(t.amount),
