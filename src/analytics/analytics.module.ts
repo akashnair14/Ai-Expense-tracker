@@ -7,8 +7,10 @@ import { TransactionModule } from '../transactions/transaction.module';
 import { AuthModule } from '../auth/auth.module';
 import { NluModule } from '../nlu/nlu.module';
 
+import { VectorModule } from '../common/vector/vector.module';
+
 @Module({
-  imports: [TransactionModule, AuthModule, forwardRef(() => NluModule)],
+  imports: [TransactionModule, AuthModule, VectorModule, forwardRef(() => NluModule)],
   controllers: [AnalyticsController],
   providers: [AnalyticsService, RecurringService, WeeklyDigestService],
   exports: [AnalyticsService, RecurringService, WeeklyDigestService],

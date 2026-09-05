@@ -127,7 +127,7 @@ CRITICAL: Return ONLY valid JSON matching this schema:
     const geminiKey = process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
     if (geminiKey) {
       try {
-        const geminiModels = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest'];
+        const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
         for (const model of geminiModels) {
           try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
@@ -332,7 +332,7 @@ Provide a clear, practical, concise, and helpful answer in 2 to 4 sentences. If 
     }
 
     if (geminiKey) {
-      const models = ['gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+      const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
       for (const model of models) {
         try {
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
@@ -341,6 +341,102 @@ Provide a clear, practical, concise, and helpful answer in 2 to 4 sentences. If 
             {
               contents: [{ role: 'user', parts: [{ text: `${systemPrompt}\n\nUser Question: "${input}"` }] }],
               generationConfig: { temperature: 0.3, maxOutputTokens: 350 },
+            },
+            { headers: { 'Content-Type': 'application/json' }, timeout: 6000 },
+          );
+          const reply = res.data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (reply && reply.trim().length > 0) return reply.trim();
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  public static async generateRagAnswer(
+    query: string,
+    financialContext: string,
+  ): Promise<string | null> {
+    const primaryProvider = (process.env.LLM_PROVIDER || 'groq').toLowerCase();
+    const primaryKey =
+      process.env.LLM_API_KEY ||
+      process.env.GROQ_API_KEY ||
+      process.env.GEMINI_API_KEY ||
+      process.env.OPENAI_API_KEY;
+    const groqKey =
+      process.env.GROQ_API_KEY || (primaryProvider === 'groq' ? primaryKey : null);
+    const geminiKey =
+      process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
+
+    const systemPrompt = `You are Kinetiq Financial Copilot, an elite personal finance assistant.
+Your goal is to answer the user's question using their real financial context snapshot.
+
+Financial Context:
+${financialContext}
+
+Guidelines:
+1. Directly and conversationally answer the user's specific question using their actual numbers and currency.
+2. If asking about a specific item, category, or purchase (e.g. "fast food", "petrol", "can I afford..."), reference the relevant amounts and transactions provided.
+3. Be concise, actionable, and encouraging (around 2 to 4 bullet points or concise paragraphs).
+4. Never make up numbers not present in the context.
+5. Format key numbers, merchants, and metrics in **bold**.`;
+
+    if (groqKey) {
+      const groqModels = [
+        'openai/gpt-oss-120b',
+        'qwen/qwen3.8-27b',
+        'openai/gpt-oss-20b',
+        'groq/compound',
+      ];
+      for (const model of groqModels) {
+        try {
+          const res = await axios.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            {
+              model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: query },
+              ],
+              temperature: 0.2,
+              max_tokens: 500,
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${groqKey}`,
+                'Content-Type': 'application/json',
+              },
+              timeout: 6000,
+            },
+          );
+          const reply = res.data.choices[0]?.message?.content;
+          if (reply && reply.trim().length > 0) return reply.trim();
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    if (geminiKey) {
+      const geminiModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+      for (const model of geminiModels) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+          const res = await axios.post(
+            url,
+            {
+              contents: [
+                {
+                  role: 'user',
+                  parts: [{ text: `${systemPrompt}\n\nUser Question: "${query}"` }],
+                },
+              ],
+              generationConfig: {
+                temperature: 0.2,
+                maxOutputTokens: 500,
+              },
             },
             { headers: { 'Content-Type': 'application/json' }, timeout: 6000 },
           );

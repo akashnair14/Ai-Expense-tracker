@@ -180,4 +180,30 @@ describe('AnalyticsController - Copilot Natural Language Understanding', () => {
       'no-store, no-cache, must-revalidate, proxy-revalidate',
     );
   });
+
+  it('should route RAG queries like "audit my subscriptions" to performFinancialRagAnalysis', async () => {
+    const req = { user: mockUser } as any;
+    const res = await controller.handleChat('audit my subscriptions and memberships', req);
+
+    expect(res).toBeDefined();
+    expect(res.reply).toBe('RAG Audit Completed');
+    expect(mockAnalyticsService.performFinancialRagAnalysis).toHaveBeenCalled();
+  });
+
+  it('should route open-ended conversational queries to performFinancialRagAnalysis instead of dropping into guidance card', async () => {
+    mockNluService.processUserInput.mockResolvedValueOnce({
+      intent: 'UNKNOWN',
+    });
+    mockAnalyticsService.performFinancialRagAnalysis.mockResolvedValueOnce({
+      reply: 'Personalized Financial Analysis & Advice',
+      data: { score: 90 },
+    });
+
+    const req = { user: mockUser } as any;
+    const res = await controller.handleChat('how can I optimize my financial health?', req);
+
+    expect(res).toBeDefined();
+    expect(res.reply).toBe('Personalized Financial Analysis & Advice');
+    expect(mockAnalyticsService.performFinancialRagAnalysis).toHaveBeenCalled();
+  });
 });

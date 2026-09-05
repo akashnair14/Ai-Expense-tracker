@@ -12,6 +12,7 @@ import { AnalyticsModule } from './analytics/analytics.module';
 import { AuthModule } from './auth/auth.module';
 import { AuditModule } from './common/audit/audit.module';
 import { ForexModule } from './common/forex/forex.module';
+import { VectorModule } from './common/vector/vector.module';
 import { HealthController } from './health/health.controller';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -35,6 +36,7 @@ import { AppService } from './app.service';
     TelegramModule,
     AnalyticsModule,
     AuthModule,
+    VectorModule,
   ],
   controllers: [AppController, HealthController],
   providers: [

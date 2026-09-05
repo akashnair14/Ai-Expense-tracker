@@ -645,7 +645,23 @@ export class AnalyticsController {
       return { reply: nluResult.replyText };
     }
 
-    // 4. Conversational Intelligence Fallback: If user asked a question, advice, or conversational prompt
+    // 4. Financial RAG & Semantic Intelligence: Route conversational questions, financial guidance, and analysis
+    try {
+      const ragAnalysis = await this.analyticsService.performFinancialRagAnalysis(
+        user.id,
+        trimmedMsg,
+      );
+      if (ragAnalysis && ragAnalysis.reply) {
+        return {
+          reply: ragAnalysis.reply,
+          financialContext: ragAnalysis.data,
+        };
+      }
+    } catch {
+      // Fall through to conversational LLM fallback
+    }
+
+    // 5. Conversational LLM Direct Fallback
     try {
       const summary = await this.analyticsService.getSummaryReport(user.id, 'month');
       const topCats = Object.entries(summary.categoryBreakdown)
@@ -661,7 +677,7 @@ export class AnalyticsController {
       // Fall through to guidance card
     }
 
-    // 5. Intelligent Copilot Guidance Card (rich, structured, actionable)
+    // 6. Intelligent Copilot Guidance Card (rich, structured, actionable)
     return {
       reply: `I'm your **Kinetiq Financial Copilot**. I didn't recognize a specific transaction or command in your message.\n\nHere are some things you can ask me:\n• ⛽ **Category Spend:** "How much is my petrol spent?", "How much on food?"\n• 🛡️ **Safe Daily Spend:** "Can I spend ${curr}500 today?", "What is my daily limit?"\n• 📊 **Deep Financial RAG:** "Audit my subscriptions", "Compare vs last month", "Detect spending leaks"\n• ⚡ **Instant Outlay:** "Coffee 150", "Uber 280 to office", "Swiggy 420"`,
     };
