@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   Body,
   Res,
   Req,
@@ -69,7 +70,9 @@ export class AuthController {
     const { token, user } = await this.authService.registerWithEmail(
       validation.data.email,
       validation.data.password,
-      validation.data.name,
+      validation.data.firstName || validation.data.name,
+      validation.data.currency,
+      validation.data.savingsTarget,
     );
 
     (res as Response).cookie('pulse_session', token, {
@@ -193,6 +196,13 @@ export class AuthController {
     }
 
     return this.authService.completeOnboarding(userId, validation.data);
+  }
+
+  @Patch('user/preferences')
+  @UseGuards(JwtAuthGuard)
+  async updatePreferences(@Req() req: any, @Body() body: any) {
+    const userId = (req as Request & { user: any }).user.id;
+    return this.authService.updateUserCurrency(userId, body?.currency);
   }
 
   @Post('auth/logout')

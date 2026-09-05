@@ -51,11 +51,19 @@ export class AuthService {
     });
   }
 
-  async registerWithEmail(email: string, pass: string, name?: string) {
+  async registerWithEmail(
+    email: string,
+    pass: string,
+    name?: string,
+    currency?: string,
+    savingsTarget?: number,
+  ) {
     const validation = RegisterWithEmailSchema.safeParse({
       email,
       password: pass,
       name,
+      currency,
+      savingsTarget,
     });
     if (!validation.success) {
       const errorMsg = validation.error.issues
@@ -66,7 +74,7 @@ export class AuthService {
 
     const cleanEmail = validation.data.email.toLowerCase().trim();
     const cleanPass = validation.data.password;
-    const cleanName = validation.data.name?.trim();
+    const cleanName = validation.data.name?.trim() || validation.data.firstName?.trim();
 
     const existing = await this.prisma.user.findUnique({
       where: { email: cleanEmail },
@@ -83,7 +91,8 @@ export class AuthService {
         email: cleanEmail,
         passwordHash: hashedPassword,
         firstName: cleanName || cleanEmail.split('@')[0],
-        currency: 'INR',
+        currency: currency || 'INR',
+        targetSavingsRate: savingsTarget ? Math.round(savingsTarget) : 20,
         lastLoginAt: new Date(),
       },
     });
@@ -437,6 +446,31 @@ export class AuthService {
     });
 
     return this.buildAuthResult(user);
+  }
+
+  async updateUserCurrency(userId: string, currency: string) {
+    const validCurrencies = ['INR', 'USD', 'EUR', 'GBP', 'AED'];
+    const cleanCurrency = currency?.toUpperCase() || 'INR';
+    if (!validCurrencies.includes(cleanCurrency)) {
+      throw new BadRequestException(`Unsupported currency: ${currency}`);
+    }
+
+    const updated = await this.prisma.user.update({
+      where: { id: userId },
+      data: { currency: cleanCurrency },
+      select: { id: true, currency: true },
+    });
+
+    await this.auditService.log({
+      userId,
+      action: 'CURRENCY_PREFERENCE_UPDATED',
+      entityType: 'USER',
+      entityId: userId,
+      source: 'WEB',
+      details: { currency: cleanCurrency },
+    });
+
+    return { success: true, currency: updated.currency };
   }
 
   private buildAuthResult(user: any) {

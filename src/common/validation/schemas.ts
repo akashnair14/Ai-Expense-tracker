@@ -143,6 +143,12 @@ export const RegisterWithEmailSchema = z.object({
     .min(6, 'Password must be at least 6 characters')
     .max(128),
   name: z.string().trim().max(100).optional(),
+  firstName: z.string().trim().max(100).optional(),
+  currency: z.string().trim().min(1).max(10).optional(),
+  savingsTarget: z.preprocess((val) => {
+    if (typeof val === 'string') return parseFloat(val);
+    return val;
+  }, z.number().optional()),
 });
 
 export type RegisterWithEmailDto = z.infer<typeof RegisterWithEmailSchema>;

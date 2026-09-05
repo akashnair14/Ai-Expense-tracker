@@ -13,10 +13,10 @@
     })();
   </script>
 
-  <!-- Fonts -->
+  <!-- Typography: Geist & Geist Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -28,7 +28,8 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            sans: ['"Geist"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"Geist Mono"', 'monospace'],
           }
         }
       }
@@ -36,16 +37,33 @@
   </script>
 
   <style>
+    :root {
+      --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    body {
+      letter-spacing: -0.015em;
+    }
+    svg, [data-lucide] {
+      stroke-width: 1.75px !important;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+    button, a {
+      transition: transform 0.15s var(--ease-spring), background-color 0.15s ease, border-color 0.15s ease;
+    }
+    button:active, a:active {
+      transform: scale(0.98);
+    }
     @keyframes floatSlow {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
+      50% { transform: translateY(-6px); }
     }
     .animate-float {
-      animation: floatSlow 4s ease-in-out infinite;
+      animation: floatSlow 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
     }
   </style>
 </head>
-<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-zinc-800 selection:text-white p-6">
+<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen flex flex-col justify-between antialiased selection:bg-emerald-500 selection:text-black p-6">
 
   <!-- TOP BRAND NAV -->
   <header class="max-w-4xl w-full mx-auto flex items-center justify-between">

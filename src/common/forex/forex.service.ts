@@ -62,6 +62,10 @@ export class ForexService {
     }
   }
 
+  public getAllRates(): Record<string, number> {
+    return { ...this.ratesAgainstUSD };
+  }
+
   public getRate(fromCurrency: string, toCurrency: string): number {
     const from = (fromCurrency || 'INR').toUpperCase();
     const to = (toCurrency || 'INR').toUpperCase();

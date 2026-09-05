@@ -178,6 +178,11 @@ export class TransactionService {
     }
   }
 
+  public async seedDemoTransactions(userId: string) {
+    // Completely disabled to prevent confusing users with fake data
+    return;
+  }
+
   public async getOrCreateUser(
     telegramId: string | number,
     username?: string,

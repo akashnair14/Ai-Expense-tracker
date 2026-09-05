@@ -118,10 +118,34 @@ export class NluService {
         toolCall,
       );
 
+      let synthesizedReply = intentResponse.replyText;
+      if (!synthesizedReply && toolResult) {
+        if (toolCall.tool === 'get_category_spending' && toolResult.category) {
+          const spent = Number(toolResult.spent || 0);
+          const curr = toolResult.currency || '₹';
+          const period = toolResult.period || 'month';
+          synthesizedReply = spent > 0
+            ? `You've spent **${curr}${spent.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}** on **${toolResult.category}** this ${period}.`
+            : `You haven't recorded any expenses for **${toolResult.category}** this ${period}!`;
+        } else if (toolCall.tool === 'get_expense_summary' && toolResult.totalExpense !== undefined) {
+          synthesizedReply = `Here is your summary for this ${toolResult.period || 'month'}:\n• Total Expenses: **₹${Number(toolResult.totalExpense || 0).toLocaleString()}**\n• Total Income: **₹${Number(toolResult.totalIncome || 0).toLocaleString()}**\n• Net Savings: **₹${Number(toolResult.netSavings || 0).toLocaleString()}**`;
+        } else if (toolCall.tool === 'get_top_expenses' && Array.isArray(toolResult)) {
+          synthesizedReply = toolResult.length === 0
+            ? "You don't have any expenses recorded yet for this month."
+            : "Here are your biggest expenses this month:\n" + toolResult.map((t: any) => `• **${t.merchant || 'Expense'}**: ₹${Number(t.amount).toLocaleString()} (${t.category})`).join('\n');
+        } else if (toolCall.tool === 'get_budget_status' && Array.isArray(toolResult)) {
+          synthesizedReply = toolResult.length === 0
+            ? "You don't have any category budgets set up yet. Try saying 'Set food budget to 5000'."
+            : "Here is your budget status:\n" + toolResult.map((b: any) => `• **${b.category}**: ₹${Number(b.spent).toLocaleString()} / ₹${Number(b.limit).toLocaleString()} (${b.usedPercentage}%)`).join('\n');
+        } else if (toolCall.tool === 'create_recurring' && toolResult.name) {
+          synthesizedReply = `🔁 Recurring schedule created: **${toolResult.name}** of ₹${Number(toolResult.amount).toLocaleString()} on day ${toolResult.day} of every month.`;
+        }
+      }
+
       return {
         intent: intentResponse.intent,
         toolResult,
-        replyText: intentResponse.replyText,
+        replyText: synthesizedReply || undefined,
       };
     }
 

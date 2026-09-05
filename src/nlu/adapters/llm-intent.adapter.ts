@@ -83,7 +83,7 @@ CRITICAL: Return ONLY valid JSON matching this schema:
     const groqKey = process.env.GROQ_API_KEY || (primaryProvider === 'groq' ? primaryKey : null);
     if (groqKey) {
       try {
-        const groqModels = ['qwen/qwen3.8-27b', 'groq/compound', 'openai/gpt-oss-120b', 'llama-3.3-70b-versatile'];
+        const groqModels = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b', 'groq/compound'];
         for (const model of groqModels) {
           try {
             const res = await axios.post(
@@ -97,6 +97,7 @@ CRITICAL: Return ONLY valid JSON matching this schema:
                 ],
                 response_format: { type: 'json_object' },
                 temperature: 0.1,
+                max_tokens: 600,
               },
               {
                 headers: {
@@ -113,8 +114,8 @@ CRITICAL: Return ONLY valid JSON matching this schema:
               return NLUIntentResponseSchema.parse(rawJson);
             }
           } catch (modelErr: any) {
-            if (modelErr?.response?.status === 404) continue; // Try next model name
-            throw modelErr;
+            this.logger.warn(`Groq model ${model} unavailable (${modelErr?.response?.status || modelErr.message}). Trying next candidate...`);
+            continue;
           }
         }
       } catch (err: any) {
@@ -122,11 +123,11 @@ CRITICAL: Return ONLY valid JSON matching this schema:
       }
     }
 
-    // Tier 2: Fallback to Google Gemini (gemini-3.5-flash-lite / gemini-2.5-flash)
+    // Tier 2: Fallback to Google Gemini
     const geminiKey = process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
     if (geminiKey) {
       try {
-        const geminiModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-2.5-flash'];
+        const geminiModels = ['gemini-3.5-flash-lite', 'gemini-3.6-flash', 'gemini-flash-latest'];
         for (const model of geminiModels) {
           try {
             const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
@@ -159,8 +160,8 @@ CRITICAL: Return ONLY valid JSON matching this schema:
               return NLUIntentResponseSchema.parse(rawJson);
             }
           } catch (mErr: any) {
-            if (mErr?.response?.status === 404) continue;
-            throw mErr;
+            this.logger.warn(`Gemini model ${model} unavailable (${mErr?.response?.status || mErr.message}). Trying next candidate...`);
+            continue;
           }
         }
       } catch (err: any) {
@@ -200,6 +201,154 @@ CRITICAL: Return ONLY valid JSON matching this schema:
         }
       } catch (err: any) {
         this.logger.warn(`OpenAI fallback failed (${err?.message || err}).`);
+      }
+    }
+
+    // Tier 4: Fast Deterministic Local Rule-based intent classifier fallback
+    return LlmIntentAdapter.deterministicFallback(input);
+  }
+
+  public static deterministicFallback(input: string): NLUIntentResponse | null {
+    const lower = input.toLowerCase().trim();
+
+    // 1. Top expenses query
+    if (lower.includes('top') || lower.includes('largest') || lower.includes('biggest') || lower.includes('highest')) {
+      return {
+        intent: 'QUERY_TOP_EXPENSES',
+        confidence: 0.95,
+        toolCalls: [{ tool: 'get_top_expenses', parameters: { limit: 5 } }],
+        targetPeriod: 'month',
+      };
+    }
+
+    // 2. Budget query
+    if (lower.includes('budget') || lower.includes('limit')) {
+      return {
+        intent: 'BUDGET_QUERY',
+        confidence: 0.9,
+        toolCalls: [{ tool: 'get_budget_status', parameters: {} }],
+        targetPeriod: 'month',
+      };
+    }
+
+    // 3. Category spending query (e.g. "how much i sent on petrol?", "food spending", "how much on uber")
+    const categoryDomains: Record<string, string[]> = {
+      'Fuel': ['petrol', 'fuel', 'diesel', 'gas', 'cng', 'shell', 'hpcl', 'bpcl', 'iocl'],
+      'Transport': ['uber', 'ola', 'rapido', 'cab', 'taxi', 'auto', 'metro', 'bus', 'train', 'commute', 'flight', 'travel'],
+      'Food & Dining': ['food', 'dining', 'restaurant', 'swiggy', 'zomato', 'lunch', 'dinner', 'breakfast', 'cafe', 'coffee'],
+      'Groceries': ['grocery', 'groceries', 'blinkit', 'zepto', 'instamart', 'bigbasket', 'supermarket', 'mart', 'milk'],
+      'Shopping': ['shopping', 'amazon', 'flipkart', 'myntra', 'clothes', 'shoes', 'electronics', 'mall', 'zara'],
+      'Bills & Utilities': ['bill', 'bills', 'electricity', 'water', 'wifi', 'internet', 'broadband', 'recharge', 'mobile'],
+      'Rent': ['rent'],
+      'EMI': ['emi', 'loan'],
+      'SIP / Investments': ['sip', 'mutual fund', 'investment', 'invest', 'stocks', 'zerodha', 'groww'],
+      'Entertainment': ['movie', 'movies', 'cinema', 'netflix', 'spotify', 'entertainment'],
+      'Healthcare': ['health', 'healthcare', 'pharmacy', 'medicine', 'medicines', 'doctor'],
+      'Miscellaneous': ['misc', 'miscellaneous', 'sundry', 'others', 'other'],
+    };
+
+    for (const [catName, keywords] of Object.entries(categoryDomains)) {
+      if (keywords.some(k => lower.includes(k))) {
+        let period: 'today' | 'week' | 'month' | 'year' = 'month';
+        if (lower.includes('today')) period = 'today';
+        else if (lower.includes('week')) period = 'week';
+        else if (lower.includes('year')) period = 'year';
+
+        return {
+          intent: 'QUERY_CATEGORY_SPENDING',
+          confidence: 0.9,
+          targetCategory: catName,
+          targetPeriod: period,
+          toolCalls: [
+            {
+              tool: 'get_category_spending',
+              parameters: { category: catName, period },
+            },
+          ],
+        };
+      }
+    }
+
+    // 4. Overall expense summary
+    if (lower.includes('how much') || lower.includes('total spend') || lower.includes('total expense') || lower.includes('summary')) {
+      let period: 'today' | 'week' | 'month' | 'year' = 'month';
+      if (lower.includes('today')) period = 'today';
+      else if (lower.includes('week')) period = 'week';
+      else if (lower.includes('year')) period = 'year';
+
+      return {
+        intent: 'QUERY_EXPENSE_SUMMARY',
+        confidence: 0.85,
+        targetPeriod: period,
+        toolCalls: [
+          {
+            tool: 'get_expense_summary',
+            parameters: { period },
+          },
+        ],
+      };
+    }
+
+    return null;
+  }
+
+  public static async generateConversationalReply(
+    input: string,
+    contextInfo?: string,
+  ): Promise<string | null> {
+    const primaryProvider = (process.env.LLM_PROVIDER || 'groq').toLowerCase();
+    const primaryKey = process.env.LLM_API_KEY || process.env.GROQ_API_KEY || process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+    const groqKey = process.env.GROQ_API_KEY || (primaryProvider === 'groq' ? primaryKey : null);
+    const geminiKey = process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
+
+    const systemPrompt = `You are Kinetiq Financial Copilot, an elite, friendly personal finance assistant.
+The user is asking a conversational question, seeking financial guidance, or chatting about their money.
+${contextInfo ? `User Financial Context:\n${contextInfo}\n` : ''}
+Provide a clear, practical, concise, and helpful answer in 2 to 4 sentences. If relevant, suggest asking about specific spending (e.g. "How much on food?") or checking safe daily spend.`;
+
+    if (groqKey) {
+      const models = ['openai/gpt-oss-120b', 'openai/gpt-oss-20b', 'qwen/qwen3.8-27b'];
+      for (const model of models) {
+        try {
+          const res = await axios.post(
+            'https://api.groq.com/openai/v1/chat/completions',
+            {
+              model,
+              messages: [
+                { role: 'system', content: systemPrompt },
+                { role: 'user', content: input },
+              ],
+              temperature: 0.3,
+              max_tokens: 350,
+            },
+            { headers: { Authorization: `Bearer ${groqKey}` }, timeout: 5000 },
+          );
+          const reply = res.data.choices[0]?.message?.content;
+          if (reply && reply.trim().length > 0) return reply.trim();
+        } catch {
+          continue;
+        }
+      }
+    }
+
+    if (geminiKey) {
+      const models = ['gemini-3.5-flash-lite', 'gemini-3.6-flash'];
+      for (const model of models) {
+        try {
+          const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+          const res = await axios.post(
+            url,
+            {
+              contents: [{ role: 'user', parts: [{ text: `${systemPrompt}\n\nUser Question: "${input}"` }] }],
+              generationConfig: { temperature: 0.3, maxOutputTokens: 350 },
+            },
+            { headers: { 'Content-Type': 'application/json' }, timeout: 6000 },
+          );
+          const reply = res.data.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (reply && reply.trim().length > 0) return reply.trim();
+        } catch {
+          continue;
+        }
       }
     }
 

@@ -14,10 +14,10 @@
     })();
   </script>
 
-  <!-- Fonts -->
+  <!-- Typography: Geist & Geist Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" rel="stylesheet">
   
   <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -29,14 +29,26 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
+            sans: ['"Geist"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['"Geist Mono"', 'monospace'],
           }
         }
       }
     }
   </script>
+
+  <style>
+    body {
+      letter-spacing: -0.015em;
+    }
+    svg, [data-lucide] {
+      stroke-width: 1.75px !important;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+  </style>
 </head>
-<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-zinc-800 selection:text-white p-6 sm:p-12">
+<body class="bg-[#FAFAFA] dark:bg-[#09090b] text-zinc-900 dark:text-zinc-100 font-sans min-h-screen antialiased selection:bg-emerald-500 selection:text-black p-6 sm:p-12">
 
   <!-- TOP BRAND NAV -->
   <header class="max-w-3xl w-full mx-auto flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 pb-6 mb-8">
