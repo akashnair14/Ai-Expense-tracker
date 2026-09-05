@@ -1321,6 +1321,17 @@
 
       <div class="card p-6 shadow-2xl space-y-5">
         
+        <!-- Mode Switcher: Email vs Telegram Signup -->
+        <div class="grid grid-cols-2 gap-1 bg-black/40 border border-white/[0.08] p-1 rounded-xl text-xs font-medium" role="tablist">
+          <button onclick="switchSignupMode('email')" id="signupModeEmail" role="tab" aria-selected="true" class="py-2 rounded-lg bg-emerald-500 text-black font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <span>Email</span>
+          </button>
+          <button onclick="switchSignupMode('telegram')" id="signupModeTelegram" role="tab" aria-selected="false" class="py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <i data-lucide="send" class="w-3.5 h-3.5 text-[#24A1DE]"></i>
+            <span>Telegram</span>
+          </button>
+        </div>
+
         <form id="signupForm" onsubmit="handleRegistration(event)" class="space-y-3.5 text-xs">
           
           <div>
@@ -1356,11 +1367,65 @@
             </div>
           </div>
 
-          <button type="submit" id="signupSubmitBtn" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all shadow-sm flex items-center justify-center gap-2 mt-4">
-            <span>Continue to Financial Setup</span>
+          <button type="submit" id="signupSubmitBtn" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all shadow-sm flex items-center justify-center gap-2 mt-4 cursor-pointer active:scale-98">
+            <span>Create Account</span>
             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
           </button>
         </form>
+
+        <!-- Telegram Sign Up Flow Panel -->
+        <div id="telegramSignupPanel" class="space-y-4 text-xs hidden text-center">
+          
+          <!-- Inside Telegram WebApp Banner (when detected) -->
+          <div id="tgSignupMiniAppNotice" class="hidden p-3.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-left space-y-2">
+            <div class="flex items-center gap-2 text-emerald-400 font-semibold text-xs">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Telegram Account Detected</span>
+            </div>
+            <p class="text-slate-300 text-[11px] leading-relaxed">
+              You are browsing inside Telegram. Sign up with 1 tap using your Telegram session.
+            </p>
+            <button onclick="loginWithTelegramMiniApp()" class="w-full py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-bold rounded-lg transition-all flex items-center justify-center gap-2 shadow-md shadow-emerald-500/20 cursor-pointer">
+              <i data-lucide="zap" class="w-4 h-4"></i>
+              <span>Create Account with Telegram</span>
+            </button>
+          </div>
+
+          <!-- Browser QR / DeepLink Section -->
+          <div id="tgSignupBrowserFlow" class="space-y-4">
+            <p class="text-slate-300 leading-relaxed text-xs">
+              Create an account instantly via Telegram with zero passwords. Click below to open Telegram or scan the QR code:
+            </p>
+
+            <!-- 1-Click Open Telegram Button -->
+            <div>
+              <a id="tgSignupDirectBtn" href="https://t.me/Akash_Expense_tracker_bot" target="_blank" rel="noopener noreferrer" class="w-full py-3 bg-[#24A1DE] hover:bg-[#1f91c7] text-white font-bold rounded-xl transition-all shadow-lg shadow-[#24A1DE]/25 flex items-center justify-center gap-2 active:scale-95 text-xs sm:text-sm cursor-pointer">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>Open @Akash_Expense_tracker_bot to Sign Up</span>
+              </a>
+            </div>
+
+            <!-- QR Code Container -->
+            <div class="py-2 flex flex-col items-center justify-center space-y-2.5">
+              <div class="relative p-2.5 rounded-2xl bg-black/60 border border-white/[0.1] shadow-xl inline-block">
+                <img id="tgSignupQrCodeImg" src="" alt="Scan QR to Sign Up with Telegram" class="w-36 h-36 rounded-lg object-contain bg-[#11141b]" />
+                <div id="tgSignupQrLoading" class="absolute inset-0 bg-black/80 backdrop-blur-xs rounded-2xl flex flex-col items-center justify-center gap-2 text-slate-400 text-[11px] font-mono">
+                  <i data-lucide="loader-2" class="w-5 h-5 animate-spin text-emerald-400"></i>
+                  <span>Generating QR...</span>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 text-[11px] font-mono text-slate-400" id="tgSignupPollStatus">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span>
+                <span>Waiting for Telegram approval...</span>
+              </div>
+            </div>
+
+            <p class="text-[11px] text-slate-500 font-mono">
+              Tap "Start" in Telegram to create your account. Your browser will launch automatically.
+            </p>
+          </div>
+
+        </div>
 
       </div>
 
@@ -1392,15 +1457,21 @@
           </p>
         </div>
 
-        <!-- Mode Toggle Pill -->
-        <div class="flex items-center self-start sm:self-auto p-1 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-medium shrink-0">
-          <button type="button" onclick="switchOnboardingMode('wizard')" id="obModeBtn-wizard" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer">
-            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
-            <span>AI Wizard</span>
-          </button>
-          <button type="button" onclick="switchOnboardingMode('detailed')" id="obModeBtn-detailed" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer">
-            <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
-            <span>Detailed Grid</span>
+        <!-- Mode Toggle Pill & Prominent Skip to Dashboard CTA -->
+        <div class="flex items-center gap-2.5 self-start sm:self-auto shrink-0">
+          <div class="flex items-center p-1 rounded-xl bg-black/50 border border-white/[0.08] text-xs font-medium">
+            <button type="button" onclick="switchOnboardingMode('wizard')" id="obModeBtn-wizard" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+              <span>AI Wizard</span>
+            </button>
+            <button type="button" onclick="switchOnboardingMode('detailed')" id="obModeBtn-detailed" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer">
+              <i data-lucide="sliders" class="w-3.5 h-3.5"></i>
+              <span>Detailed Grid</span>
+            </button>
+          </div>
+          <button type="button" onclick="navigateTo('/app')" class="px-3.5 py-2 rounded-xl bg-white/[0.08] hover:bg-white/[0.14] border border-white/[0.12] hover:border-emerald-500/40 text-slate-200 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95">
+            <span>Skip to Dashboard</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
           </button>
         </div>
       </div>
@@ -1473,8 +1544,9 @@
               <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
               <span>Back</span>
             </button>
-            <button type="button" onclick="navigateTo('/app')" class="text-xs text-slate-500 hover:text-slate-300 transition-colors cursor-pointer">
-              Skip setup for now
+            <button type="button" onclick="navigateTo('/app')" class="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-300 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer">
+              <span>Skip setup to Dashboard</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
             </button>
           </div>
 
@@ -1761,8 +1833,9 @@
           </div>
 
           <div class="flex items-center justify-between pt-2">
-            <button type="button" onclick="navigateTo('/app')" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
-              Skip setup for now
+            <button type="button" onclick="navigateTo('/app')" class="px-3 py-1.5 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] border border-white/[0.08] text-slate-300 hover:text-white text-xs font-medium transition-all flex items-center gap-1.5 cursor-pointer">
+              <span>Skip setup to Dashboard</span>
+              <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-emerald-400"></i>
             </button>
             <button type="submit" id="obSubmitBtn" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold rounded-md transition-all shadow-sm flex items-center gap-2 cursor-pointer">
               <span>Finish & Open Dashboard</span>
@@ -3142,7 +3215,7 @@
 
     function renderView(viewName) {
       state.view = viewName;
-      if (viewName !== 'login') {
+      if (viewName !== 'login' && viewName !== 'signup') {
         stopTelegramPolling();
       }
       ['landing', 'login', 'signup', 'onboarding', 'app'].forEach(v => {
@@ -3397,6 +3470,120 @@
       lucide.createIcons();
     }
 
+    function switchSignupMode(mode) {
+      ['email', 'telegram'].forEach(m => {
+        const btn = document.getElementById(`signupMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
+        if (!btn) return;
+        if (m === mode) {
+          btn.className = 'py-2 rounded-lg bg-emerald-500 text-black font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer';
+          btn.setAttribute('aria-selected', 'true');
+        } else {
+          btn.className = 'py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer';
+          btn.setAttribute('aria-selected', 'false');
+        }
+      });
+
+      const emailForm = document.getElementById('signupForm');
+      const tgPanel = document.getElementById('telegramSignupPanel');
+
+      if (mode === 'email') {
+        if (emailForm) emailForm.classList.remove('hidden');
+        if (tgPanel) tgPanel.classList.add('hidden');
+        stopTelegramPolling();
+      } else if (mode === 'telegram') {
+        if (emailForm) emailForm.classList.add('hidden');
+        if (tgPanel) tgPanel.classList.remove('hidden');
+        initTelegramSignupFlow();
+      }
+      lucide.createIcons();
+    }
+
+    async function initTelegramSignupFlow() {
+      stopTelegramPolling();
+
+      if (window.Telegram?.WebApp?.initData) {
+        const miniAppNotice = document.getElementById('tgSignupMiniAppNotice');
+        if (miniAppNotice) miniAppNotice.classList.remove('hidden');
+      }
+
+      const qrLoading = document.getElementById('tgSignupQrLoading');
+      const qrImg = document.getElementById('tgSignupQrCodeImg');
+      const directBtn = document.getElementById('tgSignupDirectBtn');
+      const pollStatus = document.getElementById('tgSignupPollStatus');
+
+      if (qrLoading) qrLoading.classList.remove('hidden');
+      if (pollStatus) {
+        pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Connecting to Telegram bot...</span>';
+      }
+
+      try {
+        const res = await fetch('/api/auth/qr/generate');
+        const data = await res.json();
+        if (!data.sessionId || !data.deepLink) throw new Error('Could not create QR session');
+
+        currentTgSessionId = data.sessionId;
+        const deepLink = data.deepLink;
+
+        if (directBtn) {
+          directBtn.href = deepLink;
+        }
+
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(deepLink)}&bgcolor=11141b&color=10b981&margin=4`;
+        if (qrImg) {
+          qrImg.onload = () => {
+            if (qrLoading) qrLoading.classList.add('hidden');
+          };
+          qrImg.src = qrUrl;
+        }
+
+        if (pollStatus) {
+          pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Waiting for Telegram approval...</span>';
+        }
+
+        let attempts = 0;
+        tgPollInterval = setInterval(async () => {
+          attempts++;
+          if (attempts > 60) {
+            stopTelegramPolling();
+            if (pollStatus) {
+              pollStatus.innerHTML = '<span class="text-amber-400">QR session expired. <button onclick="initTelegramSignupFlow()" class="underline text-emerald-400 ml-1 font-semibold">Refresh</button></span>';
+            }
+            return;
+          }
+
+          try {
+            const pollRes = await fetch(`/api/auth/qr/status?sessionId=${currentTgSessionId}`);
+            if (!pollRes.ok) return;
+            const session = await pollRes.json();
+
+            if (session.status === 'APPROVED' && session.token) {
+              stopTelegramPolling();
+              if (pollStatus) {
+                pollStatus.innerHTML = '<span class="text-emerald-400 font-bold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Account Created! Launching...</span></span>';
+                lucide.createIcons();
+              }
+              state.token = session.token;
+              localStorage.setItem('pulse_jwt_token', session.token);
+              triggerHaptic('success');
+              showToast('Account created via Telegram! Loading workspace...', 'success');
+              setTimeout(() => {
+                navigateTo('/app');
+              }, 400);
+            }
+          } catch (e) {
+            // Silently ignore temporary polling fetch errors
+          }
+        }, 2000);
+
+      } catch (err) {
+        if (qrLoading) qrLoading.classList.add('hidden');
+        if (pollStatus) {
+          pollStatus.innerHTML = `<span class="text-rose-400">Error: ${err.message}. <button onclick="initTelegramSignupFlow()" class="underline ml-1">Retry</button></span>`;
+        }
+      }
+      lucide.createIcons();
+    }
+
     async function loginWithTelegramMiniApp() {
       const initData = window.Telegram?.WebApp?.initData;
       if (!initData) {
@@ -3495,7 +3682,7 @@
         showToast(err.message, 'error');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span>Continue to Financial Setup</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
+        btn.innerHTML = '<span>Create Account</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
         lucide.createIcons();
       }
     }
