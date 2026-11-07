@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { Logger } from '@nestjs/common';
+import { AITelemetryService } from '../../common/audit/ai-telemetry.service';
 
 export interface ScannedReceiptResult {
   merchant?: string;
@@ -18,6 +19,7 @@ export class ReceiptVisionService {
     base64Image: string,
     mimeType = 'image/jpeg',
   ): Promise<ScannedReceiptResult | null> {
+    const startTime = Date.now();
     const geminiKey = process.env.GEMINI_API_KEY || process.env.LLM_API_KEY;
     if (!geminiKey) {
       this.logger.warn(
@@ -43,7 +45,7 @@ Return ONLY valid JSON matching this schema:
   ]
 }`;
 
-    const visionModels = ['gemini-3.5-flash-lite', 'gemini-3.5-flash', 'gemini-2.5-flash', 'gemini-1.5-flash'];
+    const visionModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
 
     for (const model of visionModels) {
       try {
@@ -78,7 +80,7 @@ Return ONLY valid JSON matching this schema:
         const parsed = JSON.parse(content);
         if (!parsed.amount || Number(parsed.amount) <= 0) continue;
 
-        return {
+        const result: ScannedReceiptResult = {
           merchant: parsed.merchant || 'Receipt Merchant',
           amount: Number(parsed.amount),
           currency: parsed.currency || 'INR',
@@ -91,6 +93,16 @@ Return ONLY valid JSON matching this schema:
             `Scanned receipt from ${parsed.merchant || 'merchant'}`,
           items: parsed.items || [],
         };
+
+        AITelemetryService.record({
+          rawPrompt: `[Receipt Image Scan ${mimeType}]`,
+          provider: `gemini/${model}`,
+          responseMetadata: { merchant: result.merchant, amount: result.amount },
+          tokensUsed: response.data?.usageMetadata?.totalTokenCount || 0,
+          latencyMs: Date.now() - startTime,
+        });
+
+        return result;
       } catch (err: any) {
         if (err?.response?.status === 404) continue;
         this.logger.warn(`Receipt Vision with ${model} failed (${err?.message || err}). Trying next model...`);

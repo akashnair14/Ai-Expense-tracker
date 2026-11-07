@@ -180,14 +180,14 @@ describe('Validation Schemas & Financial Input Hardening', () => {
   describe('RegisterWithEmailSchema & LoginWithEmailSchema', () => {
     it('should validate proper email and password', () => {
       const valid = {
-        email: 'user@pulseai.internal',
+        email: 'user@kinetiq.internal',
         password: 'password123',
         name: 'John',
       };
       expect(RegisterWithEmailSchema.safeParse(valid).success).toBe(true);
       expect(
         LoginWithEmailSchema.safeParse({
-          email: 'user@pulseai.internal',
+          email: 'user@kinetiq.internal',
           password: 'password123',
         }).success,
       ).toBe(true);
@@ -202,7 +202,7 @@ describe('Validation Schemas & Financial Input Hardening', () => {
       ).toBe(false);
       expect(
         RegisterWithEmailSchema.safeParse({
-          email: 'user@pulseai.internal',
+          email: 'user@kinetiq.internal',
           password: '123',
         }).success,
       ).toBe(false);

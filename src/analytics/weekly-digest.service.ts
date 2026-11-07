@@ -14,8 +14,10 @@ export class WeeklyDigestService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  // Run every Sunday at 8:00 PM (20:00)
-  @Cron('0 20 * * 0')
+  // Run every Sunday at 8:00 PM IST (20:00)
+  @Cron('0 20 * * 0', {
+    timeZone: 'Asia/Kolkata',
+  })
   async sendWeeklyMoneyReport() {
     this.logger.log(
       '📊 Compiling and delivering Weekly Money Digest to users...',

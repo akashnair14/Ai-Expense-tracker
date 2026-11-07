@@ -1,4 +1,4 @@
-# PulseAI (Kinetiq Money) Architecture Documentation
+# Kinetiq Money Architecture Documentation
 
 > **Status:** Current Production Architecture  
 > **Framework:** NestJS 11 (TypeScript)  
@@ -28,7 +28,7 @@
 
 ## 1. System Overview
 
-PulseAI is a personal financial intelligence platform operating on a **modular monolith** pattern. It provides automated income and expense tracking, conversational querying, receipt scanning, voice expense capture, deterministic budget pace tracking, and scheduled cash flow automation.
+Kinetiq Money is a personal financial intelligence platform operating on a **modular monolith** pattern. It provides automated income and expense tracking, conversational querying, receipt scanning, voice expense capture, deterministic budget pace tracking, and scheduled cash flow automation.
 
 ### Key Tenet
 > **AI decides what the user means; deterministic backend code decides what actually happens.**

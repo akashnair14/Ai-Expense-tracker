@@ -25,7 +25,7 @@ import { TransactionModule } from '../transactions/transaction.module';
         }
 
         return {
-          secret: secret || 'pulseai_jwt_secret_key_2026_super_secure',
+          secret: secret || 'kinetiq_jwt_secret_key_2026_super_secure',
           signOptions: { expiresIn: '30d' },
         };
       },

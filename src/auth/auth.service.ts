@@ -166,14 +166,14 @@ export class AuthService {
 
   async demoLogin() {
     let demoUser = await this.prisma.user.findUnique({
-      where: { email: 'demo@pulseai.internal' },
+      where: { email: 'demo@kinetiq.internal' },
     });
 
     if (!demoUser) {
       const hashedPassword = await bcrypt.hash('demo123456', 10);
       demoUser = await this.prisma.user.create({
         data: {
-          email: 'demo@pulseai.internal',
+          email: 'demo@kinetiq.internal',
           passwordHash: hashedPassword,
           firstName: 'Demo User',
           currency: 'INR',

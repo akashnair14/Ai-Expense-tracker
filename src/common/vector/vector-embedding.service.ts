@@ -1,4 +1,4 @@
-﻿import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import axios from 'axios';
 
 export interface ScoredTransaction {
@@ -35,7 +35,7 @@ export class VectorEmbeddingService {
       (process.env.LLM_PROVIDER === 'gemini' ? process.env.LLM_API_KEY : null);
 
     if (geminiKey) {
-      const models = ['gemini-embedding-001', 'gemini-embedding-2'];
+      const models = ['text-embedding-004', 'embedding-001'];
       for (const model of models) {
         try {
           const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:embedContent?key=${geminiKey}`;
@@ -57,8 +57,8 @@ export class VectorEmbeddingService {
       }
     }
 
-    // Fallback: Deterministic token frequency vector for graceful offline/test degradation
-    const fallbackVec = this.generateTokenVector(clean);
+    // Fallback: Deterministic token frequency vector for graceful offline/test degradation (768-dim)
+    const fallbackVec = this.generateTokenVector(clean, 768);
     this.setCache(clean, fallbackVec);
     return fallbackVec;
   }
@@ -67,11 +67,14 @@ export class VectorEmbeddingService {
    * Computes standard cosine similarity between two vectors.
    */
   public computeCosineSimilarity(a: number[], b: number[]): number {
-    if (!a || !b || a.length !== b.length || a.length === 0) return 0;
+    if (!a || !b || a.length === 0 || b.length === 0) return 0;
+    
+    // Safety check for dimension compatibility
+    const len = Math.min(a.length, b.length);
     let dot = 0;
     let normA = 0;
     let normB = 0;
-    for (let i = 0; i < a.length; i++) {
+    for (let i = 0; i < len; i++) {
       dot += a[i] * b[i];
       normA += a[i] * a[i];
       normB += b[i] * b[i];
@@ -81,7 +84,7 @@ export class VectorEmbeddingService {
   }
 
   /**
-   * Semantically ranks transactions against a natural language query.
+   * Semantically ranks transactions against a natural language query with parallelized resolution.
    */
   public async searchSimilarTransactions(
     query: string,
@@ -98,19 +101,29 @@ export class VectorEmbeddingService {
       return { matches: [], totalAmount: 0, matchedCategories: [] };
     }
 
+    // Prepare text payloads for candidate transactions
+    const candidates = transactions
+      .map((tx) => {
+        const catName = tx.category?.name || tx.category || '';
+        const textToEmbed = `${tx.merchant || ''} ${tx.description || ''} ${catName}`.trim();
+        return { tx, textToEmbed };
+      })
+      .filter((c) => c.textToEmbed.length > 0);
+
+    // Resolve embeddings concurrently instead of serial N+1 loop
+    const embeddingResults = await Promise.all(
+      candidates.map(async (c) => {
+        const txVec = await this.getEmbedding(c.textToEmbed);
+        return { tx: c.tx, vec: txVec };
+      }),
+    );
+
     const scored: ScoredTransaction[] = [];
-
-    for (const tx of transactions) {
-      const catName = tx.category?.name || tx.category || '';
-      const textToEmbed = `${tx.merchant || ''} ${tx.description || ''} ${catName}`.trim();
-      if (!textToEmbed) continue;
-
-      const txVec = await this.getEmbedding(textToEmbed);
-      if (!txVec) continue;
-
-      const sim = this.computeCosineSimilarity(queryVec, txVec);
+    for (const item of embeddingResults) {
+      if (!item.vec) continue;
+      const sim = this.computeCosineSimilarity(queryVec, item.vec);
       if (sim >= threshold) {
-        scored.push({ transaction: tx, similarity: sim });
+        scored.push({ transaction: item.tx, similarity: sim });
       }
     }
 
@@ -146,8 +159,9 @@ export class VectorEmbeddingService {
 
   /**
    * Fast deterministic hash/token vector used as an offline/unit-test fallback.
+   * Defaults to 768 dimensions to match text-embedding-004.
    */
-  private generateTokenVector(text: string, dimensions = 64): number[] {
+  private generateTokenVector(text: string, dimensions = 768): number[] {
     const vec = new Array(dimensions).fill(0);
     const words = text.toLowerCase().split(/\W+/).filter(Boolean);
     for (const w of words) {

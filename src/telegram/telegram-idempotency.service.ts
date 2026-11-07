@@ -1,4 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
 
 export type IdempotencyDecision =
@@ -149,6 +150,29 @@ export class TelegramIdempotencyService {
       this.logger.warn(
         `Could not mark Telegram update ${updateId} as failed: ${err.message}`,
       );
+    }
+  }
+
+  /**
+   * Periodic maintenance job to clean up stale update locks and keep table size bounded.
+   * Runs daily at 3:00 AM IST, purges locks older than 7 days.
+   */
+  @Cron(CronExpression.EVERY_DAY_AT_3AM, {
+    timeZone: 'Asia/Kolkata',
+  })
+  async cleanOldLocks(): Promise<void> {
+    try {
+      const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+      const result = await this.prisma.telegramUpdateLock.deleteMany({
+        where: {
+          lockedAt: { lt: sevenDaysAgo },
+        },
+      });
+      if (result.count > 0) {
+        this.logger.log(`Cleaned up ${result.count} stale Telegram update locks.`);
+      }
+    } catch (err: any) {
+      this.logger.warn(`Failed to clean old Telegram update locks: ${err.message}`);
     }
   }
 }

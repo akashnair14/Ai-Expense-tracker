@@ -66,12 +66,12 @@ export class AnalyticsController {
     // 1. Assign demo user if unauthenticated guest
     if (!user) {
       let demoUser = await this.prisma.user.findUnique({
-        where: { email: 'demo@pulseai.internal' },
+        where: { email: 'demo@kinetiq.internal' },
       });
       if (!demoUser) {
         demoUser = await this.prisma.user.create({
           data: {
-            email: 'demo@pulseai.internal',
+            email: 'demo@kinetiq.internal',
             firstName: 'Demo Guest',
             currency: 'INR',
           },

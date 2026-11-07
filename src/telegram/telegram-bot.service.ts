@@ -2040,10 +2040,12 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
     await this.sendMessage(payload.telegramId, payload.message);
   }
 
-  // --- AUTOMATED 9:00 PM DAILY EVENING CHECK-IN CRON ---
-  @Cron('0 21 * * *')
+  // --- AUTOMATED 7:00 PM IST DAILY EVENING CHECK-IN CRON ---
+  @Cron('0 19 * * *', {
+    timeZone: 'Asia/Kolkata',
+  })
   async handleDailyEveningCheckIn() {
-    this.logger.log('Running 9:00 PM Evening Check-In Cron...');
+    this.logger.log('Running 7:00 PM IST Evening Check-In Cron...');
     const now = new Date();
     const todayStart = startOfDay(now);
     const todayEnd = endOfDay(now);
