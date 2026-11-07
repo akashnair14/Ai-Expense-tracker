@@ -31,7 +31,23 @@ export class TelegramBotService implements OnModuleInit {
     private readonly forexService: ForexService,
   ) {
     const token = process.env.TELEGRAM_BOT_TOKEN || 'MOCK_TELEGRAM_TOKEN';
-    this.bot = new Bot(token);
+    this.bot = new Bot(token, {
+      botInfo: {
+        id: 8981075920,
+        is_bot: true,
+        first_name: 'My Expense Tracker',
+        username: 'Akash_Expense_tracker_bot',
+        can_join_groups: true,
+        can_read_all_group_messages: false,
+        supports_inline_queries: false,
+        can_connect_to_business: false,
+        has_main_web_app: false,
+        has_topics_enabled: false,
+        allows_users_to_create_topics: false,
+        can_manage_bots: false,
+        supports_join_request_queries: false,
+      },
+    });
   }
 
   async onModuleInit() {
