@@ -23,5 +23,5 @@ export default async function handler(req: any, res: any) {
     await app.init();
   }
   const expressApp = app.getHttpAdapter().getInstance();
-  expressApp(req, res);
+  return expressApp(req, res);
 }
