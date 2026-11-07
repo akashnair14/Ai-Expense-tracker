@@ -1,6 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
+  <script>
+    (function() {
+      try {
+        var theme = localStorage.getItem('app_theme');
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.add('dark');
+          document.documentElement.classList.remove('light');
+        }
+      } catch (e) {}
+    })();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>MySpendAI — Intelligent Financial Operating System</title>
@@ -365,6 +379,164 @@
     .hero-glow {
       background: radial-gradient(circle at 50% -10%, rgba(16, 185, 129, 0.12) 0%, rgba(9, 9, 11, 0) 70%);
     }
+  
+    /* Light Mode Landing Page High-Contrast Overrides */
+    html.light #view-landing,
+    html:not(.dark) #view-landing {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+
+    html.light #view-landing h1,
+    html.light #view-landing h2,
+    html.light #view-landing h3,
+    html.light #view-landing h4,
+    html.light #view-landing .text-white,
+    html:not(.dark) #view-landing h1,
+    html:not(.dark) #view-landing h2,
+    html:not(.dark) #view-landing h3,
+    html:not(.dark) #view-landing h4,
+    html:not(.dark) #view-landing .text-white {
+      color: #0f172a !important;
+    }
+
+    html.light #view-landing p,
+    html.light #view-landing .text-slate-400,
+    html.light #view-landing .text-slate-300,
+    html:not(.dark) #view-landing p,
+    html:not(.dark) #view-landing .text-slate-400,
+    html:not(.dark) #view-landing .text-slate-300 {
+      color: #334155 !important;
+    }
+
+    html.light #view-landing .text-slate-500,
+    html:not(.dark) #view-landing .text-slate-500 {
+      color: #64748b !important;
+    }
+
+    html.light #view-landing nav a,
+    html:not(.dark) #view-landing nav a {
+      color: #334155 !important;
+    }
+    html.light #view-landing nav a:hover,
+    html:not(.dark) #view-landing nav a:hover {
+      color: #059669 !important;
+    }
+
+    html.light #view-landing .border-white\/\[0\.08\],
+    html.light #view-landing .border-white\/\[0\.06\],
+    html.light #view-landing .border-white\/\[0\.04\],
+    html:not(.dark) #view-landing .border-white\/\[0\.08\],
+    html:not(.dark) #view-landing .border-white\/\[0\.06\],
+    html:not(.dark) #view-landing .border-white\/\[0\.04\] {
+      border-color: rgba(15, 23, 42, 0.12) !important;
+    }
+
+    html.light #view-landing .bg-\[\#141722\],
+    html.light #view-landing .bg-\[\#141721\],
+    html.light #view-landing .bg-\[\#0e111a\],
+    html.light #view-landing .bg-\[\#11141d\],
+    html:not(.dark) #view-landing .bg-\[\#141722\],
+    html:not(.dark) #view-landing .bg-\[\#141721\],
+    html:not(.dark) #view-landing .bg-\[\#0e111a\],
+    html:not(.dark) #view-landing .bg-\[\#11141d\] {
+      background-color: #ffffff !important;
+      border-color: rgba(15, 23, 42, 0.1) !important;
+      box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.04) !important;
+    }
+
+    html.light #view-landing .bg-white\/\[0\.02\],
+    html.light #view-landing .bg-white\/\[0\.03\],
+    html.light #view-landing .bg-white\/\[0\.04\],
+    html.light #view-landing .bg-white\/\[0\.05\],
+    html:not(.dark) #view-landing .bg-white\/\[0\.02\],
+    html:not(.dark) #view-landing .bg-white\/\[0\.03\],
+    html:not(.dark) #view-landing .bg-white\/\[0\.04\],
+    html:not(.dark) #view-landing .bg-white\/\[0\.05\] {
+      background-color: rgba(15, 23, 42, 0.04) !important;
+      border-color: rgba(15, 23, 42, 0.08) !important;
+    }
+
+    html.light #landing-navbar,
+    html:not(.dark) #landing-navbar {
+      background-color: rgba(255, 255, 255, 0.92) !important;
+      border-color: rgba(15, 23, 42, 0.12) !important;
+      box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04) !important;
+    }
+    html.light #landing-navbar span,
+    html:not(.dark) #landing-navbar span {
+      color: #0f172a !important;
+    }
+    html.light #landing-navbar button,
+    html:not(.dark) #landing-navbar button {
+      color: #334155 !important;
+    }
+
+  
+    /* Light Mode Simulated Telegram Messages */
+    html.light #view-landing .bg-emerald-600\/30,
+    html:not(.dark) #view-landing .bg-emerald-600\/30 {
+      background-color: #d1fae5 !important;
+      border-color: #a7f3d0 !important;
+      color: #065f46 !important;
+    }
+
+    html.light #view-landing .text-emerald-100,
+    html:not(.dark) #view-landing .text-emerald-100 {
+      color: #065f46 !important;
+    }
+
+    html.light #view-landing .text-emerald-300,
+    html:not(.dark) #view-landing .text-emerald-300 {
+      color: #047857 !important;
+    }
+
+    /* Light Mode Bot Response Cards inside Simulated Messages */
+    html.light #view-landing .bg-white\/\[0\.04\],
+    html:not(.dark) #view-landing .bg-white\/\[0\.04\] {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      color: #1e293b !important;
+    }
+
+    /* Light Mode Interactive Playground Simulator & Samples */
+    html.light #view-landing input#landingSimulatorInput,
+    html:not(.dark) #view-landing input#landingSimulatorInput {
+      background-color: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      color: #0f172a !important;
+    }
+
+    html.light #view-landing input#landingSimulatorInput::placeholder,
+    html:not(.dark) #view-landing input#landingSimulatorInput::placeholder {
+      color: #94a3b8 !important;
+    }
+
+    html.light #view-landing #simulatorOutput,
+    html:not(.dark) #view-landing #simulatorOutput {
+      background-color: #f1f5f9 !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+    }
+
+    html.light #view-landing #simulatorOutput .text-slate-500,
+    html:not(.dark) #view-landing #simulatorOutput .text-slate-500 {
+      color: #64748b !important;
+    }
+
+    html.light #view-landing #demo button:not(.bg-emerald-500),
+    html:not(.dark) #view-landing #demo button:not(.bg-emerald-500) {
+      background-color: #f8fafc !important;
+      border-color: #e2e8f0 !important;
+      color: #334155 !important;
+    }
+
+    html.light #view-landing #demo button:not(.bg-emerald-500):hover,
+    html:not(.dark) #view-landing #demo button:not(.bg-emerald-500):hover {
+      background-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+
   </style>
 </head>
 <body class="selection:bg-emerald-500 selection:text-black">
@@ -382,34 +554,41 @@
   <!-- ========================================================================= -->
   <div id="view-landing" class="relative min-h-screen bg-[#0d0f14] text-[#eceef2] flex flex-col justify-between selection:bg-emerald-500 selection:text-black font-sans antialiased">
 
-    <!-- Sticky Fluid Animated Navigation Bar -->
-    <div id="sticky-nav-wrapper" class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-out py-3 sm:py-4 px-4 sm:px-6">
-      <header id="sticky-header" class="max-w-5xl mx-auto w-full transition-all duration-300 ease-out rounded-2xl bg-[#141721]/80 backdrop-blur-md border border-white/[0.08] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-lg shadow-black/20" role="banner">
+    <!-- Animated Capsule-to-Fluid Sticky Navigation Bar -->
+    <div id="landing-nav-wrapper" class="fixed top-0 left-0 right-0 z-50 pointer-events-none transition-all duration-300 ease-out py-3 sm:py-4 px-4 sm:px-6">
+      <header id="landing-navbar" class="pointer-events-auto max-w-5xl mx-auto w-full transition-all duration-300 ease-out rounded-2xl bg-[#141721]/90 backdrop-blur-md border border-white/[0.08] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-xl shadow-black/20" role="banner">
         
-        <!-- Brand -->
-        <div class="flex items-center gap-2.5 cursor-pointer" onclick="navigateTo('/')" role="button" aria-label="MySpendAI Home">
-          <div class="w-7 h-7 rounded-lg bg-emerald-500 text-black font-bold text-xs flex items-center justify-center shadow-sm">
+        <!-- Brand with subtle hover animation -->
+        <div class="flex items-center gap-2.5 cursor-pointer group" onclick="navigateTo('/')" role="button" aria-label="MySpendAI Home">
+          <div class="w-7 h-7 rounded-lg bg-emerald-500 text-black font-bold text-xs flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform duration-200">
             M
           </div>
-          <span class="font-semibold text-sm tracking-tight text-white">MySpendAI</span>
+          <span class="font-semibold text-sm tracking-tight text-white group-hover:text-emerald-400 transition-colors">MySpendAI</span>
         </div>
 
-        <!-- Links -->
+        <!-- Links with animated hover underline -->
         <nav class="hidden md:flex items-center gap-7 text-xs text-slate-300 font-medium" aria-label="Public Navigation">
-          <a href="#how-it-works" class="hover:text-emerald-400 transition-colors">How It Works</a>
-          <a href="#features" class="hover:text-emerald-400 transition-colors">Features</a>
-          <a href="#demo" class="hover:text-emerald-400 transition-colors">Interactive Demo</a>
-          <a href="#pricing" class="hover:text-emerald-400 transition-colors">Pricing</a>
+          <a href="#how-it-works" class="hover:text-emerald-400 transition-all py-1 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-emerald-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform">How It Works</a>
+          <a href="#features" class="hover:text-emerald-400 transition-all py-1 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-emerald-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform">Features</a>
+          <a href="#demo" class="hover:text-emerald-400 transition-all py-1 relative after:absolute after:bottom-0 after:left-0 after:right-0 after:h-[2px] after:bg-emerald-400 after:scale-x-0 hover:after:scale-x-100 after:transition-transform">Interactive Demo</a>
         </nav>
 
-        <!-- CTAs -->
-        <div id="landingAuthContainer" class="flex items-center gap-2.5">
-          <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-3 py-1.5 rounded-lg hover:bg-white/[0.05] transition-all cursor-pointer">
+        <!-- Right Side: Theme Toggle + Login + Bot CTA -->
+        <div id="landingAuthContainer" class="flex items-center gap-2 sm:gap-3">
+          
+          <!-- Theme Toggle Button -->
+          <button id="theme-toggle-btn" onclick="toggleGlobalTheme()" class="w-8 h-8 rounded-lg bg-white/[0.05] hover:bg-white/[0.1] text-slate-300 hover:text-white flex items-center justify-center transition-colors border border-white/[0.08]" aria-label="Toggle theme">
+            <i id="theme-icon" data-lucide="sun" class="w-4 h-4"></i>
+          </button>
+
+          <button onclick="navigateTo('/login')" class="text-xs text-slate-300 hover:text-white font-medium px-2.5 sm:px-3 py-1.5 rounded-lg hover:bg-white/[0.05] transition-all cursor-pointer">
             Sign In
           </button>
+          
           <a href="https://t.me/Akash_Expense_tracker_bot" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold text-xs rounded-lg transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer shadow-sm">
-            <i data-lucide="send" class="w-3 h-3"></i>
-            <span>Telegram Bot</span>
+            <i data-lucide="send" class="w-3.5 h-3.5"></i>
+            <span class="hidden sm:inline">Telegram Bot</span>
+            <span class="sm:hidden">Bot</span>
           </a>
         </div>
       </header>
@@ -677,7 +856,7 @@
         </div>
       </section>
 
-      <!-- Simple Transparent Pricing -->
+      <!-- Simple Transparent Pricing (Commented out)
       <section id="pricing" class="space-y-8" aria-labelledby="pricing-heading">
         <div class="space-y-2 text-left">
           <span class="text-xs font-semibold uppercase text-emerald-400 tracking-wider">Pricing</span>
@@ -749,6 +928,7 @@
 
         </div>
       </section>
+      -->
 
       <!-- Bottom Banner -->
       <section class="rounded-xl p-8 bg-white/[0.02] border border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-6">
@@ -2805,1050 +2985,14 @@
         if (el) {
           if (v === viewName) {
             el.classList.remove('hidden');
-            el.classList.remove('animate-view-fade');
-            void el.offsetWidth;
-            el.classList.add('animate-view-fade');
+            if (v !== 'landing') {
+              el.classList.remove('animate-view-fade');
+              void el.offsetWidth;
+              el.classList.add('animate-view-fade');
+            }
           } else {
             el.classList.add('hidden');
           }
-        }
-      });
-
-      if (viewName === 'app') {
-        checkAuthAndLoadDashboard();
-        startLiveSync();
-      } else {
-        stopLiveSync();
-        if (viewName === 'onboarding') {
-          initWizard();
-          switchOnboardingMode('wizard');
-          recalcOnboardingPreview();
-        }
-      }
-      lucide.createIcons();
-      setTimeout(initSpotlightCards, 60);
-    }
-
-    window.addEventListener('popstate', handleRoute);
-    window.addEventListener('hashchange', handleRoute);
-
-    // Tab visibility & focus change detection for instant Telegram sync
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible' && state.view === 'app' && state.token) {
-        checkSyncStatus(true);
-      }
-    });
-
-    window.addEventListener('focus', () => {
-      if (state.view === 'app' && state.token) {
-        checkSyncStatus(true);
-      }
-    });
-
-    // Keyboard support: Escape closes modals
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeEditModal();
-        closeCreateModal();
-        closeSetBudgetModal();
-        closeTelegramLinkModal();
-        closeHowItWorksModal();
-      }
-    });
-
-    document.addEventListener('DOMContentLoaded', async () => {
-      lucide.createIcons();
-      populateCategoryDropdown([]);
-      initTelegramMiniApp();
-      updateLandingAuthUI();
-      handleRoute();
-    });
-
-    function initTelegramMiniApp() {
-      if (window.Telegram && window.Telegram.WebApp) {
-        const tg = window.Telegram.WebApp;
-        tg.ready();
-        tg.expand();
-
-        try {
-          if (typeof tg.onEvent === 'function') {
-            tg.onEvent('activated', () => {
-              if (state.view === 'app' && state.token) {
-                checkSyncStatus(true);
-              }
-            });
-            tg.onEvent('viewportChanged', (eData) => {
-              if (eData && eData.isStateChanged && state.view === 'app' && state.token) {
-                checkSyncStatus(true);
-              }
-            });
-          }
-        } catch (e) {
-          console.warn('Telegram event registration warning:', e);
-        }
-
-        if (tg.initData) {
-          navigateTo('/app');
-          authenticateWithTelegram(tg.initData);
-        }
-      }
-    }
-
-    function triggerHaptic(type = 'medium') {
-      if (window.Telegram && window.Telegram.WebApp && window.Telegram.WebApp.HapticFeedback) {
-        if (['success', 'error', 'warning'].includes(type)) {
-          window.Telegram.WebApp.HapticFeedback.notificationOccurred(type);
-        } else {
-          window.Telegram.WebApp.HapticFeedback.impactOccurred(type);
-        }
-      }
-    }
-
-    async function authenticateWithTelegram(initData) {
-      try {
-        const res = await fetch('/api/auth/telegram', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ initData }),
-        });
-        const data = await res.json();
-        if (data.token) {
-          state.token = data.token;
-          localStorage.setItem('pulse_jwt_token', data.token);
-          await checkAuthAndLoadDashboard();
-        }
-      } catch (err) {
-        console.error('TMA Auth Error:', err);
-      }
-    }
-
-    // =========================================================================
-    // AUTHENTICATION & ONBOARDING
-    // =========================================================================
-    let tgPollInterval = null;
-    let currentTgSessionId = null;
-
-    function switchLoginMode(mode) {
-      ['email', 'telegram'].forEach(m => {
-        const btn = document.getElementById(`loginMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
-        if (!btn) return;
-        if (m === mode) {
-          btn.className = 'py-2 rounded-lg bg-emerald-500 text-black font-semibold transition-all flex items-center justify-center gap-1.5';
-          btn.setAttribute('aria-selected', 'true');
-        } else {
-          btn.className = 'py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5';
-          btn.setAttribute('aria-selected', 'false');
-        }
-      });
-
-      const emailForm = document.getElementById('emailLoginForm');
-      const tgPanel = document.getElementById('telegramLoginPanel');
-
-      if (mode === 'email') {
-        if (emailForm) emailForm.classList.remove('hidden');
-        if (tgPanel) tgPanel.classList.add('hidden');
-        stopTelegramPolling();
-      } else if (mode === 'telegram') {
-        if (emailForm) emailForm.classList.add('hidden');
-        if (tgPanel) tgPanel.classList.remove('hidden');
-        initTelegramLoginFlow();
-      }
-      lucide.createIcons();
-    }
-
-    function stopTelegramPolling() {
-      if (tgPollInterval) {
-        clearInterval(tgPollInterval);
-        tgPollInterval = null;
-      }
-    }
-
-    async function initTelegramLoginFlow() {
-      stopTelegramPolling();
-
-      // Check if browsing inside Telegram WebApp
-      if (window.Telegram?.WebApp?.initData) {
-        const miniAppNotice = document.getElementById('tgMiniAppNotice');
-        if (miniAppNotice) miniAppNotice.classList.remove('hidden');
-      }
-
-      const qrLoading = document.getElementById('tgQrLoading');
-      const qrImg = document.getElementById('tgQrCodeImg');
-      const directBtn = document.getElementById('tgDirectLoginBtn');
-      const pollStatus = document.getElementById('tgPollStatus');
-
-      if (qrLoading) qrLoading.classList.remove('hidden');
-      if (pollStatus) {
-        pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Connecting to Telegram bot...</span>';
-      }
-
-      try {
-        const res = await fetch('/api/auth/qr/generate');
-        const data = await res.json();
-        if (!data.sessionId || !data.deepLink) throw new Error('Could not create QR session');
-
-        currentTgSessionId = data.sessionId;
-        const deepLink = data.deepLink;
-
-        if (directBtn) {
-          directBtn.href = deepLink;
-        }
-
-        // Generate high-resolution QR code
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(deepLink)}&bgcolor=11141b&color=10b981&margin=4`;
-        if (qrImg) {
-          qrImg.onload = () => {
-            if (qrLoading) qrLoading.classList.add('hidden');
-          };
-          qrImg.src = qrUrl;
-        }
-
-        if (pollStatus) {
-          pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Waiting for Telegram confirmation...</span>';
-        }
-
-        // Poll every 2 seconds for confirmation from the bot
-        let attempts = 0;
-        tgPollInterval = setInterval(async () => {
-          attempts++;
-          if (attempts > 60) {
-            stopTelegramPolling();
-            if (pollStatus) {
-              pollStatus.innerHTML = '<span class="text-amber-400">QR session expired. <button onclick="initTelegramLoginFlow()" class="underline text-emerald-400 ml-1 font-semibold">Refresh</button></span>';
-            }
-            return;
-          }
-
-          try {
-            const pollRes = await fetch(`/api/auth/qr/status?sessionId=${currentTgSessionId}`);
-            if (!pollRes.ok) return;
-            const session = await pollRes.json();
-
-            if (session.status === 'APPROVED' && session.token) {
-              stopTelegramPolling();
-              if (pollStatus) {
-                pollStatus.innerHTML = '<span class="text-emerald-400 font-bold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Login Approved! Redirecting...</span></span>';
-                lucide.createIcons();
-              }
-              state.token = session.token;
-              localStorage.setItem('pulse_jwt_token', session.token);
-              triggerHaptic('success');
-              showToast('Telegram login confirmed!', 'success');
-              setTimeout(() => {
-                navigateTo('/app');
-              }, 400);
-            }
-          } catch (e) {
-            // Silently ignore temporary polling fetch errors
-          }
-        }, 2000);
-
-      } catch (err) {
-        if (qrLoading) qrLoading.classList.add('hidden');
-        if (pollStatus) {
-          pollStatus.innerHTML = `<span class="text-rose-400">Error: ${err.message}. <button onclick="initTelegramLoginFlow()" class="underline ml-1">Retry</button></span>`;
-        }
-      }
-      lucide.createIcons();
-    }
-
-    function switchSignupMode(mode) {
-      ['email', 'telegram'].forEach(m => {
-        const btn = document.getElementById(`signupMode${m.charAt(0).toUpperCase() + m.slice(1)}`);
-        if (!btn) return;
-        if (m === mode) {
-          btn.className = 'py-2 rounded-lg bg-emerald-500 text-black font-semibold transition-all flex items-center justify-center gap-1.5 cursor-pointer';
-          btn.setAttribute('aria-selected', 'true');
-        } else {
-          btn.className = 'py-2 rounded-lg text-slate-400 hover:text-white transition-all flex items-center justify-center gap-1.5 cursor-pointer';
-          btn.setAttribute('aria-selected', 'false');
-        }
-      });
-
-      const emailForm = document.getElementById('signupForm');
-      const tgPanel = document.getElementById('telegramSignupPanel');
-
-      if (mode === 'email') {
-        if (emailForm) emailForm.classList.remove('hidden');
-        if (tgPanel) tgPanel.classList.add('hidden');
-        stopTelegramPolling();
-      } else if (mode === 'telegram') {
-        if (emailForm) emailForm.classList.add('hidden');
-        if (tgPanel) tgPanel.classList.remove('hidden');
-        initTelegramSignupFlow();
-      }
-      lucide.createIcons();
-    }
-
-    async function initTelegramSignupFlow() {
-      stopTelegramPolling();
-
-      if (window.Telegram?.WebApp?.initData) {
-        const miniAppNotice = document.getElementById('tgSignupMiniAppNotice');
-        if (miniAppNotice) miniAppNotice.classList.remove('hidden');
-      }
-
-      const qrLoading = document.getElementById('tgSignupQrLoading');
-      const qrImg = document.getElementById('tgSignupQrCodeImg');
-      const directBtn = document.getElementById('tgSignupDirectBtn');
-      const pollStatus = document.getElementById('tgSignupPollStatus');
-
-      if (qrLoading) qrLoading.classList.remove('hidden');
-      if (pollStatus) {
-        pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Connecting to Telegram bot...</span>';
-      }
-
-      try {
-        const res = await fetch('/api/auth/qr/generate');
-        const data = await res.json();
-        if (!data.sessionId || !data.deepLink) throw new Error('Could not create QR session');
-
-        currentTgSessionId = data.sessionId;
-        const deepLink = data.deepLink;
-
-        if (directBtn) {
-          directBtn.href = deepLink;
-        }
-
-        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(deepLink)}&bgcolor=11141b&color=10b981&margin=4`;
-        if (qrImg) {
-          qrImg.onload = () => {
-            if (qrLoading) qrLoading.classList.add('hidden');
-          };
-          qrImg.src = qrUrl;
-        }
-
-        if (pollStatus) {
-          pollStatus.innerHTML = '<span class="w-2 h-2 rounded-full bg-emerald-400 pulse-live"></span><span>Waiting for Telegram approval...</span>';
-        }
-
-        let attempts = 0;
-        tgPollInterval = setInterval(async () => {
-          attempts++;
-          if (attempts > 60) {
-            stopTelegramPolling();
-            if (pollStatus) {
-              pollStatus.innerHTML = '<span class="text-amber-400">QR session expired. <button onclick="initTelegramSignupFlow()" class="underline text-emerald-400 ml-1 font-semibold">Refresh</button></span>';
-            }
-            return;
-          }
-
-          try {
-            const pollRes = await fetch(`/api/auth/qr/status?sessionId=${currentTgSessionId}`);
-            if (!pollRes.ok) return;
-            const session = await pollRes.json();
-
-            if (session.status === 'APPROVED' && session.token) {
-              stopTelegramPolling();
-              if (pollStatus) {
-                pollStatus.innerHTML = '<span class="text-emerald-400 font-bold flex items-center gap-1.5"><i data-lucide="check-circle-2" class="w-4 h-4"></i><span>Account Created! Launching...</span></span>';
-                lucide.createIcons();
-              }
-              state.token = session.token;
-              localStorage.setItem('pulse_jwt_token', session.token);
-              triggerHaptic('success');
-              showToast('Account created via Telegram! Loading workspace...', 'success');
-              setTimeout(() => {
-                navigateTo('/app');
-              }, 400);
-            }
-          } catch (e) {
-            // Silently ignore temporary polling fetch errors
-          }
-        }, 2000);
-
-      } catch (err) {
-        if (qrLoading) qrLoading.classList.add('hidden');
-        if (pollStatus) {
-          pollStatus.innerHTML = `<span class="text-rose-400">Error: ${err.message}. <button onclick="initTelegramSignupFlow()" class="underline ml-1">Retry</button></span>`;
-        }
-      }
-      lucide.createIcons();
-    }
-
-    async function loginWithTelegramMiniApp() {
-      const initData = window.Telegram?.WebApp?.initData;
-      if (!initData) {
-        showToast('Not running inside Telegram WebApp', 'error');
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/auth/telegram', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ initData }),
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Telegram auth failed');
-
-        if (data.token) {
-          state.token = data.token;
-          localStorage.setItem('pulse_jwt_token', data.token);
-          triggerHaptic('success');
-          showToast('Authenticated via Telegram!', 'success');
-          navigateTo('/app');
-        }
-      } catch (err) {
-        showToast(err.message, 'error');
-      }
-    }
-
-    async function handleEmailSignIn(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmailInput').value.trim();
-      const password = document.getElementById('loginPasswordInput').value;
-      const btn = document.getElementById('loginSubmitBtn');
-
-      btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Signing In...</span>';
-      lucide.createIcons();
-
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Invalid credentials');
-
-        if (data.token) {
-          state.token = data.token;
-          localStorage.setItem('pulse_jwt_token', data.token);
-          triggerHaptic('success');
-          showToast('Signed in successfully.', 'success');
-          navigateTo('/app');
-        }
-      } catch (err) {
-        showToast(err.message, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span>Sign In</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
-        lucide.createIcons();
-      }
-    }
-
-    async function handleRegistration(e) {
-      e.preventDefault();
-      const firstName = document.getElementById('signupNameInput').value.trim();
-      const email = document.getElementById('signupEmailInput').value.trim();
-      const password = document.getElementById('signupPasswordInput').value;
-      const currency = document.getElementById('signupCurrencyInput').value;
-      const savingsTarget = parseFloat(document.getElementById('signupSavingsTargetInput').value) || 20;
-      const btn = document.getElementById('signupSubmitBtn');
-
-      btn.disabled = true;
-      btn.innerHTML = '<i data-lucide="loader-2" class="w-3.5 h-3.5 animate-spin"></i><span>Setting Up...</span>';
-      lucide.createIcons();
-
-      try {
-        const res = await fetch('/api/auth/register', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ firstName, email, password, currency, savingsTarget }),
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.message || 'Registration failed');
-
-        if (data.token) {
-          state.token = data.token;
-          localStorage.setItem('pulse_jwt_token', data.token);
-          triggerHaptic('success');
-          showToast('Account registered! Calibrating financial engine...', 'success');
-          navigateTo('/onboarding');
-        }
-      } catch (err) {
-        showToast(err.message, 'error');
-      } finally {
-        btn.disabled = false;
-        btn.innerHTML = '<span>Create Account</span><i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>';
-        lucide.createIcons();
-      }
-    }
-
-    // =========================================================================
-    // CONVERSATIONAL AI ONBOARDING WIZARD ENGINE
-    // =========================================================================
-    let wizardState = {
-      currentStep: 1,
-      income: 60000,
-      savingsRate: 25,
-      sip: 5000,
-      rent: 15000,
-      emi: 0,
-      bills: 2500,
-      groceries: 6000,
-      food: 5000,
-      travel: 3500,
-      health: 1500,
-      shopping: 4000,
-      entertainment: 2000,
-      misc: 1500,
-    };
-
-    function getWizardQuestions(income) {
-      const sym = state.currencySymbol || '₹';
-      const inc = income || 60000;
-
-      return [
-        {
-          step: 1,
-          stepName: "Monthly Inflow",
-          title: "What is your approximate monthly take-home income?",
-          subtitle: "Your salary or recurring cash flow anchors your baseline safe daily burn rate.",
-          field: "income",
-          prefix: sym,
-          placeholder: "e.g. 60000",
-          hint: "Net take-home salary or earnings",
-          options: [
-            { label: `${sym}35,000`, sub: "Early career / Starter", val: 35000, icon: "wallet" },
-            { label: `${sym}60,000`, sub: "Growing professional", val: 60000, icon: "briefcase" },
-            { label: `${sym}1,00,000`, sub: "Senior / Established", val: 100000, icon: "trending-up" },
-            { label: `${sym}1,80,000+`, sub: "High cash flow", val: 180000, icon: "sparkles" },
-          ],
-        },
-        {
-          step: 2,
-          stepName: "Wealth & Savings",
-          title: "How much do you want to set aside for savings & SIPs?",
-          subtitle: "This amount is preserved for your future before determining what you can safely spend.",
-          field: "savings",
-          prefix: "%",
-          placeholder: "e.g. 25",
-          hint: "Enter savings percentage (0 - 80)",
-          options: [
-            { label: "15% Target", sub: `~${sym}${Math.round(inc * 0.15).toLocaleString()} / mo (Starter reserve)`, rate: 15, sipRatio: 0.35, icon: "shield" },
-            { label: "25% Target", sub: `~${sym}${Math.round(inc * 0.25).toLocaleString()} / mo (Balanced & Recommended)`, rate: 25, sipRatio: 0.40, icon: "gem" },
-            { label: "35% Target", sub: `~${sym}${Math.round(inc * 0.35).toLocaleString()} / mo (Aggressive investor)`, rate: 35, sipRatio: 0.50, icon: "rocket" },
-            { label: "45%+ Target", sub: `~${sym}${Math.round(inc * 0.45).toLocaleString()} / mo (FIRE / High saver)`, rate: 45, sipRatio: 0.60, icon: "flame" },
-          ],
-        },
-        {
-          step: 3,
-          stepName: "Fixed Commitments",
-          title: "What are your fixed monthly commitments (Rent, EMI, Bills)?",
-          subtitle: "Shelter, car/home loans, and utilities that must be paid every single month.",
-          field: "fixed",
-          prefix: sym,
-          placeholder: "e.g. 20000",
-          hint: "Total monthly fixed obligations",
-          options: [
-            { 
-              label: "Minimal / With Family", 
-              sub: `~${sym}0 - ${sym}3,000 (No rent or heavy loan commitments)`, 
-              val: Math.round(inc * 0.05), 
-              rent: 0, 
-              emi: 0, 
-              bills: Math.round(inc * 0.05), 
-              icon: "home" 
-            },
-            { 
-              label: "Light Fixed (~15%)", 
-              sub: `~${sym}${Math.round(inc * 0.15).toLocaleString()} (Shared flat or small utilities)`, 
-              val: Math.round(inc * 0.15), 
-              rent: Math.round(inc * 0.10), 
-              emi: 0, 
-              bills: Math.round(inc * 0.05), 
-              icon: "shield-check" 
-            },
-            { 
-              label: "Moderate (~30%)", 
-              sub: `~${sym}${Math.round(inc * 0.30).toLocaleString()} (Standard rent or vehicle EMI)`, 
-              val: Math.round(inc * 0.30), 
-              rent: Math.round(inc * 0.20), 
-              emi: Math.round(inc * 0.06), 
-              bills: Math.round(inc * 0.04), 
-              icon: "building" 
-            },
-            { 
-              label: "High Fixed (~45%)", 
-              sub: `~${sym}${Math.round(inc * 0.45).toLocaleString()} (Dedicated rent + loan repayments)`, 
-              val: Math.round(inc * 0.45), 
-              rent: Math.round(inc * 0.25), 
-              emi: Math.round(inc * 0.15), 
-              bills: Math.round(inc * 0.05), 
-              icon: "landmark" 
-            },
-          ],
-        },
-        {
-          step: 4,
-          stepName: "Living Essentials",
-          title: "Approximately what do you spend monthly on day-to-day essentials?",
-          subtitle: "Supermarket runs, groceries, dining meals, and daily commute fuel/cabs.",
-          field: "essentials",
-          prefix: sym,
-          placeholder: "e.g. 15000",
-          hint: "Total groceries, food & transit spend",
-          options: [
-            { 
-              label: "Frugal Essentials", 
-              sub: `~${sym}${Math.round(inc * 0.15).toLocaleString()} (Home cooking & transit)`, 
-              val: Math.round(inc * 0.15), 
-              groc: 0.45, food: 0.30, travel: 0.25, 
-              icon: "shopping-bag" 
-            },
-            { 
-              label: "Balanced (~22%)", 
-              sub: `~${sym}${Math.round(inc * 0.22).toLocaleString()} (Weekly groceries & food delivery)`, 
-              val: Math.round(inc * 0.22), 
-              groc: 0.42, food: 0.35, travel: 0.23, 
-              icon: "coffee" 
-            },
-            { 
-              label: "Comfortable (~32%)", 
-              sub: `~${sym}${Math.round(inc * 0.32).toLocaleString()} (Regular dining & personal car fuel)`, 
-              val: Math.round(inc * 0.32), 
-              groc: 0.38, food: 0.38, travel: 0.24, 
-              icon: "car" 
-            },
-            { 
-              label: "Generous (~40%)", 
-              sub: `~${sym}${Math.round(inc * 0.40).toLocaleString()} (Premium groceries & dining)`, 
-              val: Math.round(inc * 0.40), 
-              groc: 0.35, food: 0.42, travel: 0.23, 
-              icon: "utensils" 
-            },
-          ],
-        },
-        {
-          step: 5,
-          stepName: "Lifestyle & Misc",
-          title: "Lastly, how much flexible cushion for shopping & miscellaneous?",
-          subtitle: "Shopping, entertainment, weekend leisure, and unforeseen sundry expenses.",
-          field: "lifestyle",
-          prefix: sym,
-          placeholder: "e.g. 8000",
-          hint: "Discretionary & sundry cushion",
-          options: [
-            { 
-              label: "Lean Lifestyle", 
-              sub: `~${sym}${Math.round(inc * 0.08).toLocaleString()} (Disciplined minimal discretionary)`, 
-              val: Math.round(inc * 0.08), 
-              shop: 0.50, ent: 0.25, misc: 0.25, 
-              icon: "feather" 
-            },
-            { 
-              label: "Moderate (~14%)", 
-              sub: `~${sym}${Math.round(inc * 0.14).toLocaleString()} (Shopping, movies & weekend fun)`, 
-              val: Math.round(inc * 0.14), 
-              shop: 0.50, ent: 0.30, misc: 0.20, 
-              icon: "shopping-cart" 
-            },
-            { 
-              label: "Generous (~22%)", 
-              sub: `~${sym}${Math.round(inc * 0.22).toLocaleString()} (Active retail & frequent outings)`, 
-              val: Math.round(inc * 0.22), 
-              shop: 0.50, ent: 0.30, misc: 0.20, 
-              icon: "smile" 
-            },
-            { 
-              label: "Flexible (~30%)", 
-              sub: `~${sym}${Math.round(inc * 0.30).toLocaleString()} (Unconstrained lifestyle allocation)`, 
-              val: Math.round(inc * 0.30), 
-              shop: 0.45, ent: 0.35, misc: 0.20, 
-              icon: "heart" 
-            },
-          ],
-        },
-      ];
-    }
-
-    function initWizard() {
-      wizardState.currentStep = 1;
-      renderWizardStep(1);
-    }
-
-    function switchOnboardingMode(mode) {
-      const wizardEl = document.getElementById('obWizardContainer');
-      const detailedEl = document.getElementById('obDetailedContainer');
-      const revealEl = document.getElementById('wizardRevealContainer');
-      const btnWizard = document.getElementById('obModeBtn-wizard');
-      const btnDetailed = document.getElementById('obModeBtn-detailed');
-
-      if (mode === 'wizard') {
-        if (wizardState.currentStep > 5) {
-          if (wizardEl) wizardEl.classList.add('hidden');
-          if (revealEl) revealEl.classList.remove('hidden');
-        } else {
-          if (wizardEl) wizardEl.classList.remove('hidden');
-          if (revealEl) revealEl.classList.add('hidden');
-          renderWizardStep(wizardState.currentStep);
-        }
-        if (detailedEl) detailedEl.classList.add('hidden');
-        if (btnWizard) btnWizard.className = 'px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer';
-        if (btnDetailed) btnDetailed.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer';
-      } else {
-        if (wizardEl) wizardEl.classList.add('hidden');
-        if (revealEl) revealEl.classList.add('hidden');
-        if (detailedEl) detailedEl.classList.remove('hidden');
-        if (btnWizard) btnWizard.className = 'px-3 py-1.5 rounded-lg text-slate-400 hover:text-white flex items-center gap-1.5 transition-all cursor-pointer';
-        if (btnDetailed) btnDetailed.className = 'px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 transition-all cursor-pointer';
-        syncWizardToDetailedInputs();
-        recalcOnboardingPreview();
-      }
-      lucide.createIcons();
-    }
-
-    function syncWizardToDetailedInputs() {
-      const setVal = (id, val) => {
-        const el = document.getElementById(id);
-        if (el && val !== undefined) el.value = val > 0 ? Math.round(val) : '';
-      };
-
-      setVal('obIncomeInput', wizardState.income);
-      setVal('obSavingsTargetInput', wizardState.savingsRate);
-      setVal('obRentLimit', wizardState.rent);
-      setVal('obEmiLimit', wizardState.emi);
-      setVal('obBillsLimit', wizardState.bills);
-      setVal('obSipLimit', wizardState.sip);
-      setVal('obGroceryLimit', wizardState.groceries);
-      setVal('obFoodLimit', wizardState.food);
-      setVal('obTravelLimit', wizardState.travel);
-      setVal('obHealthLimit', wizardState.health);
-      setVal('obShoppingLimit', wizardState.shopping);
-      setVal('obEntertainmentLimit', wizardState.entertainment);
-      setVal('obMiscLimit', wizardState.misc);
-    }
-
-    function recalcWizardDailySpend() {
-      const income = wizardState.income || 60000;
-      const fixedTotal = (wizardState.rent || 0) + (wizardState.emi || 0) + (wizardState.bills || 0);
-      const percentageSavings = (income * (wizardState.savingsRate || 25)) / 100;
-      const totalSavings = Math.max(percentageSavings, wizardState.sip || 0);
-
-      const discretionaryPool = Math.max(0, income - fixedTotal - totalSavings);
-      const safeDaily = Math.round(discretionaryPool / 30);
-      const sym = state.currencySymbol || '₹';
-
-      const liveDailyEl = document.getElementById('wizardLiveDailySpend');
-      if (liveDailyEl) liveDailyEl.innerText = `${sym}${safeDaily.toLocaleString()} / day`;
-
-      return { safeDaily, fixedTotal, totalSavings, income, discretionaryPool };
-    }
-
-    function renderWizardStep(step) {
-      wizardState.currentStep = step;
-      const questions = getWizardQuestions(wizardState.income);
-
-      if (step > 5) {
-        showWizardReveal();
-        return;
-      }
-
-      const q = questions[step - 1];
-      if (!q) return;
-
-      const wizardEl = document.getElementById('obWizardContainer');
-      const revealEl = document.getElementById('wizardRevealContainer');
-      if (wizardEl) wizardEl.classList.remove('hidden');
-      if (revealEl) revealEl.classList.add('hidden');
-
-      const stepLabel = document.getElementById('wizardStepLabel');
-      const stepPct = document.getElementById('wizardStepPct');
-      const progressBar = document.getElementById('wizardProgressBar');
-      const questionTitleEl = document.getElementById('wizardQuestionTitle');
-      const questionSubtitleEl = document.getElementById('wizardQuestionSubtitle');
-      const inputPrefixEl = document.getElementById('wizardManualPrefix');
-      const manualInputEl = document.getElementById('wizardManualInput');
-      const inputHintEl = document.getElementById('wizardInputHint');
-      const prevBtn = document.getElementById('wizardBackBtn');
-      const optionsContainer = document.getElementById('wizardOptionsContainer');
-
-      if (stepLabel) {
-        stepLabel.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span><span>Step ${step} of 5: ${q.stepName}</span>`;
-      }
-      if (stepPct) stepPct.innerText = `${step * 20}% Complete`;
-      if (progressBar) progressBar.style.width = `${step * 20}%`;
-      if (questionTitleEl) questionTitleEl.innerText = q.title;
-      if (questionSubtitleEl) questionSubtitleEl.innerText = q.subtitle;
-      if (inputPrefixEl) inputPrefixEl.innerText = q.prefix;
-      if (inputHintEl) inputHintEl.innerText = q.hint;
-
-      if (manualInputEl) {
-        manualInputEl.value = '';
-        manualInputEl.placeholder = q.placeholder;
-      }
-
-      if (prevBtn) {
-        if (step > 1) prevBtn.classList.remove('hidden');
-        else prevBtn.classList.add('hidden');
-      }
-
-      if (optionsContainer) {
-        optionsContainer.innerHTML = q.options.map((opt, idx) => {
-          return `
-            <button type="button" onclick="selectWizardOption(${step}, ${idx})" class="p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.06] border border-white/[0.08] hover:border-emerald-500/40 text-left transition-all group flex items-start gap-3 cursor-pointer shadow-sm hover:scale-[1.01] active:scale-[0.99]">
-              <div class="w-9 h-9 rounded-lg bg-white/[0.04] group-hover:bg-emerald-500/15 group-hover:text-emerald-400 border border-white/[0.06] group-hover:border-emerald-500/30 flex items-center justify-center text-slate-400 shrink-0 transition-colors">
-                <i data-lucide="${opt.icon || 'check-circle-2'}" class="w-4 h-4"></i>
-              </div>
-              <div class="space-y-0.5 flex-1 min-w-0">
-                <div class="flex items-center justify-between">
-                  <span class="font-bold text-sm text-white group-hover:text-emerald-300 transition-colors font-mono">${opt.label}</span>
-                  <i data-lucide="chevron-right" class="w-4 h-4 text-slate-600 group-hover:text-emerald-400 transition-colors"></i>
-                </div>
-                <p class="text-[11px] text-slate-400 truncate">${opt.sub}</p>
-              </div>
-            </button>
-          `;
-        }).join('');
-      }
-
-      recalcWizardDailySpend();
-      lucide.createIcons();
-    }
-
-    function selectWizardOption(step, optIndex) {
-      const questions = getWizardQuestions(wizardState.income);
-      const q = questions[step - 1];
-      if (!q || !q.options[optIndex]) return;
-
-      const opt = q.options[optIndex];
-
-      if (step === 1) {
-        wizardState.income = opt.val;
-      } else if (step === 2) {
-        wizardState.savingsRate = opt.rate;
-        const totalPreserved = (wizardState.income * opt.rate) / 100;
-        wizardState.sip = Math.round(totalPreserved * (opt.sipRatio || 0.40));
-      } else if (step === 3) {
-        wizardState.rent = opt.rent;
-        wizardState.emi = opt.emi;
-        wizardState.bills = opt.bills;
-      } else if (step === 4) {
-        const total = opt.val;
-        wizardState.groceries = Math.round(total * opt.groc);
-        wizardState.food = Math.round(total * opt.food);
-        wizardState.travel = Math.round(total * opt.travel);
-      } else if (step === 5) {
-        const total = opt.val;
-        wizardState.shopping = Math.round(total * opt.shop);
-        wizardState.entertainment = Math.round(total * opt.ent);
-        wizardState.misc = Math.round(total * opt.misc);
-      }
-
-      triggerHaptic('light');
-      wizardNextStep();
-    }
-
-    function handleWizardInputKey(e) {
-      if (e.key === 'Enter') {
-        e.preventDefault();
-        submitWizardManualEntry();
-      }
-    }
-
-    function submitWizardManualEntry() {
-      const inputEl = document.getElementById('wizardManualInput');
-      const val = parseFloat(inputEl?.value);
-      if (isNaN(val) || val <= 0) {
-        showToast('Please enter a valid positive number', 'info');
-        if (inputEl) inputEl.focus();
-        return;
-      }
-
-      const step = wizardState.currentStep;
-
-      if (step === 1) {
-        wizardState.income = val;
-      } else if (step === 2) {
-        if (val > 100) {
-          const inc = wizardState.income || 60000;
-          wizardState.sip = Math.round(val);
-          wizardState.savingsRate = Math.min(80, Math.max(5, Math.round((val / inc) * 100)));
-        } else {
-          wizardState.savingsRate = Math.min(80, Math.max(0, Math.round(val)));
-          const totalPreserved = ((wizardState.income || 60000) * wizardState.savingsRate) / 100;
-          wizardState.sip = Math.round(totalPreserved * 0.40);
-        }
-      } else if (step === 3) {
-        wizardState.rent = Math.round(val * 0.60);
-        wizardState.emi = Math.round(val * 0.25);
-        wizardState.bills = Math.round(val * 0.15);
-      } else if (step === 4) {
-        wizardState.groceries = Math.round(val * 0.40);
-        wizardState.food = Math.round(val * 0.35);
-        wizardState.travel = Math.round(val * 0.25);
-      } else if (step === 5) {
-        wizardState.shopping = Math.round(val * 0.50);
-        wizardState.entertainment = Math.round(val * 0.30);
-        wizardState.misc = Math.round(val * 0.20);
-      }
-
-      triggerHaptic('success');
-      wizardNextStep();
-    }
-
-    function wizardNextStep() {
-      wizardState.currentStep++;
-      if (wizardState.currentStep > 5) {
-        showWizardReveal();
-      } else {
-        renderWizardStep(wizardState.currentStep);
-      }
-    }
-
-    function wizardPrevStep() {
-      if (wizardState.currentStep > 1) {
-        wizardState.currentStep--;
-        renderWizardStep(wizardState.currentStep);
-      }
-    }
-
-    function showWizardReveal() {
-      const wizardEl = document.getElementById('obWizardContainer');
-      const revealEl = document.getElementById('wizardRevealContainer');
-      const detailedEl = document.getElementById('obDetailedContainer');
-
-      if (wizardEl) wizardEl.classList.add('hidden');
-      if (detailedEl) detailedEl.classList.add('hidden');
-      if (revealEl) revealEl.classList.remove('hidden');
-
-      const { safeDaily, fixedTotal, totalSavings, income, discretionaryPool } = recalcWizardDailySpend();
-      const sym = state.currencySymbol || '₹';
-
-      const dailyEl = document.getElementById('revealDailySpend');
-      const fixedEl = document.getElementById('revealFixed');
-      const savingsEl = document.getElementById('revealSavings');
-      const essentialsEl = document.getElementById('revealEssentials');
-      const lifestyleEl = document.getElementById('revealLifestyle');
-
-      const essentialsTotal = (wizardState.groceries || 0) + (wizardState.food || 0) + (wizardState.travel || 0) + (wizardState.health || 0);
-      const lifestyleTotal = (wizardState.shopping || 0) + (wizardState.entertainment || 0) + (wizardState.misc || 0);
-
-      if (dailyEl) dailyEl.innerText = `${sym}${safeDaily.toLocaleString()} / day`;
-      if (fixedEl) fixedEl.innerText = `${sym}${fixedTotal.toLocaleString()}`;
-      if (savingsEl) savingsEl.innerText = `${sym}${Math.round(totalSavings).toLocaleString()}`;
-      if (essentialsEl) essentialsEl.innerText = `${sym}${essentialsTotal.toLocaleString()}`;
-      if (lifestyleEl) lifestyleEl.innerText = `${sym}${lifestyleTotal.toLocaleString()}`;
-
-      const alertEl = document.getElementById('revealOverAllocatedAlert');
-      const alertText = document.getElementById('revealOverAllocatedText');
-      const committed = fixedTotal + totalSavings;
-      const totalOutlays = committed + essentialsTotal + lifestyleTotal;
-
-      if (alertEl && alertText) {
-        if (committed >= income) {
-          alertEl.classList.remove('hidden');
-          alertText.innerHTML = `
-            <div class="font-semibold text-amber-400">Zero Spend Discretionary Pool Detected</div>
-            <p>Your Fixed Debt (${sym}${fixedTotal.toLocaleString()}) and Savings Goal (${sym}${Math.round(totalSavings).toLocaleString()}) total ${sym}${committed.toLocaleString()}, consuming ${Math.round((committed / income) * 100)}% of your ${sym}${income.toLocaleString()} monthly inflow.</p>
-            <p class="text-[11px] text-amber-200/80">To generate a safe daily spending limit, reduce your savings target or adjust fixed obligations in the Detailed Matrix.</p>
-          `;
-        } else if (totalOutlays > income) {
-          alertEl.classList.remove('hidden');
-          alertText.innerHTML = `
-            <div class="font-semibold text-teal-400">Pacing Calibration Active</div>
-            <p>Your planned category caps (${sym}${totalOutlays.toLocaleString()}) exceed your monthly inflow (${sym}${income.toLocaleString()}). To safeguard your ${sym}${Math.round(totalSavings).toLocaleString()} savings goal, your Safe Daily Spend is calibrated to <strong>${sym}${safeDaily.toLocaleString()}/day</strong>.</p>
-          `;
-        } else {
-          alertEl.classList.add('hidden');
-        }
-      }
-
-      syncWizardToDetailedInputs();
-
-      triggerHaptic('success');
-      lucide.createIcons();
-    }
-
-    async function submitWizardCalibration() {
-      const btn = document.getElementById('wizardFinishBtn');
-      if (btn) {
-        btn.disabled = true;
-        btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Calibrating Engine...</span>';
-        lucide.createIcons();
-      }
-
-      const budgets = [
-        { category: 'Rent', limit: wizardState.rent || 0 },
-        { category: 'EMI', limit: wizardState.emi || 0 },
-        { category: 'Bills & Utilities', limit: wizardState.bills || 0 },
-        { category: 'SIP / Investments', limit: wizardState.sip || 0 },
-        { category: 'Groceries', limit: wizardState.groceries || 0 },
-        { category: 'Food & Dining', limit: wizardState.food || 0 },
-        { category: 'Travel & Fuel', limit: wizardState.travel || 0 },
-        { category: 'Healthcare', limit: wizardState.health || 0 },
-        { category: 'Shopping', limit: wizardState.shopping || 0 },
-        { category: 'Entertainment', limit: wizardState.entertainment || 0 },
-        { category: 'Miscellaneous', limit: wizardState.misc || 0 },
-      ].filter(b => b.limit > 0);
-
-      if (!state.token) {
-        localStorage.setItem('pulse_pending_calibration', JSON.stringify({
-          monthlyIncome: wizardState.income,
-          targetSavingsRate: wizardState.savingsRate,
-          currency: state.currency || 'INR',
-          budgets,
-        }));
-        showToast('Calibration saved! Create an account or sign in to launch your dashboard.', 'info');
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '<span>Launch Dashboard</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
-          lucide.createIcons();
-        }
-        navigateTo('/login');
-        return;
-      }
-
-      try {
-        const headers = { 'Content-Type': 'application/json' };
-        if (state.token) headers['Authorization'] = `Bearer ${state.token}`;
-
-        await fetch('/api/user/onboarding', {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            monthlyIncome: wizardState.income,
-            targetSavingsRate: wizardState.savingsRate,
-            currency: state.currency || 'INR',
-            budgets,
-          }),
-        });
-
-        triggerHaptic('success');
-        showToast('Engine calibrated! Welcome to your financial dashboard.', 'success');
-        navigateTo('/app');
-      } catch (err) {
-        showToast('Saved locally. Launching dashboard...', 'info');
-        navigateTo('/app');
-      } finally {
-        if (btn) {
-          btn.disabled = false;
-          btn.innerHTML = '<span>Launch Dashboard</span><i data-lucide="arrow-right" class="w-4 h-4"></i>';
-          lucide.createIcons();
-        }
-      }
-    }
-
-    function filterOnboardingCategories(type) {
-      const tabs = ['all', 'fixed', 'savings', 'essentials', 'discretionary'];
-      tabs.forEach(t => {
-        const btn = document.getElementById(`obTab-${t}`);
-        if (!btn) return;
-        if (t === type) {
-          btn.className = 'px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-medium border border-emerald-500/30 shrink-0';
-        } else {
-          btn.className = 'px-2.5 py-1 rounded-full bg-white/[0.04] text-slate-400 hover:text-slate-200 border border-white/[0.06] shrink-0';
-        }
-      });
-
-      const sections = {
-        fixed: document.getElementById('obSection-fixed'),
-        savings: document.getElementById('obSection-savings'),
-        essentials: document.getElementById('obSection-essentials'),
-        discretionary: document.getElementById('obSection-discretionary'),
-      };
-
-      Object.entries(sections).forEach(([secType, el]) => {
-        if (!el) return;
-        if (type === 'all' || type === secType) {
-          el.classList.remove('hidden');
-        } else {
-          el.classList.add('hidden');
         }
       });
     }
@@ -6403,7 +5547,94 @@
       }
     });
 
+    
+    // Theme Switcher & Scroll Navbar Animation
+    function initThemeAndNavbar() {
+      // 1. Theme Logic
+      const savedTheme = localStorage.getItem('app_theme') || 'dark';
+      applyTheme(savedTheme);
+
+      // 2. Smooth Transition from floating capsule to fluid edge-to-edge navbar on scroll
+      const wrapper = document.getElementById('landing-nav-wrapper');
+      const navbar = document.getElementById('landing-navbar');
+
+      function updateNavOnScroll() {
+        if (!wrapper || !navbar) return;
+        const scrolled = window.scrollY > 30;
+        const isDark = document.documentElement.classList.contains('dark') || !document.documentElement.classList.contains('light');
+
+        if (scrolled) {
+          wrapper.className = 'fixed top-0 left-0 right-0 z-50 pointer-events-none transition-all duration-300 ease-out py-0 px-0';
+          navbar.className = 'pointer-events-auto max-w-none w-full transition-all duration-300 ease-out rounded-none ' +
+            (isDark ? 'bg-[#0d0f14]/95 border-b border-white/[0.08]' : 'bg-white/95 border-b border-slate-200/80') +
+            ' backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg shadow-black/20';
+        } else {
+          wrapper.className = 'fixed top-0 left-0 right-0 z-50 pointer-events-none transition-all duration-300 ease-out py-3 sm:py-4 px-4 sm:px-6';
+          navbar.className = 'pointer-events-auto max-w-5xl mx-auto w-full transition-all duration-300 ease-out rounded-2xl ' +
+            (isDark ? 'bg-[#141721]/90 border border-white/[0.08]' : 'bg-white/90 border border-slate-200/80') +
+            ' backdrop-blur-md px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-xl shadow-black/20';
+        }
+      }
+
+      window.addEventListener('scroll', updateNavOnScroll, { passive: true });
+      updateNavOnScroll();
+    }
+
+    function toggleGlobalTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      applyTheme(isDark ? 'light' : 'dark');
+    }
+
+    function applyTheme(theme) {
+      const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      const landing = document.getElementById('view-landing');
+
+      const wrapper = document.getElementById('landing-nav-wrapper');
+      const navbar = document.getElementById('landing-navbar');
+
+      if (theme === 'light') {
+        html.classList.remove('dark');
+        html.classList.add('light');
+        localStorage.setItem('app_theme', 'light');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'moon');
+        }
+        if (landing) {
+          landing.classList.add('bg-[#f8fafc]', 'text-[#0f172a]');
+          landing.classList.remove('bg-[#0d0f14]', 'text-[#eceef2]');
+        }
+      } else {
+        html.classList.add('dark');
+        html.classList.remove('light');
+        localStorage.setItem('app_theme', 'dark');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'sun');
+        }
+        if (landing) {
+          landing.classList.remove('bg-[#f8fafc]', 'text-[#0f172a]');
+          landing.classList.add('bg-[#0d0f14]', 'text-[#eceef2]');
+        }
+      }
+
+      if (navbar) {
+        const scrolled = window.scrollY > 30;
+        const isDark = theme === 'dark';
+        if (scrolled) {
+          navbar.className = 'pointer-events-auto max-w-none w-full transition-all duration-300 ease-out rounded-none ' +
+            (isDark ? 'bg-[#0d0f14]/95 border-b border-white/[0.08]' : 'bg-white/95 border-b border-slate-200/80') +
+            ' backdrop-blur-md px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-lg shadow-black/20';
+        } else {
+          navbar.className = 'pointer-events-auto max-w-5xl mx-auto w-full transition-all duration-300 ease-out rounded-2xl ' +
+            (isDark ? 'bg-[#141721]/90 border border-white/[0.08]' : 'bg-white/90 border border-slate-200/80') +
+            ' backdrop-blur-md px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between shadow-xl shadow-black/20';
+        }
+      }
+      if (window.lucide) lucide.createIcons();
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
+      initThemeAndNavbar();
       initSpotlightCards();
     });
   </script>
