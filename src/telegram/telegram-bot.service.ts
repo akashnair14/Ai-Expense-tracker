@@ -1805,7 +1805,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
           batchMsg += `${i + 1}. ${typeEmoji} *${this.escapeMd(transaction.description || transaction.merchant || 'Expense')}*: ${user.currency} ${amt.toLocaleString()} (${this.escapeMd(parsed.category)})\n`;
         }
 
-        batchMsg += `\n💰 *Total Batch Outlay:* ${user.currency} ${totalBatchSpend.toLocaleString()}\n⚡ *Parsed By:* REGEX BATCH`;
+        batchMsg += `\n💰 *Total Batch Outlay:* ${user.currency} ${totalBatchSpend.toLocaleString()}`;
 
         const batchKeyboard = new InlineKeyboard()
           .text('📅 Today Summary', 'cmd_today')
@@ -1853,7 +1853,6 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
           responseText += `\n🏪 *Merchant:* ${this.escapeMd(transaction.merchant)}`;
         if (transaction.description)
           responseText += `\n📝 *Description:* ${this.escapeMd(transaction.description)}`;
-        responseText += `\n⚡ *Parsed By:* ${transaction.parsedBy}`;
 
         // Check if category has an active monthly budget and render visual gauge
         const now = new Date();
