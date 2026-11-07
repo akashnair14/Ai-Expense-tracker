@@ -16,7 +16,7 @@ export class LlmIntentAdapter {
   ): Promise<NLUIntentResponse | null> {
     const startTime = Date.now();
     const todayStr = new Date().toISOString().split('T')[0];
-    const systemPrompt = `You are Kinetiq Money, an expert financial assistant and NLU intent router.
+    const systemPrompt = `You are MySpendAI, an expert financial assistant and NLU intent router.
 Current Date: ${todayStr}.
 
 Your task is to analyze user input inside <user_message> tags, determine intent, extract transactions, and/or choose tool calls.
@@ -330,7 +330,7 @@ CRITICAL: Return ONLY valid JSON matching this schema:
     const groqKey = process.env.GROQ_API_KEY || (primaryProvider === 'groq' ? primaryKey : null);
     const geminiKey = process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
 
-    const systemPrompt = `You are Kinetiq Financial Copilot, an elite, friendly personal finance assistant.
+    const systemPrompt = `You are MySpendAI Financial Copilot, an elite, friendly personal finance assistant.
 The user is asking a conversational question, seeking financial guidance, or chatting about their money.
 ${contextInfo ? `User Financial Context:\n${contextInfo}\n` : ''}
 Provide a clear, practical, concise, and helpful answer in 2 to 4 sentences. If relevant, suggest asking about specific spending (e.g. "How much on food?") or checking safe daily spend.`;
@@ -399,7 +399,7 @@ Provide a clear, practical, concise, and helpful answer in 2 to 4 sentences. If 
     const geminiKey =
       process.env.GEMINI_API_KEY || (primaryProvider === 'gemini' ? primaryKey : null);
 
-    const systemPrompt = `You are Kinetiq Financial Copilot, an elite personal finance assistant.
+    const systemPrompt = `You are MySpendAI Financial Copilot, an elite personal finance assistant.
 Your goal is to answer the user's question using their real financial context snapshot.
 
 Financial Context:

@@ -238,7 +238,7 @@ export class TelegramBotService implements OnModuleInit {
     const gradeEmoji = pulse.pulseScore >= 80 ? '🟢' : pulse.pulseScore >= 60 ? '🟡' : '🔴';
     const bar = this.renderProgressBar(pulse.pulseScore, 10);
 
-    let text = `💓 *Kinetiq Pulse Financial Health Score*\n\n`;
+    let text = `💓 *MySpendAI Pulse Financial Health Score*\n\n`;
     text += `       ${gradeEmoji} *${pulse.pulseScore} / 100 — ${pulse.grade.toUpperCase()}*\n`;
     text += `       [${bar}]\n\n`;
 
@@ -379,7 +379,7 @@ export class TelegramBotService implements OnModuleInit {
 
     const hasBudget = userBudgets.length > 0;
 
-    let welcomeText = `👋 Hello *${name}*!\n\nWelcome to your *Kinetiq Money Finance Assistant*.\n\n💬 *Ways to Log:*
+    let welcomeText = `👋 Hello *${name}*!\n\nWelcome to your *MySpendAI Finance Assistant*.\n\n💬 *Ways to Log:*
 • Text: \`Coffee 180\` or \`Rent 15k\`
 • Batch: \`Lunch 200, tea 40, cab 180\`
 • Bank SMS: Paste any bank debit/credit alert
@@ -532,7 +532,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
     });
 
     let card = `╔═══════════════════════════╗\n`;
-    card += `   💳 *KINETIQ MONEY MONTHLY STATEMENT*\n`;
+    card += `   💳 *MYSPENDAI MONTHLY STATEMENT*\n`;
     card += `   🗓️ *${monthName.toUpperCase()}*\n`;
     card += `╚═══════════════════════════╝\n\n`;
 
@@ -618,7 +618,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
     });
 
     const buffer = Buffer.from(csv, 'utf-8');
-    const filename = `kinetiq_expenses_${new Date().toISOString().split('T')[0]}.csv`;
+    const filename = `myspendai_expenses_${new Date().toISOString().split('T')[0]}.csv`;
 
     const keyboard = new InlineKeyboard()
       .text('📊 Report Card', 'cmd_report')
@@ -926,7 +926,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
       // Send persistent keyboard on start
       try {
         await ctx.reply(
-          '✨ *Welcome to Kinetiq Money! Quick menu loaded below.*',
+          '✨ *Welcome to MySpendAI! Quick menu loaded below.*',
           {
             parse_mode: 'Markdown',
             reply_markup: this.getPersistentKeyboard(),

@@ -679,7 +679,7 @@ export class AnalyticsController {
 
     // 6. Intelligent Copilot Guidance Card (rich, structured, actionable)
     return {
-      reply: `I'm your **Kinetiq Financial Copilot**. I didn't recognize a specific transaction or command in your message.\n\nHere are some things you can ask me:\n• ⛽ **Category Spend:** "How much is my petrol spent?", "How much on food?"\n• 🛡️ **Safe Daily Spend:** "Can I spend ${curr}500 today?", "What is my daily limit?"\n• 📊 **Deep Financial RAG:** "Audit my subscriptions", "Compare vs last month", "Detect spending leaks"\n• ⚡ **Instant Outlay:** "Coffee 150", "Uber 280 to office", "Swiggy 420"`,
+      reply: `I'm your **MySpendAI Financial Copilot**. I didn't recognize a specific transaction or command in your message.\n\nHere are some things you can ask me:\n• ⛽ **Category Spend:** "How much is my petrol spent?", "How much on food?"\n• 🛡️ **Safe Daily Spend:** "Can I spend ${curr}500 today?", "What is my daily limit?"\n• 📊 **Deep Financial RAG:** "Audit my subscriptions", "Compare vs last month", "Detect spending leaks"\n• ⚡ **Instant Outlay:** "Coffee 150", "Uber 280 to office", "Swiggy 420"`,
     };
   }
 
