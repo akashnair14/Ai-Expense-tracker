@@ -108,19 +108,29 @@ export class TelegramBotService implements OnModuleInit {
       }
     }
 
-    // Only run long-polling when NOT in a serverless environment (e.g. Vercel)
-    if (process.env.TELEGRAM_BOT_TOKEN && !process.env.VERCEL) {
-      this.bot
-        .start({
-          onStart: (botInfo) => {
-            this.logger.log(
-              `🤖 Telegram Bot successfully connected & running as @${botInfo.username}`,
-            );
-          },
-        })
-        .catch((err) => {
-          this.logger.warn(`Telegram Bot long polling notice: ${err.message}`);
-        });
+    // In serverless / webhook environments (e.g. Vercel), bot.start() is not called,
+    // so we must explicitly initialize bot info so bot.handleUpdate() works.
+    if (process.env.TELEGRAM_BOT_TOKEN) {
+      if (process.env.VERCEL) {
+        try {
+          await this.bot.init();
+          this.logger.log(`🤖 Telegram Bot initialized for Webhook mode as @${this.bot.botInfo.username}`);
+        } catch (e: any) {
+          this.logger.warn(`Could not initialize bot info: ${e.message}`);
+        }
+      } else {
+        this.bot
+          .start({
+            onStart: (botInfo) => {
+              this.logger.log(
+                `🤖 Telegram Bot successfully connected & running as @${botInfo.username}`,
+              );
+            },
+          })
+          .catch((err) => {
+            this.logger.warn(`Telegram Bot long polling notice: ${err.message}`);
+          });
+      }
     }
   }
 
