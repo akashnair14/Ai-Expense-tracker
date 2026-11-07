@@ -171,7 +171,7 @@ export class TelegramBotService implements OnModuleInit {
   }
 
     private getPersistentKeyboard() {
-    const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+    const appUrl = process.env.APP_URL || 'https://MySpendAI.vercel.app';
     return new Keyboard()
       .text('📅 Today')
       .text('🗓️ Month')
@@ -230,7 +230,7 @@ export class TelegramBotService implements OnModuleInit {
       });
     }
 
-    const appUrl = process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+    const appUrl = process.env.APP_URL || 'https://MySpendAI.vercel.app';
     const keyboard = new InlineKeyboard()
       .text('🎯 Adjust Budget', 'cmd_budget')
       .webApp('📱 Mini App', appUrl)
@@ -397,7 +397,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
     if (appUrl && appUrl.startsWith('https://')) {
       quickKeyboard.webApp('📱 Open Mini App', appUrl).url('🌐 Web Dashboard', appUrl);
     } else {
-      quickKeyboard.webApp('📱 Open Mini App', appUrl || 'https://ai-expense-tracker-o5a3.onrender.com');
+      quickKeyboard.webApp('📱 Open Mini App', appUrl || 'https://MySpendAI.vercel.app');
     }
 
     if (isEdit) {
@@ -537,7 +537,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
     }
 
     const appUrl =
-      process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+      process.env.APP_URL || 'https://MySpendAI.vercel.app';
     const keyboard = new InlineKeyboard()
       .url('📊 Full Interactive Charts', appUrl)
       .row()
@@ -607,7 +607,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
 
   private async showDashboard(ctx: any, isEdit = false) {
     const appUrl =
-      process.env.APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+      process.env.APP_URL || 'https://MySpendAI.vercel.app';
     const keyboard = new InlineKeyboard()
       .webApp('📱 Open Mini App', appUrl).row().url('🌐 Open in Browser', appUrl)
       .row()
@@ -862,7 +862,7 @@ You haven't fixed a spending budget for this month yet. Setting monthly limits h
         );
 
         if (linkResult.success) {
-          const appUrl = process.env.WEB_APP_URL || 'https://ai-expense-tracker-o5a3.onrender.com';
+          const appUrl = process.env.WEB_APP_URL || 'https://MySpendAI.vercel.app';
           const linkKeyboard = new InlineKeyboard()
             .webApp('🚀 Open Web Dashboard', appUrl)
             .row()
